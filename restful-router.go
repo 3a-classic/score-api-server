@@ -27,17 +27,33 @@ type ProductResource struct {
 }
 
 func (p ProductResource) getOne(req *restful.Request, resp *restful.Response) {
-	//	id := req.PathParameter("id")
-	id := "1"
-	log.Println("getting product with id:" + id)
-	data, err := mongo.GetAllPlayerJson()
-	//	fmt.Println(data)
-	if err != nil {
-		panic(err)
+	col := req.PathParameter("col")
+	//	id := "1"
+	log.Println("getting data with api:" + col)
+	if col == "player" {
+		data, err := collection.GetAllPlayerJson()
+		//	fmt.Println(data)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
+	} else if col == "field" {
+		data, err := collection.GetAllFieldJson()
+		//	fmt.Println(data)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
+	} else if col == "team" {
+		data, err := collection.GetAllTeamJson()
+		//	fmt.Println(data)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
+		//	resp.WriteEntity(Product{Id: id, Title: "test"})
+		//	resp.WriteEntity(data)
 	}
-	//	resp.WriteEntity(Product{Id: id, Title: "test"})
-	//	resp.WriteEntity(data)
-	resp.WriteAsJson(data)
 }
 
 func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
@@ -59,7 +75,7 @@ func (p ProductResource) Register(rootPath string) {
 	ws.Produces(restful.MIME_JSON)
 
 	//	ws.Route(ws.GET("/{id}").To(p.getOne).
-	ws.Route(ws.GET("/id").To(p.getOne).
+	ws.Route(ws.GET("/{col)").To(p.getOne).
 		Doc("get the product by its id").
 		Param(ws.PathParameter("id", "identifier of the product").DataType("string")))
 
@@ -71,6 +87,6 @@ func (p ProductResource) Register(rootPath string) {
 }
 
 func main() {
-	ProductResource{}.Register("products")
+	ProductResource{}.Register("api")
 	http.ListenAndServe(":8443", nil)
 }
