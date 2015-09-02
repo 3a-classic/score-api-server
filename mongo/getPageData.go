@@ -1,57 +1,110 @@
-package page
+package mongo
 
 import (
 	//	"encoding/json"
 	"fmt"
-	"labix.org/v2/mgo"
+	//	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	//	"reflect"
 )
 
+//Children
+
+type Score struct {
+	hole1 int
+	hole2 int
+	hole3 int
+	hole4 int
+}
+
+type UserScore struct {
+	score int
+	name  string
+	hole  int
+}
+
+type Member struct {
+	member1 string
+	member2 string
+	member3 string
+	member4 string
+	length  int
+}
+
+type Apply struct {
+	member1 int
+	member2 int
+	member3 int
+	member4 int
+}
+
+type Hole struct {
+	hole  int
+	par   int
+	yard  int
+	score Score
+}
+
+//type Stroke struct {
+//  hole1 int
+//  hole2 int
+//  hole3 int
+//  hole4 int
+//}
+//
+//type Putt struct {
+//  hole1 int
+//  hole2 int
+//  hole3 int
+//  hole4 int
+//}
+
+// Parents
+
 type Index struct {
-  team []string
+	team   string
 	length string
 }
 
 type LeaderBoard struct {
-	ranking  map[]
+	ranking []*UserScore
 }
 
 type ScoreEntrySheet struct {
- team: string
-  hole: int
-  member: map[]
-  par: int
-  yard: int
-  stroke: map[]
-  putt  map[]
-  excnt int
+	team   string
+	hole   int
+	member Member
+	par    int
+	yard   int
+	stroke Score
+	putt   Score
+	excnt  int
 }
 
 type ScoreViewSheet struct {
-  team string
-  member map[]
-  applay map[]
-  hole: map[]
+	team   string
+	member Member
+	applay Apply
+	hole   []*Hole
 }
 
-var (
-	mongoIp = "172.17.0.19"
-)
+//var (
+//	mongoIp = "172.17.0.19"
+//)
 
-func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
-	session, err := mgo.Dial(mongoIp)
-	if err != nil {
-		panic(err)
-	}
+//func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
+//	session, err := mgo.Dial(mongoIp)
+//	if err != nil {
+//		panic(err)
+//	}
+//
+//	session.SetMode(mgo.Monotonic, true)
+//	c := session.DB("3a-test").C(col)
+//	return c, session
+//
+//}
 
-	session.SetMode(mgo.Monotonic, true)
-	c := session.DB("3a-test").C(col)
-	return c, session
-
-}
-
-func GetAllPlayerJson() (*[]Player, error) {
+func GetIndex() (*Index, error) {
 	collectionName := "player"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
@@ -60,10 +113,11 @@ func GetAllPlayerJson() (*[]Player, error) {
 	if err != nil {
 		panic(err)
 	}
-	return &result, nil
+	//	return &result, nil
+	return nil, nil
 }
 
-func GetAllFieldJson() (*[]Field, error) {
+func GetLeaderBoard() (*LeaderBoard, error) {
 	collectionName := "field"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
@@ -73,10 +127,11 @@ func GetAllFieldJson() (*[]Field, error) {
 		panic(err)
 	}
 	//	fmt.Println(result)
-	return &result, nil
+	//	return &result, nil
+	return nil, nil
 }
 
-func GetAllTeamJson() (*[]Team, error) {
+func GetScoreEntrySheet() (*ScoreEntrySheet, error) {
 	collectionName := "team"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
@@ -86,5 +141,20 @@ func GetAllTeamJson() (*[]Team, error) {
 	if err != nil {
 		panic(err)
 	}
-	return &result, nil
+	//	return &result, nil
+	return nil, nil
+}
+
+func GetScoreViewSheet() (*ScoreViewSheet, error) {
+	collectionName := "team"
+	col, session := mongoInit(collectionName)
+	defer session.Close()
+	result := []Team{}
+	err := col.Find(bson.M{}).All(&result)
+	fmt.Println(result)
+	if err != nil {
+		panic(err)
+	}
+	//	return &result, nil
+	return nil, nil
 }
