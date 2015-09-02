@@ -2,7 +2,7 @@ package main
 
 import (
 	"./mongo"
-	//	"fmt"
+	"fmt"
 	"github.com/emicklei/go-restful"
 	"log"
 	"net/http"
@@ -26,33 +26,59 @@ type ProductResource struct {
 	// typically reference a DAO (data-access-object)
 }
 
-func (p ProductResource) getOne(req *restful.Request, resp *restful.Response) {
+func (p ProductResource) getCol(req *restful.Request, resp *restful.Response) {
 	col := req.PathParameter("col")
-	//	id := "1"
-	log.Println("getting data with api:" + col)
+	log.Println("getting collection data with api:" + col)
 	if col == "player" {
-		data, err := collection.GetAllPlayerJson()
-		//	fmt.Println(data)
+		data, err := mongo.GetAllPlayerCol()
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println(data)
 		resp.WriteAsJson(data)
 	} else if col == "field" {
-		data, err := collection.GetAllFieldJson()
-		//	fmt.Println(data)
+		data, err := mongo.GetAllFieldCol()
 		if err != nil {
 			panic(err)
 		}
 		resp.WriteAsJson(data)
 	} else if col == "team" {
-		data, err := collection.GetAllTeamJson()
-		//	fmt.Println(data)
+		data, err := mongo.GetAllTeamCol()
 		if err != nil {
 			panic(err)
 		}
 		resp.WriteAsJson(data)
-		//	resp.WriteEntity(Product{Id: id, Title: "test"})
-		//	resp.WriteEntity(data)
+	}
+}
+
+func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
+	page := req.PathParameter("page")
+	log.Println("getting page data with api:" + page)
+	if page == "index" {
+		data, err := mongo.GetIndexPageData()
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(data)
+		resp.WriteAsJson(data)
+	} else if page == "leaderBoard" {
+		data, err := mongo.GetLeaderBoardPageData()
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
+	} else if page == "scoreEntrySheet" {
+		data, err := mongo.GetScoreEntrySheetPageData()
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
+	} else if page == "scoreViewSheet" {
+		data, err := mongo.GetScoreViewSheetPageData()
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
 	}
 }
 
@@ -69,15 +95,17 @@ func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
 func (p ProductResource) Register(rootPath string) {
 	ws := new(restful.WebService)
 	ws.Path("/" + rootPath)
-	//	ws.Consumes(restful.MIME_XML)
-	//	ws.Produces(restful.MIME_XML)
 	ws.Consumes(restful.MIME_JSON)
 	ws.Produces(restful.MIME_JSON)
 
 	//	ws.Route(ws.GET("/{id}").To(p.getOne).
-	ws.Route(ws.GET("/{col)").To(p.getOne).
+	ws.Route(ws.GET("/collection/{col)").To(p.getCol).
 		Doc("get the product by its id").
-		Param(ws.PathParameter("id", "identifier of the product").DataType("string")))
+		Param(ws.PathParameter("id", "identifier of the collection index").DataType("string")))
+
+	ws.Route(ws.GET("/page/{page)").To(p.getPage).
+		Doc("get the page data  by its page").
+		Param(ws.PathParameter("page", "identifier of the page index").DataType("string")))
 
 	ws.Route(ws.POST("").To(p.postOne).
 		Doc("update or create a product").
