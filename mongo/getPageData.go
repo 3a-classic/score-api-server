@@ -62,8 +62,8 @@ type Hole struct {
 // Parents
 
 type Index struct {
-	team   string
-	length string
+	team   []string
+	length int
 }
 
 type LeaderBoard struct {
@@ -104,20 +104,31 @@ type ScoreViewSheet struct {
 //
 //}
 
-func GetIndex() (*Index, error) {
-	collectionName := "player"
+func GetIndexPageData() (*Index, error) {
+	collectionName := "team"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
-	result := []Player{}
+	result := []Team{}
 	err := col.Find(bson.M{}).All(&result)
 	if err != nil {
 		panic(err)
 	}
+
+	teamArr := make([]string, 0, 10)
+	for i := 0; i < len(result); i++ {
+		teamArr = append(teamArr, result[i].Team)
+	}
+
+	idx := &Index{teamArr, len(result)}
+
+	fmt.Println(idx)
+	fmt.Println(result)
+	fmt.Println(len(result))
 	//	return &result, nil
-	return nil, nil
+	return idx, nil
 }
 
-func GetLeaderBoard() (*LeaderBoard, error) {
+func GetLeaderBoardPageData() (*LeaderBoard, error) {
 	collectionName := "field"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
@@ -131,7 +142,7 @@ func GetLeaderBoard() (*LeaderBoard, error) {
 	return nil, nil
 }
 
-func GetScoreEntrySheet() (*ScoreEntrySheet, error) {
+func GetScoreEntrySheetPageData() (*ScoreEntrySheet, error) {
 	collectionName := "team"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
@@ -145,7 +156,7 @@ func GetScoreEntrySheet() (*ScoreEntrySheet, error) {
 	return nil, nil
 }
 
-func GetScoreViewSheet() (*ScoreViewSheet, error) {
+func GetScoreViewSheetPageData() (*ScoreViewSheet, error) {
 	collectionName := "team"
 	col, session := mongoInit(collectionName)
 	defer session.Close()

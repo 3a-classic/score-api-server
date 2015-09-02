@@ -52,7 +52,7 @@ func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
 
 }
 
-func GetAllPlayerJson() (*[]Player, error) {
+func GetAllPlayerCol() (*[]Player, error) {
 	collectionName := "player"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
@@ -64,7 +64,7 @@ func GetAllPlayerJson() (*[]Player, error) {
 	return &result, nil
 }
 
-func GetAllFieldJson() (*[]Field, error) {
+func GetAllFieldCol() (*[]Field, error) {
 	collectionName := "field"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
@@ -77,7 +77,7 @@ func GetAllFieldJson() (*[]Field, error) {
 	return &result, nil
 }
 
-func GetAllTeamJson() (*[]Team, error) {
+func GetAllTeamCol() (*[]Team, error) {
 	collectionName := "team"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
