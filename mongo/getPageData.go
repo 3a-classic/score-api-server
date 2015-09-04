@@ -4,45 +4,47 @@ import (
 	//	"encoding/json"
 	"fmt"
 	//	"labix.org/v2/mgo"
+	"sort"
+
 	"labix.org/v2/mgo/bson"
 	//	"reflect"
 )
 
 //Children
 
-type Score struct {
-	hole1 int
-	hole2 int
-	hole3 int
-	hole4 int
+type TeamScore struct {
+	Hole1 int
+	Hole2 int
+	Hole3 int
+	Hole4 int
 }
 
 type UserScore struct {
-	score int
-	name  string
-	hole  int
+	Score int
+	Name  string
+	Hole  int
 }
 
-type Member struct {
-	member1 string
-	member2 string
-	member3 string
-	member4 string
-	length  int
+type TeamMember struct {
+	Member1 string
+	Member2 string
+	Member3 string
+	Member4 string
+	Length  int
 }
 
 type Apply struct {
-	member1 int
-	member2 int
-	member3 int
-	member4 int
+	Member1 int
+	Member2 int
+	Member3 int
+	Member4 int
 }
 
 type Hole struct {
-	hole  int
-	par   int
-	yard  int
-	score Score
+	Hole  int
+	Par   int
+	Yard  int
+	Score TeamScore
 }
 
 //type Stroke struct {
@@ -62,30 +64,30 @@ type Hole struct {
 // Parents
 
 type Index struct {
-	team   []string
-	length int
+	Team   []string
+	Length int
 }
 
 type LeaderBoard struct {
-	ranking []*UserScore
+	Ranking []*UserScore
 }
 
 type ScoreEntrySheet struct {
-	team   string
-	hole   int
-	member Member
-	par    int
-	yard   int
-	stroke Score
-	putt   Score
-	excnt  int
+	Team   string
+	Hole   int
+	Member TeamMember
+	Par    int
+	Yard   int
+	Stroke TeamScore
+	Putt   TeamScore
+	Excnt  int
 }
 
 type ScoreViewSheet struct {
-	team   string
-	member Member
-	applay Apply
-	hole   []*Hole
+	Team   string
+	Member Member
+	Applay Apply
+	Hole   []*Hole
 }
 
 //var (
@@ -114,29 +116,55 @@ func GetIndexPageData() (*Index, error) {
 		panic(err)
 	}
 
-	teamArr := make([]string, 0, 10)
+	teamArr := make([]string, len(result))
 	for i := 0; i < len(result); i++ {
-		teamArr = append(teamArr, result[i].Team)
+		teamArr[i] = result[i].Team
 	}
 
 	idx := &Index{teamArr, len(result)}
 
-	fmt.Println(idx)
-	fmt.Println(result)
-	fmt.Println(len(result))
 	//	return &result, nil
 	return idx, nil
 }
 
 func GetLeaderBoardPageData() (*LeaderBoard, error) {
-	collectionName := "field"
+	collectionName := "player"
 	col, session := mongoInit(collectionName)
 	defer session.Close()
-	result := []Field{}
+	result := []Player{}
 	err := col.Find(bson.M{}).All(&result)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(len(result))
+
+	var leadersBoard []UserScore
+	var userScore UserScore
+
+	//	fmt.Println(result[1].Score[8])
+	//	fmt.Println(reflect.ValueOf(result[0].Score[0]["total"]).Type())
+	for i := 0; i < len(result); i++ {
+		totalScore := 0
+		passedHoleCnt := 0
+		for j := 0; j < len(result[i].Score); j++ {
+			//			fmt.Println(result[i].Score[j]["hole"])
+			if result[i].Score[j]["total"] != 0 {
+				//				fmt.Println(reflect.ValueOf(result[0].Score[0]["total"]).Type())
+				//				fmt.Println(reflect.ValueOf(totalScore).Type())
+
+				totalScore += result[i].Score[j]["total"].(int)
+				passedHoleCnt += 1
+			}
+		}
+		userScore = UserScore{
+			Score: totalScore,
+			Name:  result[i].Name,
+			Hole:  passedHoleCnt,
+		}
+		leadersBoard = append(leadersBoard, userScore)
+	}
+	fmt.Println(leadersBoard)
+
 	//	fmt.Println(result)
 	//	return &result, nil
 	return nil, nil
@@ -168,4 +196,36 @@ func GetScoreViewSheetPageData() (*ScoreViewSheet, error) {
 	}
 	//	return &result, nil
 	return nil, nil
+}
+
+// https://gist.github.com/ikbear/4038654
+// sortのメソッドパクってきた
+type sortedMap struct {
+	m map[string]int
+	s []string
+}
+
+func (sm *sortedMap) Len() int {
+	return len(sm.m)
+}
+
+func (sm *sortedMap) Less(i, j int) bool {
+	return sm.m[sm.s[i]] > sm.m[sm.s[j]]
+}
+
+func (sm *sortedMap) Swap(i, j int) {
+	sm.s[i], sm.s[j] = sm.s[j], sm.s[i]
+}
+
+func sortedKeys(m map[string]int) []string {
+	sm := new(sortedMap)
+	sm.m = m
+	sm.s = make([]string, len(m))
+	i := 0
+	for key, _ := range m {
+		sm.s[i] = key
+		i++
+	}
+	sort.Sort(sm)
+	return sm.s
 }

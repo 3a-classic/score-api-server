@@ -3,21 +3,35 @@ package mongo
 import (
 	//	"encoding/json"
 	"fmt"
+
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	//	"reflect"
 )
+
+type Score struct {
+	Hole int
+	Strole int
+	Putt int
+	Total int
+}
+
+type Member struct {
+	Player mgo.DBRef
+}
 
 type Player struct {
 	Id       bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Name     string
 	Apply    string
 	Editable bool
-	Score    bson.M
+//	Score    Score
+	Score    []bson.M
 }
 
 type Team struct {
 	Id     bson.ObjectId `json:"id" bson:"_id,omitempty"`
+//	Member []Member
 	Member bson.M
 	Team   string
 }
@@ -47,7 +61,7 @@ func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
 	}
 
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB("3a-test").C(col)
+	c := session.DB("testa").C(col)
 	return c, session
 
 }
@@ -57,10 +71,11 @@ func GetAllPlayerCol() (*[]Player, error) {
 	col, session := mongoInit(collectionName)
 	defer session.Close()
 	result := []Player{}
-	err := col.Find(bson.M{}).All(&result)
+	err := col.Find(nil).All(&result)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(&result)
 	return &result, nil
 }
 
