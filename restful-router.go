@@ -1,6 +1,7 @@
 package main
 
 import (
+	"reflect"
 	"./mongo"
 	"fmt"
 	"github.com/emicklei/go-restful"
@@ -35,6 +36,8 @@ func (p ProductResource) getCol(req *restful.Request, resp *restful.Response) {
 			panic(err)
 		}
 		fmt.Println(data)
+		fmt.Println(reflect.ValueOf(data).Type())
+		fmt.Println(fmt.Sprint("%+v", data))
 		resp.WriteAsJson(data)
 	} else if col == "field" {
 		data, err := mongo.GetAllFieldCol()
@@ -59,7 +62,6 @@ func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(data)
 		resp.WriteAsJson(data)
 	} else if page == "leaderBoard" {
 		data, err := mongo.GetLeaderBoardPageData()
