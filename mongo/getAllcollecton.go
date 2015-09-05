@@ -2,7 +2,7 @@ package mongo
 
 import (
 	//	"encoding/json"
-	"fmt"
+	//	"fmt"
 
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
@@ -10,48 +10,45 @@ import (
 )
 
 type Score struct {
-	Hole int
-	Strole int
-	Putt int
-	Total int
+	Hole   int `json:"hole"`
+	Strole int `json:"stroke"`
+	Putt   int `json:"putt"`
+	Total  int `json:"total"`
 }
 
 type Member struct {
-	Player mgo.DBRef
+	Player mgo.DBRef `json:"player"`
 }
 
 type Player struct {
 	Id       bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Name     string
-	Apply    string
-	Editable bool
-//	Score    Score
-	Score    []bson.M
+	Name     string        `json:"name"`
+	Apply    int           `json:"apply"`
+	Editable bool          `json:"editable"`
+	Score    []bson.M      `json:"score"`
+	Team     mgo.DBRef     `json:"team"`
 }
 
 type Team struct {
 	Id     bson.ObjectId `json:"id" bson:"_id,omitempty"`
-//	Member []Member
-	Member bson.M
-	Team   string
+	Member []Member      `json:"member"`
+	Team   string        `json:"team"`
 }
 
 type Field struct {
 	Id             bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Hole           string
-	DrivingContest bool
-	Ignore         string
-	NearPin        bool
-	Par            int
-	Yard           int
+	Hole           int           `json:"hole"`
+	DrivingContest bool          `json:"drivingContest"`
+	Ignore         bool          `json:"ignore"`
+	Image          string        `json:"image"`
+	NearPin        bool          `json:"nearPin"`
+	Par            int           `json:"par"`
+	Yard           int           `json:"yard"`
 }
 
-//type Member struct {
-//	member string
-//}
-//
 var (
-	mongoIp = "172.17.0.2"
+	//	mongoIp = "172.17.0.2"
+	mongoIp = "172.17.0.19"
 )
 
 func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
@@ -75,7 +72,6 @@ func GetAllPlayerCol() (*[]Player, error) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(&result)
 	return &result, nil
 }
 
@@ -88,7 +84,6 @@ func GetAllFieldCol() (*[]Field, error) {
 	if err != nil {
 		panic(err)
 	}
-	//	fmt.Println(result)
 	return &result, nil
 }
 
@@ -98,7 +93,6 @@ func GetAllTeamCol() (*[]Team, error) {
 	defer session.Close()
 	result := []Team{}
 	err := col.Find(bson.M{}).All(&result)
-	fmt.Println(result)
 	if err != nil {
 		panic(err)
 	}

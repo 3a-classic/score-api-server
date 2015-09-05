@@ -14,15 +14,15 @@ import (
 
 type Player struct {
 	Id       bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Name     string
-	Apply    string
-	Editable bool
+	Name     string        `json:"name"`
+	Apply    int           `json:"apply"`
+	Editable bool          `json:"editable"`
 	Score    []struct {
-		Hole   int
-		Stroke int
-		Putt   int
-		Total  int
-	}
+		Hole   int `json:"hole"`
+		Stroke int `json:"stroke"`
+		Putt   int `json:"putt"`
+		Total  int `json:"total"`
+	} `json:"score"`
 	Team mgo.DBRef
 }
 
@@ -32,23 +32,24 @@ type Member struct {
 
 type Team struct {
 	Id     bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Member []Member
+	Member []Member      `json:"member"`
 	Team   string
 }
 
 type Field struct {
 	Id             bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Hole           int
-	DrivingContest bool
-	Ignore         bool
-	Image          string
-	NearPin        bool
-	Par            int
-	Yard           int
+	Hole           int           `json:"hole"`
+	DrivingContest bool          `json:"drivingContest"`
+	Ignore         bool          `json:"ignore"`
+	Image          string        `json:"image"`
+	NearPin        bool          `json:"nearPin"`
+	Par            int           `json:"par"`
+	Yard           int           `json:"yard"`
 }
 
 var (
-	mongoIp = "172.17.0.2"
+	//	mongoIp = "172.17.0.2"
+	mongoIp = "172.17.0.19"
 	dbName  = "testa"
 )
 

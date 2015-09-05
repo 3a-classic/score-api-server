@@ -1,12 +1,14 @@
 package main
 
 import (
-	"reflect"
 	"./mongo"
-	"fmt"
+	//	"fmt"
 	"github.com/emicklei/go-restful"
+	//	"io"
 	"log"
 	"net/http"
+	//	"reflect"
+	//	"strconv"
 )
 
 // This example shows how to use methods as RouteFunctions for WebServices.
@@ -19,9 +21,12 @@ import (
 // POST http://localhost:8080/products
 // <Product><Id>1</Id><Title>The First</Title></Product>
 
-type Product struct {
-	Id, Title string
-}
+//type PostTeamScore struct {
+//	Member []string
+//	Stroke []int
+//	putt   []int
+//	excnt  int
+//}
 
 type ProductResource struct {
 	// typically reference a DAO (data-access-object)
@@ -35,9 +40,9 @@ func (p ProductResource) getCol(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(data)
-		fmt.Println(reflect.ValueOf(data).Type())
-		fmt.Println(fmt.Sprint("%+v", data))
+		//		fmt.Println(data)
+		//		fmt.Println(reflect.ValueOf(data).Type())
+		//		fmt.Println(fmt.Sprint("%+v", data))
 		resp.WriteAsJson(data)
 	} else if col == "field" {
 		data, err := mongo.GetAllFieldCol()
@@ -56,27 +61,44 @@ func (p ProductResource) getCol(req *restful.Request, resp *restful.Response) {
 
 func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
 	page := req.PathParameter("page")
+	team := req.PathParameter("team")
+	hole := req.PathParameter("hole")
+
 	log.Println("getting page data with api:" + page)
 	if page == "index" {
+		if team != "" || hole != "" {
+			return
+		}
 		data, err := mongo.GetIndexPageData()
 		if err != nil {
 			panic(err)
 		}
 		resp.WriteAsJson(data)
-	} else if page == "leaderBoard" {
-		data, err := mongo.GetLeaderBoardPageData()
+	} else if page == "leadersBoard" {
+		if team != "" || hole != "" {
+			return
+		}
+		data, err := mongo.GetLeadersBoardPageData()
 		if err != nil {
 			panic(err)
 		}
+		//		fmt.Println(data == nil)
 		resp.WriteAsJson(data)
 	} else if page == "scoreEntrySheet" {
-		data, err := mongo.GetScoreEntrySheetPageData()
+		//		log.Println(reflect.ValueOf(team).Type())
+		//		log.Println(reflect.ValueOf(hole).Type())
+		teamName := team
+		holeString := hole
+		data, err := mongo.GetScoreEntrySheetPageData(teamName, holeString)
 		if err != nil {
 			panic(err)
 		}
 		resp.WriteAsJson(data)
 	} else if page == "scoreViewSheet" {
-		data, err := mongo.GetScoreViewSheetPageData()
+		if hole != "" {
+			return
+		}
+		data, err := mongo.GetScoreViewSheetPageData(team)
 		if err != nil {
 			panic(err)
 		}
@@ -85,13 +107,37 @@ func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
 }
 
 func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
-	updatedProduct := new(Product)
-	err := req.ReadEntity(updatedProduct)
-	if err != nil { // bad request
-		resp.WriteErrorString(http.StatusBadRequest, err.Error())
-		return
+	page := req.PathParameter("page")
+	teamName := req.PathParameter("team")
+	holeString := req.PathParameter("hole")
+	log.Println("post data at " + page)
+	//	var chain *restful.FilterChain
+	if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
+		// prevent duplicate header
+		if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
+			resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
+		}
 	}
-	log.Println("updating product with id:" + updatedProduct.Id)
+	if page == "scoreEntrySheet" {
+		log.Println("before chain")
+		log.Println(req)
+		log.Println(resp)
+		//		chain.ProcessFilter(req, resp)
+
+		updatedTeamScore := new(mongo.PostTeamScore)
+		err := req.ReadEntity(updatedTeamScore)
+		if err != nil { // bad request
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		status, err := mongo.PostScoreEntrySheetPageData(teamName, holeString, updatedTeamScore)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(status)
+		log.Println("updating score team:" + teamName + ", hole: " + holeString)
+	}
 }
 
 func (p ProductResource) Register(rootPath string) {
@@ -109,14 +155,24 @@ func (p ProductResource) Register(rootPath string) {
 		Doc("get the page data  by its page").
 		Param(ws.PathParameter("page", "identifier of the page index").DataType("string")))
 
-	ws.Route(ws.POST("").To(p.postOne).
-		Doc("update or create a product").
-		Param(ws.BodyParameter("Product", "a Product (XML)").DataType("main.Product")))
+	ws.Route(ws.GET("/page/{page)/{team}").To(p.getPage).
+		Doc("get the page data  by its page").
+		Param(ws.PathParameter("page", "identifier of the page index").DataType("string")))
+
+	ws.Route(ws.GET("/page/{page)/{team}/{hole}").To(p.getPage).
+		Doc("get the page data  by its page").
+		Param(ws.PathParameter("page", "identifier of the page index").DataType("string")))
+
+	ws.Route(ws.POST("/page/{page}/{team}/{hole}").To(p.postOne).
+		//	ws.Route(ws.POST("").To(p.postOne).
+		Doc("update or create team score").
+		Param(ws.BodyParameter("Product", "a Product (JSON)").DataType("mongo.PostTeamScore")))
 
 	restful.Add(ws)
 }
 
 func main() {
+
 	ProductResource{}.Register("api")
 	http.ListenAndServe(":8443", nil)
 }
