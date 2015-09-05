@@ -7,7 +7,7 @@ import (
 	"sort"
 
 	"labix.org/v2/mgo/bson"
-	"reflect"
+	//	"reflect"
 	"strconv"
 )
 
@@ -179,10 +179,6 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 		panic(err)
 	}
 
-	err = session1.FindRef(&result1[0].Team).All(&result3)
-	if err != nil {
-		panic(err)
-	}
 	teamMember := make([]string, 4)
 	strokeScore := make([]int, 4)
 	puttScore := make([]int, 4)
@@ -205,11 +201,6 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 		Stroke: strokeScore,
 		Putt:   puttScore,
 		Excnt:  0,
-	}
-	//get team name from dbref
-	err = session1.FindRef(&result1[0].Team).All(&result3)
-	if err != nil {
-		panic(err)
 	}
 	return &scoreEntrySheet, nil
 }
@@ -239,30 +230,22 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 	if err != nil {
 		panic(err)
 	}
-	err = col3.Find(bson.M{"team": teamName}).All(&result3)
-	if err != nil {
-		panic(err)
-	}
 
 	err = col3.Find(bson.M{"team": teamName}).All(&result3)
 	if err != nil {
 		panic(err)
 	}
 
-	err = session1.FindRef(&result1[0].Team).All(&result3)
-	if err != nil {
-		panic(err)
-	}
 	teamMember := make([]string, len(result3[0].Member))
 	apply := make([]int, len(result3[0].Member))
-	for i := 0; i < len(result3[0].Member); i++ {
-		err = session1.FindRef(&result3[0].Member[i].Player).All(&result4)
-		if err != nil {
-			panic(err)
-		}
-		teamMember[i] = result4[0].Name
-		apply[i] = result4[0].Apply
-	}
+	//	for i := 0; i < len(result3[0].Member); i++ {
+	////		err = session1.FindRef(&result3[0].Member[i].Player).All(&result4)
+	////		if err != nil {
+	////			panic(err)
+	////		}
+	////		teamMember[i] = result4[0].Name
+	////		apply[i] = result4[0].Apply
+	//	}
 	holes := make([]Hole, holeNum)
 	totalScore := make([]int, len(result3[0].Member))
 	totalPar := 0
@@ -271,8 +254,22 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 		totalPar += result2[holeIndex].Par
 		score := make([]int, len(result3[0].Member))
 		for playerIndex := 0; playerIndex < len(result3[0].Member); playerIndex++ {
-			score[playerIndex] = result4[0].Score[holeIndex]["total"].(int)
+			//			fmt.Println(holeIndex)
+			//			fmt.Println(result1[playerIndex].Name)
+			//			fmt.Println(result1[playerIndex].Score[holeIndex]["total"].(int))
+			//			score[playerIndex] = result4[0].Score[holeIndex]["total"].(int)
+			score[playerIndex] = result1[playerIndex].Score[holeIndex]["total"].(int)
 			totalScore[playerIndex] += score[playerIndex]
+			if holeIndex == 0 {
+				err = session1.FindRef(&result3[0].Member[playerIndex].Player).All(&result4)
+				if err != nil {
+					panic(err)
+				}
+				//				teamMember[playerIndex] = result4[0].Name
+				//				apply[playerIndex] = result4[0].Apply
+				teamMember[playerIndex] = result1[playerIndex].Name
+				apply[playerIndex] = result1[playerIndex].Apply
+			}
 		}
 		holes[holeIndex] = Hole{
 			Hole:  holeIndex + 1,
@@ -299,14 +296,14 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 
 func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeamScore *PostTeamScore) (*Status, error) {
 
-	fmt.Println(teamName)
-	fmt.Println(holeString)
-	fmt.Println(updatedTeamScore)
+	//	fmt.Println(teamName)
+	//	fmt.Println(holeString)
+	//	fmt.Println(updatedTeamScore)
 
 	holeNum, err := strconv.Atoi(holeString)
 	holeIndex := holeNum - 1
 
-	fmt.Println(reflect.ValueOf(holeIndex).Type())
+	//	fmt.Println(reflect.ValueOf(holeIndex).Type())
 
 	collectionName := "player"
 	fmt.Println(collectionName + "にデータを挿入します。")
@@ -321,7 +318,7 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeam
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(result)
+		//		fmt.Println(result)
 
 		stroke := updatedTeamScore.Stroke[i]
 		putt := updatedTeamScore.Putt[i]
@@ -330,7 +327,7 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeam
 		result.Score[holeIndex]["putt"] = putt
 		result.Score[holeIndex]["total"] = total
 
-		fmt.Println(result)
+		//		fmt.Println(result)
 
 		err = col.Update(query, result)
 		if err != nil {

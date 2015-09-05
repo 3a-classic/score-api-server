@@ -122,10 +122,11 @@ func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
 		log.Println("before chain")
 		log.Println(req)
 		log.Println(resp)
-		//		chain.ProcessFilter(req, resp)
+		//	chain.ProcessFilter(req, resp)
 
 		updatedTeamScore := new(mongo.PostTeamScore)
 		err := req.ReadEntity(updatedTeamScore)
+		log.Println(updatedTeamScore)
 		if err != nil { // bad request
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
