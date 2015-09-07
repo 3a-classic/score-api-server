@@ -48,9 +48,9 @@ type Field struct {
 }
 
 var (
-	//	mongoIp = "172.17.0.2"
-	mongoIp = "172.17.0.19"
-	dbName  = "testa"
+	mongoIp = "172.17.0.2"
+	//	mongoIp = "172.17.0.19"
+	dbName = "testa"
 )
 
 func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
