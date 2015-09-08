@@ -1,6 +1,7 @@
 package mongo
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strconv"
@@ -8,12 +9,23 @@ import (
 	"labix.org/v2/mgo/bson"
 )
 
+var (
+	players []Player
+	fields  []Field
+	teams   []Team
+)
+
+func init() {
+	players = GetAllPlayerCol()
+	fields = GetAllFieldCol()
+	teams = GetAllTeamCol()
+}
+
 func GetIndexPageData() (*Index, error) {
-	teams := GetAllTeamCol()
 
 	teamArray := make([]string, len(teams))
-	for i := 0; i < len(teams); i++ {
-		teamArray[i] = teams[i].Team
+	for i, team := range teams {
+		teamArray[i] = team.Team
 	}
 
 	idx := &Index{
@@ -24,35 +36,28 @@ func GetIndexPageData() (*Index, error) {
 }
 
 func GetLeadersBoardPageData() (*LeadersBoard, error) {
-	players := GetAllPlayerCol()
-	fields := GetAllFieldCol()
 
 	var leadersBoard LeadersBoard
-	usersScore := make([]UserScore, len(players))
 	var userScore UserScore
 
-	for personNum := 0; personNum < len(players); personNum++ {
-		totalPar := 0
-		totalScore := 0
-		passedHoleCnt := 0
-		for holeNum := 0; holeNum < len(players[personNum].Score); holeNum++ {
-			if players[personNum].Score[holeNum]["total"] != 0 {
-				holeIndex := fields[holeNum].Hole - 1
+	for _, player := range players {
+		var totalPar, totalScore, passedHoleCnt int
+		for holeIndex, playerScore := range player.Score {
+			if playerScore["total"] != 0 {
 				totalPar += fields[holeIndex].Par
-				totalScore += players[personNum].Score[holeNum]["total"].(int)
+				totalScore += playerScore["total"].(int)
 				passedHoleCnt += 1
 			}
 		}
 		userScore = UserScore{
 			Score: totalScore - totalPar,
 			Total: totalScore,
-			Name:  players[personNum].Name,
+			Name:  player.Name,
 			Hole:  passedHoleCnt,
 		}
-		usersScore[personNum] = userScore
+		leadersBoard.Ranking = append(leadersBoard.Ranking, userScore)
 	}
-	sort.Sort(sortByScore(usersScore))
-	leadersBoard.Ranking = usersScore
+	sort.Sort(sortByScore(leadersBoard.Ranking))
 
 	return &leadersBoard, nil
 }
@@ -64,16 +69,16 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 	holeNum, _ := strconv.Atoi(holeString)
 	holeIndex := holeNum - 1
 
-	field := GetOneFieldByQuery(bson.M{"hole": holeNum})
+	field := fields[holeIndex]
 	playersInTheTeam := GetPlayersDataInTheTeam(teamName)
 
 	member := make([]string, 4)
 	stroke := make([]int, 4)
 	putt := make([]int, 4)
-	for playerIndex := 0; playerIndex < len(playersInTheTeam); playerIndex++ {
-		member[playerIndex] = playersInTheTeam[playerIndex].Name
-		stroke[playerIndex] = playersInTheTeam[playerIndex].Score[holeIndex]["stroke"].(int)
-		putt[playerIndex] = playersInTheTeam[playerIndex].Score[holeIndex]["putt"].(int)
+	for playerIndex, player := range playersInTheTeam {
+		member[playerIndex] = player.Name
+		stroke[playerIndex] = player.Score[holeIndex]["stroke"].(int)
+		putt[playerIndex] = player.Score[holeIndex]["putt"].(int)
 	}
 
 	scoreEntrySheet := ScoreEntrySheet{
@@ -92,29 +97,28 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 
 	playersInTheTeam := GetPlayersDataInTheTeam(teamName)
-	fields := GetAllFieldCol()
 
 	member := make([]string, len(playersInTheTeam))
 	apply := make([]int, len(playersInTheTeam))
 	holes := make([]Hole, len(fields))
 	totalScore := make([]int, len(playersInTheTeam))
-	totalPar := 0
-	for holeIndex := 0; holeIndex < len(fields); holeIndex++ {
+	var totalPar int
+	for holeIndex, field := range fields {
 
-		totalPar += fields[holeIndex].Par
+		totalPar += field.Par
 		score := make([]int, len(playersInTheTeam))
-		for playerIndex := 0; playerIndex < len(playersInTheTeam); playerIndex++ {
-			score[playerIndex] = playersInTheTeam[playerIndex].Score[holeIndex]["total"].(int)
+		for playerIndex, player := range playersInTheTeam {
+			score[playerIndex] = player.Score[holeIndex]["total"].(int)
 			totalScore[playerIndex] += score[playerIndex]
 			if holeIndex == 0 {
-				member[playerIndex] = playersInTheTeam[playerIndex].Name
-				apply[playerIndex] = playersInTheTeam[playerIndex].Apply
+				member[playerIndex] = player.Name
+				apply[playerIndex] = player.Apply
 			}
 		}
 		holes[holeIndex] = Hole{
 			Hole:  holeIndex + 1,
-			Par:   fields[holeIndex].Par,
-			Yard:  fields[holeIndex].Yard,
+			Par:   field.Par,
+			Yard:  field.Yard,
 			Score: score,
 		}
 	}
@@ -137,9 +141,9 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeamScore *PostTeamScore) (*Status, error) {
 
 	if len(holeString) == 0 {
-		return nil, nil
+		return &Status{"failed"}, errors.New("hole is not string")
 	}
-	holeNum, err := strconv.Atoi(holeString)
+	holeNum, _ := strconv.Atoi(holeString)
 	holeIndex := holeNum - 1
 
 	fmt.Println("Team : " + teamName + ", Hole : " + holeString + "にデータを挿入します。")
@@ -147,30 +151,22 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeam
 	playerCol := db.C("player")
 	defer session.Close()
 
-	for i := 0; i < len(updatedTeamScore.Member); i++ {
-		player := Player{}
+	teamPlayers := GetPlayersDataInTheTeam(teamName)
 
-		query := bson.M{"name": updatedTeamScore.Member[i]}
-		err = playerCol.Find(query).One(&player)
-		if err != nil {
-			return nil, err
-		}
-
-		stroke, putt := updatedTeamScore.Stroke[i], updatedTeamScore.Putt[i]
+	for playerIndex, player := range teamPlayers {
+		stroke, putt := updatedTeamScore.Stroke[playerIndex], updatedTeamScore.Putt[playerIndex]
 		player.Score[holeIndex]["stroke"] = stroke
 		player.Score[holeIndex]["putt"] = putt
 		player.Score[holeIndex]["total"] = stroke + putt
 
-		err = playerCol.Update(query, player)
-		if err != nil {
-			return nil, err
+		query := bson.M{"_id": player.Id}
+		if err := playerCol.Update(query, player); err != nil {
+			return &Status{"failed"}, err
 		}
 	}
 
-	status := Status{
-		Status: "success",
-	}
-	return &status, nil
+	players = GetAllPlayerCol()
+	return &Status{"success"}, nil
 }
 
 // sort
