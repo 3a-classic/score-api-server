@@ -1,8 +1,6 @@
 package mongo
 
 import (
-	"fmt"
-
 	"github.com/BurntSushi/toml"
 
 	"labix.org/v2/mgo"
@@ -18,7 +16,6 @@ func mongoInit() (*mgo.Database, *mgo.Session) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(conf)
 
 	session, err := mgo.Dial(conf.Mongo.Host)
 	if err != nil {
