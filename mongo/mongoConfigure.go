@@ -1,27 +1,31 @@
 package mongo
 
-import "labix.org/v2/mgo"
+import (
+	"fmt"
+
+	"github.com/BurntSushi/toml"
+
+	"labix.org/v2/mgo"
+)
 
 // set env name existing mongo server
 // future or home
-var environment = "future"
-var mongoDbName = "testa"
 
 func mongoInit() (*mgo.Database, *mgo.Session) {
-	var mongoIp string
 
-	switch environment {
-	case "future":
-		mongoIp = "172.17.0.2"
-	case "home":
-		mongoIp = "172.17.0.19"
+	var conf *Config
+	_, err := toml.DecodeFile("config/config.tml", &conf)
+	if err != nil {
+		panic(err)
 	}
-	session, err := mgo.Dial(mongoIp)
+	fmt.Println(conf)
+
+	session, err := mgo.Dial(conf.Mongo.Host)
 	if err != nil {
 		panic(err)
 	}
 	session.SetMode(mgo.Monotonic, true)
-	db := session.DB(mongoDbName)
+	db := session.DB(conf.Mongo.Database)
 
 	return db, session
 }

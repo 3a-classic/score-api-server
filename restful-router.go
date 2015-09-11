@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"./mongo"
 	"github.com/emicklei/go-restful"
@@ -137,4 +140,12 @@ func main() {
 
 	ProductResource{}.Register("api")
 	http.ListenAndServe(":8443", nil)
+	shutdownHook()
+}
+
+func shutdownHook() {
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	<-sigs
+	os.Exit(0)
 }
