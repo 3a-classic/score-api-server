@@ -1,1 +1,1 @@
-curl -X POST -H "Content-Type : application/json"  -d '{"Id":"name","Titile":"title"}'  "localhost:8443/api"
+curl -X POST -H "Content-Type : application/json"  -d @testdata  localhost:8443/api/scoreViewSheet/A/
