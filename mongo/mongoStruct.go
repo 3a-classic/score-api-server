@@ -62,6 +62,10 @@ type Sum struct {
 	Score []int `json:"score"`
 }
 
+type Rows struct {
+	Columns []string `json:"columns"`
+}
+
 type sortByScore []UserScore
 
 type Index struct {
@@ -90,6 +94,10 @@ type ScoreViewSheet struct {
 	Apply  []int    `json:"apply"`
 	Hole   []Hole   `json:"hole"`
 	Sum    Sum      `json:"sum"`
+}
+
+type EntireScore struct {
+	rows []Rows `json:"rows"`
 }
 
 type PostTeamScore struct {

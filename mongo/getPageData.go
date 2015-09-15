@@ -138,6 +138,10 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 	return &scoreViewSheet, nil
 }
 
+func GetEntireScorePageData() (*EntireScore, error) {
+
+}
+
 func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeamScore *PostTeamScore) (*Status, error) {
 
 	if len(holeString) == 0 {

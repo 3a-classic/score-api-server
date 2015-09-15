@@ -73,6 +73,17 @@ func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
 			panic(err)
 		}
 		resp.WriteAsJson(data)
+
+	case "entireScore":
+		if team != "" || hole != "" {
+			return
+		}
+		data, err := mongo.GetEntireScorePageData()
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
+
 	}
 }
 
