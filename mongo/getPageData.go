@@ -140,6 +140,101 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 
 func GetEntireScorePageData() (*EntireScore, error) {
 
+	columnSize := len(players) + 2
+	holeSize := len(fields)
+	holeRows := make([][]string, holeSize)
+	for i := 0; i < holeSize; i++ {
+		holeRows[i] = make([]string, columnSize)
+	}
+
+	//	for i := 0; i < holeSize; i++ {
+	//		grossRow[i] := make([]string, holeSize)
+	//		for j := 0; j < len(grossRow); j++ {
+	//			grossRow[i][j] = make([]string, columnSize)
+	//		}
+	//	}
+	//	rows := make([]string, 25)
+	var teamRow []string
+	mainColumnNum := 2
+	main_row := make([]string, len(players)+2)
+	//	holeRows := make([]string, len(players)+2)
+	//	var grossRow [holeSize][columnSize]string
+	//  grossRow make()[holeSize][columnSize]string
+	grossRow := make([]string, len(players)+2)
+	netRow := make([]string, len(players)+2)
+	applyRow := make([]string, len(players)+2)
+	diffRow := make([]string, len(players)+2)
+	orderRow := make([]string, len(players)+2)
+
+	main_row[0] = "ホール"
+	main_row[1] = "パー"
+	grossRow[0] = "Gross"
+	grossRow[1] = "-"
+	netRow[0] = "Net"
+	netRow[1] = "-"
+	applyRow[0] = "申請"
+	applyRow[1] = "-"
+	diffRow[0] = "スコア差"
+	diffRow[1] = "-"
+	orderRow[0] = "順位"
+	orderRow[1] = "-"
+
+	var passedPlayerNum int
+	for _, team := range teams {
+		teamRow = append(teamRow, strconv.Itoa(len(team.Member)))
+		teamRow = append(teamRow, team.Team)
+		playerInTheTeam := GetPlayersDataInTheTeam(team.Team)
+		for playerIndex, player := range playerInTheTeam {
+			userDataIndex := playerIndex + passedPlayerNum + mainColumnNum
+			main_row[userDataIndex] = player.Name
+
+			var gross int
+			var net int
+			for holeIndex, field := range fields {
+				if playerIndex == 0 {
+					if field.Ignore {
+						holeRows[holeIndex][0] = "-i" + strconv.Itoa(field.Hole)
+					} else {
+						holeRows[holeIndex][0] = strconv.Itoa(field.Hole)
+					}
+					holeRows[holeIndex][1] = strconv.Itoa(field.Par)
+				}
+				gross += player.Score[holeIndex]["total"].(int)
+				if field.Ignore == false {
+					net += player.Score[holeIndex]["total"].(int)
+				}
+				holeRows[holeIndex][userDataIndex] = strconv.Itoa(player.Score[holeIndex]["total"].(int))
+			}
+			grossRow[userDataIndex] = strconv.Itoa(gross)
+			netRow[userDataIndex] = strconv.Itoa(net)
+			applyRow[userDataIndex] = strconv.Itoa(player.Apply)
+			diff := player.Apply - net
+			if diff < 0 {
+				diff = diff * -1
+			}
+			diffRow[userDataIndex] = strconv.Itoa(diff)
+		}
+		passedPlayerNum += len(playerInTheTeam)
+	}
+
+	fmt.Println(teamRow)
+	fmt.Println(main_row)
+	fmt.Println(holeRows)
+	fmt.Println(grossRow)
+	fmt.Println(netRow)
+	fmt.Println(applyRow)
+	fmt.Println(diffRow)
+	fmt.Println(orderRow)
+	//	fmt.Println(rows)
+
+	fmt.Println("appendddddddddddddddddd")
+	fmt.Println(append(teamRow, main_row))
+
+	EntireScore := EntireScore{
+		Rows: nil,
+	}
+
+	return &EntireScore, nil
 }
 
 func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeamScore *PostTeamScore) (*Status, error) {

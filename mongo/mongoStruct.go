@@ -97,7 +97,7 @@ type ScoreViewSheet struct {
 }
 
 type EntireScore struct {
-	rows []Rows `json:"rows"`
+	Rows []Rows `json:"rows"`
 }
 
 type PostTeamScore struct {
