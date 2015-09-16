@@ -140,98 +140,94 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 
 func GetEntireScorePageData() (*EntireScore, error) {
 
+	rowSize := 25
 	columnSize := len(players) + 2
-	holeSize := len(fields)
-	holeRows := make([][]string, holeSize)
-	for i := 0; i < holeSize; i++ {
-		holeRows[i] = make([]string, columnSize)
+	rankMap := make(map[string]bool)
+
+	rows := make([][]string, rowSize)
+	for i := 0; i < rowSize; i++ {
+		if i == 0 {
+			rows[i] = make([]string, len(teams)*2)
+		} else {
+			rows[i] = make([]string, columnSize)
+		}
 	}
-
-	//	for i := 0; i < holeSize; i++ {
-	//		grossRow[i] := make([]string, holeSize)
-	//		for j := 0; j < len(grossRow); j++ {
-	//			grossRow[i][j] = make([]string, columnSize)
-	//		}
-	//	}
-	//	rows := make([]string, 25)
-	var teamRow []string
 	mainColumnNum := 2
-	main_row := make([]string, len(players)+2)
-	//	holeRows := make([]string, len(players)+2)
-	//	var grossRow [holeSize][columnSize]string
-	//  grossRow make()[holeSize][columnSize]string
-	grossRow := make([]string, len(players)+2)
-	netRow := make([]string, len(players)+2)
-	applyRow := make([]string, len(players)+2)
-	diffRow := make([]string, len(players)+2)
-	orderRow := make([]string, len(players)+2)
 
-	main_row[0] = "ホール"
-	main_row[1] = "パー"
-	grossRow[0] = "Gross"
-	grossRow[1] = "-"
-	netRow[0] = "Net"
-	netRow[1] = "-"
-	applyRow[0] = "申請"
-	applyRow[1] = "-"
-	diffRow[0] = "スコア差"
-	diffRow[1] = "-"
-	orderRow[0] = "順位"
-	orderRow[1] = "-"
+	rows[1][0] = "ホール"
+	rows[1][1] = "パー"
+	rows[20][0] = "Gross"
+	rows[20][1] = "-"
+	rows[21][0] = "Net"
+	rows[21][1] = "-"
+	rows[22][0] = "申請"
+	rows[22][1] = "-"
+	rows[23][0] = "スコア差"
+	rows[23][1] = "-"
+	rows[24][0] = "順位"
+	rows[24][1] = "-"
 
 	var passedPlayerNum int
-	for _, team := range teams {
-		teamRow = append(teamRow, strconv.Itoa(len(team.Member)))
-		teamRow = append(teamRow, team.Team)
+	for teamIndex, team := range teams {
+		rows[0][teamIndex*2] = strconv.Itoa(len(team.Member))
+		rows[0][teamIndex*2+1] = team.Team
 		playerInTheTeam := GetPlayersDataInTheTeam(team.Team)
 		for playerIndex, player := range playerInTheTeam {
 			userDataIndex := playerIndex + passedPlayerNum + mainColumnNum
-			main_row[userDataIndex] = player.Name
+			rows[1][userDataIndex] = player.Name
 
 			var gross int
 			var net int
 			for holeIndex, field := range fields {
+				holeRowNum := holeIndex + 2
 				if playerIndex == 0 {
 					if field.Ignore {
-						holeRows[holeIndex][0] = "-i" + strconv.Itoa(field.Hole)
+						rows[holeRowNum][0] = "-i" + strconv.Itoa(field.Hole)
 					} else {
-						holeRows[holeIndex][0] = strconv.Itoa(field.Hole)
+						rows[holeRowNum][0] = strconv.Itoa(field.Hole)
 					}
-					holeRows[holeIndex][1] = strconv.Itoa(field.Par)
+					rows[holeRowNum][1] = strconv.Itoa(field.Par)
 				}
-				gross += player.Score[holeIndex]["total"].(int)
+				playerTotal := player.Score[holeIndex]["total"].(int)
+				gross += playerTotal
 				if field.Ignore == false {
-					net += player.Score[holeIndex]["total"].(int)
+					net += playerTotal
 				}
-				holeRows[holeIndex][userDataIndex] = strconv.Itoa(player.Score[holeIndex]["total"].(int))
+				rows[holeRowNum][userDataIndex] = strconv.Itoa(playerTotal)
 			}
-			grossRow[userDataIndex] = strconv.Itoa(gross)
-			netRow[userDataIndex] = strconv.Itoa(net)
-			applyRow[userDataIndex] = strconv.Itoa(player.Apply)
+			rows[20][userDataIndex] = strconv.Itoa(gross)
+			rows[21][userDataIndex] = strconv.Itoa(net)
+			rows[22][userDataIndex] = strconv.Itoa(player.Apply)
 			diff := player.Apply - net
 			if diff < 0 {
 				diff = diff * -1
 			}
-			diffRow[userDataIndex] = strconv.Itoa(diff)
+			rows[23][userDataIndex] = strconv.Itoa(diff)
+			rankMap[strconv.Itoa(diff)] = true
 		}
 		passedPlayerNum += len(playerInTheTeam)
 	}
 
-	fmt.Println(teamRow)
-	fmt.Println(main_row)
-	fmt.Println(holeRows)
-	fmt.Println(grossRow)
-	fmt.Println(netRow)
-	fmt.Println(applyRow)
-	fmt.Println(diffRow)
-	fmt.Println(orderRow)
-	//	fmt.Println(rows)
+	var rank []int
+	for k := range rankMap {
+		intK, _ := strconv.Atoi(k)
+		rank = append(rank, intK)
+	}
 
-	fmt.Println("appendddddddddddddddddd")
-	fmt.Println(append(teamRow, main_row))
+	sort.Ints(rank)
+	for i := 0; i < len(rows[24])-2; i++ {
+		userDataIndex := i + 2
+		for j := 0; j < len(rank); j++ {
+			if rows[23][userDataIndex] != strconv.Itoa(rank[j]) {
+				continue
+			} else {
+				rows[24][userDataIndex] = strconv.Itoa(j + 1)
+			}
+		}
+	}
 
 	EntireScore := EntireScore{
-		Rows: nil,
+		Rows: rows,
 	}
 
 	return &EntireScore, nil
