@@ -72,17 +72,18 @@ func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
 		}
 		resp.WriteAsJson(data)
 
-	case "entireScore":
-		if team != "" || hole != "" {
-			return
-		}
-		data, err := mongo.GetEntireScorePageData()
-		if err != nil {
-			panic(err)
-		}
-		resp.WriteAsJson(data)
-
 	}
+}
+
+func (p ProductResource) getSecret(req *restful.Request, resp *restful.Response) {
+
+	log.Println("getting page data with api: entireScore")
+	data, err := mongo.GetEntireScorePageData()
+	if err != nil {
+		panic(err)
+	}
+	resp.WriteAsJson(data)
+
 }
 
 func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
@@ -158,10 +159,14 @@ func (p ProductResource) Register(rootPath string) {
 		Doc("get the page data  by its page").
 		Param(ws.PathParameter("page", "identifier of the page index").DataType("string")))
 
+	//basic auth
+	ws.Route(ws.GET("/page/entireScore").Filter(basicAuthenticate).To(p.getSecret))
+
 	//Post URL
 	ws.Route(ws.POST("/page/{page}/{team}").To(p.postOne).
 		Doc("update apply score").
 		Param(ws.BodyParameter("PostApplyScore", "a PostApplyScore  (JSON)").DataType("mongo.PostApplyScore")))
+
 	ws.Route(ws.POST("/page/{page}/{team}/{hole}").To(p.postOne).
 		Doc("update or create team score").
 		Param(ws.BodyParameter("PostTeamScore", "a PostTeamScore (JSON)").DataType("mongo.PostTeamScore")))
@@ -169,9 +174,22 @@ func (p ProductResource) Register(rootPath string) {
 	restful.Add(ws)
 }
 
-func main() {
+func basicAuthenticate(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
+	encoded := req.Request.Header.Get("Authorization")
+	// usr/pwd = admin/admin
+	// real code does some decoding
+	//	if len(encoded) == 0 || "Basic YWRtaW46YWRtaW4=" != encoded {
+	if len(encoded) == 0 || "Basic M2E6Y2xhc3NpYw==" != encoded {
+		resp.AddHeader("WWW-Authenticate", "Basic realm=Protected Area")
+		resp.WriteErrorString(401, "401: Not Authorized")
+		return
+	}
+	chain.ProcessFilter(req, resp)
+}
 
+func main() {
 	ProductResource{}.Register("api")
+	//	http.ListenAndServe(":8443", nil)
 	http.ListenAndServe(":8443", nil)
 	shutdownHook()
 }
