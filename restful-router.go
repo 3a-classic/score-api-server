@@ -56,9 +56,7 @@ func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
 		resp.WriteAsJson(data)
 
 	case "scoreEntrySheet":
-		teamName := team
-		holeString := hole
-		data, err := mongo.GetScoreEntrySheetPageData(teamName, holeString)
+		data, err := mongo.GetScoreEntrySheetPageData(team, hole)
 		if err != nil {
 			panic(err)
 		}
@@ -89,17 +87,18 @@ func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
 
 func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
 	page := req.PathParameter("page")
-	teamName := req.PathParameter("team")
-	holeString := req.PathParameter("hole")
+	team := req.PathParameter("team")
+	hole := req.PathParameter("hole")
 	log.Println("post data at " + page)
 	if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
 		if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
 			resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
 		}
 	}
-	if page == "scoreEntrySheet" {
-		log.Println(req)
-		log.Println(resp)
+	log.Println(req)
+	log.Println(resp)
+	switch page {
+	case "scoreEntrySheet":
 
 		updatedTeamScore := new(mongo.PostTeamScore)
 		err := req.ReadEntity(updatedTeamScore)
@@ -109,12 +108,30 @@ func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
 			return
 		}
 
-		status, err := mongo.PostScoreEntrySheetPageData(teamName, holeString, updatedTeamScore)
+		status, err := mongo.PostScoreEntrySheetPageData(team, hole, updatedTeamScore)
 		if err != nil {
 			panic(err)
 		}
 		resp.WriteAsJson(status)
-		log.Println("updating score team:" + teamName + ", hole: " + holeString)
+		log.Println("updating score team:" + team + ", hole: " + hole)
+	case "apply":
+		if hole != "" {
+			return
+		}
+		registeredApplyScore := new(mongo.PostApplyScore)
+		err := req.ReadEntity(registeredApplyScore)
+		log.Println(registeredApplyScore)
+		if err != nil { // bad request
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		status, err := mongo.PostApplyScoreData(team, registeredApplyScore)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(status)
+		log.Println("updating apply score:" + team)
 	}
 }
 
@@ -124,9 +141,10 @@ func (p ProductResource) Register(rootPath string) {
 	ws.Consumes(restful.MIME_JSON)
 	ws.Produces(restful.MIME_JSON)
 
+	// Get URL
 	ws.Route(ws.GET("/collection/{col)").To(p.getCol).
-		Doc("get the product by its id").
-		Param(ws.PathParameter("id", "identifier of the collection index").DataType("string")))
+		Doc("get the product by its col").
+		Param(ws.PathParameter("col", "identifier of the collection index").DataType("string")))
 
 	ws.Route(ws.GET("/page/{page)").To(p.getPage).
 		Doc("get the page data  by its page").
@@ -140,9 +158,13 @@ func (p ProductResource) Register(rootPath string) {
 		Doc("get the page data  by its page").
 		Param(ws.PathParameter("page", "identifier of the page index").DataType("string")))
 
+	//Post URL
+	ws.Route(ws.POST("/page/{page}/{team}").To(p.postOne).
+		Doc("update apply score").
+		Param(ws.BodyParameter("PostApplyScore", "a PostApplyScore  (JSON)").DataType("mongo.PostApplyScore")))
 	ws.Route(ws.POST("/page/{page}/{team}/{hole}").To(p.postOne).
 		Doc("update or create team score").
-		Param(ws.BodyParameter("Product", "a Product (JSON)").DataType("mongo.PostTeamScore")))
+		Param(ws.BodyParameter("PostTeamScore", "a PostTeamScore (JSON)").DataType("mongo.PostTeamScore")))
 
 	restful.Add(ws)
 }

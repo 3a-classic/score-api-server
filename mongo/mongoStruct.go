@@ -96,6 +96,11 @@ type EntireScore struct {
 	Rows [][]string `json:"rows"`
 }
 
+type PostApplyScore struct {
+	Member []string `json:"member"`
+	Apply  []int    `json:"apply"`
+}
+
 type PostTeamScore struct {
 	Member []string `json:"member"`
 	Stroke []int    `json:"stroke"`

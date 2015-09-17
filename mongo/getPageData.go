@@ -1,12 +1,8 @@
 package mongo
 
 import (
-	"errors"
-	"fmt"
 	"sort"
 	"strconv"
-
-	"labix.org/v2/mgo/bson"
 )
 
 var (
@@ -231,37 +227,6 @@ func GetEntireScorePageData() (*EntireScore, error) {
 	}
 
 	return &EntireScore, nil
-}
-
-func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeamScore *PostTeamScore) (*Status, error) {
-
-	if len(holeString) == 0 {
-		return &Status{"failed"}, errors.New("hole is not string")
-	}
-	holeNum, _ := strconv.Atoi(holeString)
-	holeIndex := holeNum - 1
-
-	fmt.Println("Team : " + teamName + ", Hole : " + holeString + "にデータを挿入します。")
-	db, session := mongoInit()
-	playerCol := db.C("player")
-	defer session.Close()
-
-	teamPlayers := GetPlayersDataInTheTeam(teamName)
-
-	for playerIndex, player := range teamPlayers {
-		stroke, putt := updatedTeamScore.Stroke[playerIndex], updatedTeamScore.Putt[playerIndex]
-		player.Score[holeIndex]["stroke"] = stroke
-		player.Score[holeIndex]["putt"] = putt
-		player.Score[holeIndex]["total"] = stroke + putt
-
-		query := bson.M{"_id": player.Id}
-		if err := playerCol.Update(query, player); err != nil {
-			return &Status{"failed"}, err
-		}
-	}
-
-	players = GetAllPlayerCol()
-	return &Status{"success"}, nil
 }
 
 // sort
