@@ -170,7 +170,7 @@ func GetEntireScorePageData() (*EntireScore, error) {
 	var passedPlayerNum int
 	for teamIndex, team := range teams {
 		rows[0][teamIndex*2] = strconv.Itoa(len(team.Member))
-		rows[0][teamIndex*2+1] = team.Team
+		rows[0][teamIndex*2+1] = "TEAM" + team.Team
 		playerInTheTeam := GetPlayersDataInTheTeam(team.Team)
 		for playerIndex, player := range playerInTheTeam {
 			userDataIndex := playerIndex + passedPlayerNum + mainColumnNum
