@@ -5,18 +5,6 @@ import (
 	"strconv"
 )
 
-var (
-	players []Player
-	fields  []Field
-	teams   []Team
-)
-
-func init() {
-	players = GetAllPlayerCol()
-	fields = GetAllFieldCol()
-	teams = GetAllTeamCol()
-}
-
 func GetIndexPageData() (*Index, error) {
 
 	teamArray := make([]string, len(teams))

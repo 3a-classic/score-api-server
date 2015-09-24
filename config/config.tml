@@ -3,3 +3,38 @@
 host = "172.17.0.1"
 port = ""
 database = "testa"
+
+[auth]
+# echo -n 'user:password' | base64
+admin = "M2E6Y2xhc3NpYw=="
+
+
+[PagesInfo]
+
+  [PagesInfo.index]
+  requireAuth = false
+  paramaterLength = 1
+
+  [PagesInfo.leadersBoard]
+  requireAuth = false
+  paramaterLength = 1
+  
+  [PagesInfo.scoreEntrySheet]
+  requireAuth = false
+  paramaterLength = 3
+  
+  [PagesInfo.scoreViewSheet]
+  requireAuth = false
+  paramaterLength = 2
+  
+  [PagesInfo.entireScore]
+  requireAuth = true
+  paramaterLength = 1
+  
+  [PagesInfo.holeInformationRegistration]
+  requireAuth = true
+  paramaterLength = 1
+  
+  [PagesInfo.userRegistration]
+  requireAuth = true
+  paramaterLength = 1

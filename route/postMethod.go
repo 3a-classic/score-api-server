@@ -8,7 +8,7 @@ import (
 	"github.com/emicklei/go-restful"
 )
 
-func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
+func postOne(req *restful.Request, resp *restful.Response) {
 	page := req.PathParameter("page")
 	team := req.PathParameter("team")
 	hole := req.PathParameter("hole")
@@ -37,12 +37,13 @@ func (p ProductResource) postOne(req *restful.Request, resp *restful.Response) {
 		}
 		resp.WriteAsJson(status)
 		log.Println("updating score team:" + team + ", hole: " + hole)
-	case "apply":
+	case "applyScore":
 		if hole != "" {
 			return
 		}
 		registeredApplyScore := new(mongo.PostApplyScore)
 		err := req.ReadEntity(registeredApplyScore)
+		log.Println("registeredApplyScore")
 		log.Println(registeredApplyScore)
 		if err != nil { // bad request      resp.WriteErrorString(http.StatusBadRequest, err.Error())      return
 		}

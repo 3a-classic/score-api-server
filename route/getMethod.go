@@ -1,13 +1,16 @@
 package route
 
 import (
+	"fmt"
 	"log"
+	"net/http"
+	"strings"
 
 	"../mongo"
 	"github.com/emicklei/go-restful"
 )
 
-func (p ProductResource) getCol(req *restful.Request, resp *restful.Response) {
+func getCol(req *restful.Request, resp *restful.Response) {
 	col := req.PathParameter("col")
 	log.Println("getting collection data with api:" + col)
 
@@ -20,10 +23,21 @@ func (p ProductResource) getCol(req *restful.Request, resp *restful.Response) {
 	}
 }
 
-func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
-	page := req.PathParameter("page")
-	team := req.PathParameter("team")
-	hole := req.PathParameter("hole")
+func getPage(req *restful.Request, resp *restful.Response) {
+	//	page := req.PathParameter("page")
+	//	team := req.PathParameter("team")
+	//	hole := req.PathParameter("hole")
+	var page, team, hole string
+
+	url := (strings.Split(req.PathParameter("page"), "/"))
+	fmt.Println(url)
+	page = url[0]
+	if len(url) > 1 {
+		team = url[1]
+	}
+	if len(url) > 2 {
+		hole = url[2]
+	}
 
 	log.Println("getting page data with api:" + page)
 	switch page {
@@ -64,5 +78,18 @@ func (p ProductResource) getPage(req *restful.Request, resp *restful.Response) {
 		}
 		resp.WriteAsJson(data)
 
+	case "entireScore":
+
+		data, err := mongo.GetEntireScorePageData()
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
+
+	default:
+		resp.WriteErrorString(
+			http.StatusNotFound,
+			"404: Page is not found.",
+		)
 	}
 }

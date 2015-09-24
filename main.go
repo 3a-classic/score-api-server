@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	route.ProductResource{}.Register("api")
+	route.Register()
 	//	http.ListenAndServe(":8443", nil)
 	http.ListenAndServe(":8443", nil)
 	shutdownHook()
