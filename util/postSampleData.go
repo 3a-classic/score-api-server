@@ -30,9 +30,11 @@ type Member struct {
 }
 
 type Team struct {
-	Id     bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Member []Member      `json:"member"`
-	Team   string
+	Id      bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	Member  []Member      `json:"member"`
+	Team    string        `json:"team"`
+	Defined bool          `json:"defined"`
+	Excnt   [18]int       `json:"excnt"`
 }
 
 type Field struct {
@@ -47,9 +49,9 @@ type Field struct {
 }
 
 var (
-	mongoIp = "172.17.0.2"
+	mongoIp = "172.17.0.1"
 	//	mongoIp = "172.17.0.19"
-	dbName = "testa"
+	dbName = "20150926"
 )
 
 func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
@@ -64,7 +66,7 @@ func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
 
 }
 
-const FILE_ROOT = "/var/www/3acses/post_data/sample_data"
+const FILE_ROOT = "/var/www/3acses/post_data/3a-20150926"
 
 func main() {
 	err := upsertField()
@@ -127,7 +129,7 @@ func upsertField() error {
 }
 
 func insertTeamAndPlayer() error {
-	playerNum := 20
+	playerNum := 16
 	// playerNum / 4 の切り上げ
 	//	teamNum := int(math.Ceil(float64(playerNum / 4)))
 	playerNumPerTeam := 4
@@ -165,7 +167,8 @@ func insertTeamAndPlayer() error {
 			team.Id = teamObjectId
 			team.Team = string(alphabet)
 			team.Member = members
-			team.Definded = false
+			team.Defined = false
+			team.Excnt = [18]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 			c1.Insert(team)
 			if i == 0 {
 				break

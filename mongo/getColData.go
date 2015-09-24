@@ -63,11 +63,11 @@ func GetPlayersDataInTheTeam(teamName string) []Player {
 	defer session.Close()
 	player := Player{}
 	team := Team{}
-	players := make([]Player, 4)
 
 	if err := col.Find(bson.M{"team": teamName}).One(&team); err != nil {
 		panic(err)
 	}
+	players := make([]Player, len(team.Member))
 	for i, teamPlayer := range team.Member {
 		if err := session.FindRef(&teamPlayer.Player).One(&player); err != nil {
 			panic(err)

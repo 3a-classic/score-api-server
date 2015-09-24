@@ -12,6 +12,7 @@ func GetIndexPageData() (*Index, error) {
 		teamArray[i] = team.Team
 	}
 
+	sort.Strings(teamArray)
 	idx := &Index{
 		Team:   teamArray,
 		Length: len(teams),
@@ -63,9 +64,9 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 		}
 	}
 
-	member := make([]string, 4)
-	total := make([]int, 4)
-	putt := make([]int, 4)
+	member := make([]string, len(playersInTheTeam))
+	total := make([]int, len(playersInTheTeam))
+	putt := make([]int, len(playersInTheTeam))
 	for playerIndex, player := range playersInTheTeam {
 		member[playerIndex] = player.Name
 		total[playerIndex] = player.Score[holeIndex]["total"].(int)

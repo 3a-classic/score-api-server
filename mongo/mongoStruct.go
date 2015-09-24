@@ -49,7 +49,7 @@ type UserScore struct {
 	Score int    `json:"score"`
 	Name  string `json:"name"`
 	Hole  int    `json:"hole"`
-	Total int    `json:"team"`
+	Total int    `json:"total"`
 }
 
 type Hole struct {
