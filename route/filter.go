@@ -41,7 +41,6 @@ func basicAuthenticate(req *restful.Request, resp *restful.Response, chain *rest
 		return
 	}
 	if conf.PagesInfo[param[0]].RequireAuth {
-
 		encoded := req.Request.Header.Get("Authorization")
 		if len(encoded) == 0 || "Basic "+conf.Auth.Admin != encoded {
 			resp.AddHeader(

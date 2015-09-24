@@ -21,6 +21,23 @@ func postOne(req *restful.Request, resp *restful.Response) {
 	log.Println(req)
 	log.Println(resp)
 	switch page {
+	case "scoreViewSheet":
+
+		definedTeam := new(mongo.PostDefinedTeam)
+		err := req.ReadEntity(definedTeam)
+		log.Println(definedTeam)
+		if err != nil { // bad request
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		status, err := mongo.PostScoreViewSheetPageData(team, definedTeam)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(status)
+		log.Println("defineding score team:" + team)
+
 	case "scoreEntrySheet":
 
 		updatedTeamScore := new(mongo.PostTeamScore)

@@ -86,6 +86,13 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 	apply := make([]int, len(playersInTheTeam))
 	holes := make([]Hole, len(fields))
 	totalScore := make([]int, len(playersInTheTeam))
+	var defined bool
+
+	for _, team := range teams {
+		if team.Team == teamName {
+			defined = team.Defined
+		}
+	}
 	var totalPar int
 	for holeIndex, field := range fields {
 
@@ -112,11 +119,12 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 		Score: totalScore,
 	}
 	scoreViewSheet := ScoreViewSheet{
-		Team:   teamName,
-		Member: member,
-		Apply:  apply,
-		Hole:   holes,
-		Sum:    sum,
+		Team:    teamName,
+		Member:  member,
+		Apply:   apply,
+		Hole:    holes,
+		Sum:     sum,
+		Defined: defined,
 	}
 
 	return &scoreViewSheet, nil

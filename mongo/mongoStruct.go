@@ -28,7 +28,8 @@ type Team struct {
 	Member []struct {
 		Player mgo.DBRef `json:"player"`
 	} `json:"member"`
-	Team string `json:"team"`
+	Team    string `json:"team"`
+	Defined bool   `json:"defined"`
 }
 
 type Field struct {
@@ -85,11 +86,12 @@ type ScoreEntrySheet struct {
 }
 
 type ScoreViewSheet struct {
-	Team   string   `json:"team"`
-	Member []string `json:"member"`
-	Apply  []int    `json:"apply"`
-	Hole   []Hole   `json:"hole"`
-	Sum    Sum      `json:"sum"`
+	Team    string   `json:"team"`
+	Member  []string `json:"member"`
+	Apply   []int    `json:"apply"`
+	Hole    []Hole   `json:"hole"`
+	Sum     Sum      `json:"sum"`
+	Defined bool     `json:"defined"`
 }
 
 type EntireScore struct {
@@ -99,6 +101,10 @@ type EntireScore struct {
 type PostApplyScore struct {
 	Member []string `json:"member"`
 	Apply  []int    `json:"apply"`
+}
+
+type PostDefinedTeam struct {
+	Team string `json:"team"`
 }
 
 type PostTeamScore struct {

@@ -34,6 +34,37 @@ func PostApplyScoreData(teamName string, registeredApplyScore *PostApplyScore) (
 
 }
 
+func PostScoreViewSheetPageData(teamName string, definedTeam *PostDefinedTeam) (*Status, error) {
+
+	fmt.Println("Team : " + teamName + "のデータを確定します。")
+
+	targetTeam := Team{}
+	for _, team := range teams {
+		if team.Team == teamName {
+			targetTeam = team
+		}
+	}
+
+	if targetTeam.Defined {
+		return &Status{"already defined"}, nil
+	}
+
+	targetTeam.Defined = true
+
+	db, session := mongoInit()
+	teamCol := db.C("team")
+	defer session.Close()
+
+	query := bson.M{"_id": targetTeam.Id}
+	if err := teamCol.Update(query, targetTeam); err != nil {
+		return &Status{"failed"}, err
+	}
+
+	//更新情報をGlobal変数に格納する
+	teams = GetAllTeamCol()
+	return &Status{"success"}, nil
+}
+
 func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeamScore *PostTeamScore) (*Status, error) {
 
 	if len(holeString) == 0 {

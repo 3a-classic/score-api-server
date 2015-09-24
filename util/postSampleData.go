@@ -166,6 +166,7 @@ func insertTeamAndPlayer() error {
 			team.Id = teamObjectId
 			team.Team = string(alphabet)
 			team.Member = members
+			team.Definded = false
 			c1.Insert(team)
 			if i == 0 {
 				break
