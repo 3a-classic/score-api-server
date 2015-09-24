@@ -30,6 +30,7 @@ type Team struct {
 	} `json:"member"`
 	Team    string `json:"team"`
 	Defined bool   `json:"defined"`
+	Excnt   []int  `json:"excnt"`
 }
 
 type Field struct {

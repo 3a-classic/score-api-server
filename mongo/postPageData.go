@@ -70,14 +70,34 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeam
 	if len(holeString) == 0 {
 		return &Status{"failed"}, errors.New("hole is not string")
 	}
+
 	holeNum, _ := strconv.Atoi(holeString)
 	holeIndex := holeNum - 1
+
+	targetTeam := Team{}
+	for _, team := range teams {
+		if team.Team == teamName {
+			targetTeam = team
+		}
+	}
+
+	if updatedTeamScore.Excnt != targetTeam.Excnt[holeIndex] {
+		return &Status{"other updated"}, nil
+	}
 
 	fmt.Println("Team : " + teamName + ", Hole : " + holeString + "にデータを挿入します。")
 
 	db, session := mongoInit()
 	playerCol := db.C("player")
+	teamCol := db.C("team")
 	defer session.Close()
+
+	targetTeam.Excnt[holeIndex] += 1
+
+	teamQuery := bson.M{"_id": targetTeam.Id}
+	if err := teamCol.Update(teamQuery, targetTeam); err != nil {
+		return &Status{"failed update excnt"}, err
+	}
 
 	teamPlayers := GetPlayersDataInTheTeam(teamName)
 
@@ -86,13 +106,14 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeam
 		player.Score[holeIndex]["putt"] = putt
 		player.Score[holeIndex]["total"] = total
 
-		query := bson.M{"_id": player.Id}
-		if err := playerCol.Update(query, player); err != nil {
-			return &Status{"failed"}, err
+		playerQuery := bson.M{"_id": player.Id}
+		if err := playerCol.Update(playerQuery, player); err != nil {
+			return &Status{"failed update score"}, err
 		}
 	}
 
 	//更新情報をGlobal変数に格納する
 	players = GetAllPlayerCol()
+	teams = GetAllTeamCol()
 	return &Status{"success"}, nil
 }

@@ -56,6 +56,13 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 	field := fields[holeIndex]
 	playersInTheTeam := GetPlayersDataInTheTeam(teamName)
 
+	targetTeam := Team{}
+	for _, team := range teams {
+		if team.Team == teamName {
+			targetTeam = team
+		}
+	}
+
 	member := make([]string, 4)
 	total := make([]int, 4)
 	putt := make([]int, 4)
@@ -73,7 +80,7 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 		Yard:   field.Yard,
 		Total:  total,
 		Putt:   putt,
-		Excnt:  0,
+		Excnt:  targetTeam.Excnt[holeIndex],
 	}
 	return &scoreEntrySheet, nil
 }
