@@ -18,10 +18,9 @@ type Player struct {
 	Apply    int           `json:"apply"`
 	Editable bool          `json:"editable"`
 	Score    []struct {
-		Hole   int `json:"hole"`
-		Stroke int `json:"stroke"`
-		Putt   int `json:"putt"`
-		Total  int `json:"total"`
+		Hole  int `json:"hole"`
+		Putt  int `json:"putt"`
+		Total int `json:"total"`
 	} `json:"score"`
 	Team mgo.DBRef
 }

@@ -80,7 +80,7 @@ type ScoreEntrySheet struct {
 	Member []string `json:"member"`
 	Par    int      `json:"par"`
 	Yard   int      `json:"yard"`
-	Stroke []int    `json:"stroke"`
+	Total  []int    `json:"total"`
 	Putt   []int    `json:"putt"`
 	Excnt  int      `json:"excnt"`
 }
@@ -109,7 +109,7 @@ type PostDefinedTeam struct {
 
 type PostTeamScore struct {
 	Member []string `json:"member"`
-	Stroke []int    `json:"stroke"`
+	Total  []int    `json:"total"`
 	Putt   []int    `json:"putt"`
 	Excnt  int      `json:"excnt"`
 }

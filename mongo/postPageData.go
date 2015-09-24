@@ -82,10 +82,9 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeam
 	teamPlayers := GetPlayersDataInTheTeam(teamName)
 
 	for playerIndex, player := range teamPlayers {
-		stroke, putt := updatedTeamScore.Stroke[playerIndex], updatedTeamScore.Putt[playerIndex]
-		player.Score[holeIndex]["stroke"] = stroke
+		total, putt := updatedTeamScore.Total[playerIndex], updatedTeamScore.Putt[playerIndex]
 		player.Score[holeIndex]["putt"] = putt
-		player.Score[holeIndex]["total"] = stroke + putt
+		player.Score[holeIndex]["total"] = total
 
 		query := bson.M{"_id": player.Id}
 		if err := playerCol.Update(query, player); err != nil {
