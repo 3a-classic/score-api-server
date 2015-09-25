@@ -1,6 +1,7 @@
 package mongo
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 )
@@ -30,7 +31,8 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 		for holeIndex, playerScore := range player.Score {
 			if playerScore["total"] != 0 {
 				totalPar += fields[holeIndex].Par
-				totalScore += playerScore["total"].(int)
+				total, _ := playerScore["total"].(int)
+				totalScore += total
 				passedHoleCnt += 1
 			}
 		}
@@ -69,8 +71,8 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 	putt := make([]int, len(playersInTheTeam))
 	for playerIndex, player := range playersInTheTeam {
 		member[playerIndex] = player.Name
-		total[playerIndex] = player.Score[holeIndex]["total"].(int)
-		putt[playerIndex] = player.Score[holeIndex]["putt"].(int)
+		total[playerIndex], _ = player.Score[holeIndex]["total"].(int)
+		putt[playerIndex], _ = player.Score[holeIndex]["putt"].(int)
 	}
 
 	scoreEntrySheet := ScoreEntrySheet{
@@ -107,7 +109,8 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 		totalPar += field.Par
 		score := make([]int, len(playersInTheTeam))
 		for playerIndex, player := range playersInTheTeam {
-			score[playerIndex] = player.Score[holeIndex]["total"].(int)
+			fmt.Println(player.Score[holeIndex]["total"])
+			score[playerIndex], _ = player.Score[holeIndex]["total"].(int)
 			totalScore[playerIndex] += score[playerIndex]
 			if holeIndex == 0 {
 				member[playerIndex] = player.Name
@@ -188,7 +191,7 @@ func GetEntireScorePageData() (*EntireScore, error) {
 					}
 					rows[holeRowNum][1] = strconv.Itoa(field.Par)
 				}
-				playerTotal := player.Score[holeIndex]["total"].(int)
+				playerTotal, aa := player.Score[holeIndex]["total"].(int)
 				gross += playerTotal
 				if field.Ignore == false {
 					net += playerTotal
