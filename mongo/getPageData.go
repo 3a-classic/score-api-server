@@ -191,7 +191,7 @@ func GetEntireScorePageData() (*EntireScore, error) {
 					}
 					rows[holeRowNum][1] = strconv.Itoa(field.Par)
 				}
-				playerTotal, aa := player.Score[holeIndex]["total"].(int)
+				playerTotal, _ := player.Score[holeIndex]["total"].(int)
 				gross += playerTotal
 				if field.Ignore == false {
 					net += playerTotal
