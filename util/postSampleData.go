@@ -69,11 +69,11 @@ func mongoInit(col string) (*mgo.Collection, *mgo.Session) {
 const FILE_ROOT = "/var/www/3acses/post_data/3a-20150926"
 
 func main() {
-	err := upsertField()
-	if err != nil {
-		panic(err)
-	}
-	err = insertTeamAndPlayer()
+	//	err := upsertField()
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	err := insertTeamAndPlayer()
 	if err != nil {
 		panic(err)
 	}

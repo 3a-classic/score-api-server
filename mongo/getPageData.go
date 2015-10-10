@@ -1,7 +1,6 @@
 package mongo
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 )
@@ -109,7 +108,6 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 		totalPar += field.Par
 		score := make([]int, len(playersInTheTeam))
 		for playerIndex, player := range playersInTheTeam {
-			fmt.Println(player.Score[holeIndex]["total"])
 			score[playerIndex], _ = player.Score[holeIndex]["total"].(int)
 			totalScore[playerIndex] += score[playerIndex]
 			if holeIndex == 0 {
@@ -193,8 +191,11 @@ func GetEntireScorePageData() (*EntireScore, error) {
 				}
 				playerTotal, _ := player.Score[holeIndex]["total"].(int)
 				gross += playerTotal
-				if field.Ignore == false {
+				if field.Ignore {
+					net += field.Par
+				} else {
 					net += playerTotal
+
 				}
 				rows[holeRowNum][userDataIndex] = strconv.Itoa(playerTotal)
 			}
