@@ -2,9 +2,9 @@ package route
 
 import (
 	"log"
+	"mongo"
 	"net/http"
 
-	"../mongo"
 	"github.com/emicklei/go-restful"
 )
 

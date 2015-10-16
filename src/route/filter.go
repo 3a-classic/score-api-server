@@ -2,6 +2,9 @@ package route
 
 import (
 	"net/http"
+	"os"
+	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/BurntSushi/toml"
@@ -23,7 +26,11 @@ type PageInfo struct {
 var conf *Config
 
 func init() {
-	_, err := toml.DecodeFile("config/config.tml", &conf)
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		panic(err)
+	}
+	_, err = toml.DecodeFile(path.Join(dir, "../config/config.tml"), &conf)
 	if err != nil {
 		panic(err)
 	}

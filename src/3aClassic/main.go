@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"./route"
+	"route"
 )
 
 func main() {

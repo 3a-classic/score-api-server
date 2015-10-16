@@ -1,0 +1,50 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/BurntSushi/toml",
+			"repository": "https://github.com/BurntSushi/toml",
+			"revision": "056c9bc7be7190eaa7715723883caffa5f8fa3e4",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/emicklei/go-restful",
+			"repository": "https://github.com/emicklei/go-restful",
+			"revision": "f3b10ff408486b3e248197254514778285fbdea1",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/golang/protobuf/proto",
+			"repository": "https://github.com/golang/protobuf",
+			"revision": "deb4a5e3b15dea23f340a311eea995421845c356",
+			"branch": "master",
+			"path": "/proto"
+		},
+		{
+			"importpath": "golang.org/x/net/context",
+			"repository": "https://go.googlesource.com/net",
+			"revision": "cd8c2701a5e10f044db915e65eac68f738399d22",
+			"branch": "master",
+			"path": "/context"
+		},
+		{
+			"importpath": "google.golang.org/appengine",
+			"repository": "https://github.com/golang/appengine",
+			"revision": "75a29a66d4850a15c19eb6d70a31f5c453572be0",
+			"branch": "master"
+		},
+		{
+			"importpath": "labix.org/v2/mgo",
+			"repository": "https://launchpad.net/mgo/v2",
+			"revision": "1",
+			"branch": "master"
+		},
+		{
+			"importpath": "labix.org/v2/mgo/bson",
+			"repository": "https://launchpad.net/mgo/v2",
+			"revision": "1",
+			"branch": "master",
+			"path": "/bson"
+		}
+	]
+}

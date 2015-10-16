@@ -1,6 +1,6 @@
 package mongo
 
-import "gopkg.in/mgo.v2/bson"
+import "labix.org/v2/mgo/bson"
 
 //for debug
 //return all collection data

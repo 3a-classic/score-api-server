@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"gopkg.in/mgo.v2/bson"
+	"labix.org/v2/mgo/bson"
 )
 
 func PostApplyScoreData(teamName string, registeredApplyScore *PostApplyScore) (*Status, error) {

@@ -1,6 +1,10 @@
 package mongo
 
 import (
+	"os"
+	"path"
+	"path/filepath"
+
 	"github.com/BurntSushi/toml"
 	"labix.org/v2/mgo"
 )
@@ -16,7 +20,12 @@ var (
 )
 
 func init() {
-	if _, err := toml.DecodeFile("config/config.tml", &conf); err != nil {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		panic(err)
+	}
+
+	if _, err := toml.DecodeFile(path.Join(dir, "../config/config.tml"), &conf); err != nil {
 		panic(err)
 	}
 	players = GetAllPlayerCol()

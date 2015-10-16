@@ -3,10 +3,10 @@ package route
 import (
 	"fmt"
 	"log"
+	"mongo"
 	"net/http"
 	"strings"
 
-	"../mongo"
 	"github.com/emicklei/go-restful"
 )
 
