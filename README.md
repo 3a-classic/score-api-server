@@ -4,13 +4,10 @@
 
 This is api server for 3a-classic
 
-
 ## DEPENDENCY
 
 * [3a-classic-ui](http://git.sadayuki-matsuno.com/3aclassic/3a-classic-ui)
 * mongo
-
-
 
 ## REQUIRED CONFIGURE
 
@@ -24,7 +21,7 @@ you can use official docker images of mongo
 * docker mongo
 
 ```
-docker run --name 3a-classic-mongo -d mongo
+$ docker run --name 3a-classic-mongo -d mongo
 ```
 
 ### 3A-CLASSIC-SERVER
@@ -44,7 +41,13 @@ $ git clone http://git.sadayuki-matsuno.com/3aclassic/3a-classic-server.git
 * run docker
 
 ```bash
-$ docker run -d -t --link 3a-classic-mongo:mongo -v /home/matsuno/docker/3a-classic/server/3a-classic-server:/go/src --name 3a-classic-server --expose 80 -p 8081:80 golang bash -c /go/src/bin/3aClassic
+$ docker run -d -t --link 3a-classic-mongo:mongo \
+  -v /home/matsuno/docker/3a-classic/server/3a-classic-server:/go/src \
+  --name 3a-classic-server \
+  --expose 80 \
+  -p 8081:80 \
+  golang:latest \
+  bash -c /go/src/bin/3aClassic
 ```
 
 * access
@@ -59,8 +62,6 @@ http://localhost:8081
 * 3a-classic-server have to be reachable from client node
 * data in mongo-docker will disappear even if you save the docker image
 
-
 ## AUTHOR
 
  Sadayuki Matsuno
-
