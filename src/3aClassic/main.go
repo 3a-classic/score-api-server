@@ -12,8 +12,7 @@ import (
 
 func main() {
 	route.Register()
-	//	http.ListenAndServe(":8443", nil)
-	http.ListenAndServe(":8443", nil)
+	http.ListenAndServe(":80", nil)
 	shutdownHook()
 }
 
