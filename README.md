@@ -62,6 +62,44 @@ http://localhost:8081
 * 3a-classic-server have to be reachable from client node
 * data in mongo-docker will disappear even if you save the docker image
 
+## FOR DEVELOPER
+
+if you edit and run this code, ready for development.
+
+## GB
+
+I use [gb](https://getgb.io/) as golang package manager
+
+* install gb
+
+```
+$ go get github.com/constabulary/gb/...
+```
+
+* change directry to this repo
+
+```
+$ cd 3a-classic-server
+```
+
+* package install
+
+```
+$ gb vendor restore ./vendor/manifest
+```
+
+* build code
+
+```
+$ gb biuld
+```
+
+now you can run code compiled.
+
+```
+$ ./bin/3aClassic
+```
+
 ## AUTHOR
 
  Sadayuki Matsuno
