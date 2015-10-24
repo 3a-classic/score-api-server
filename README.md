@@ -56,6 +56,21 @@ $ docker run -d -t --link 3a-classic-mongo:mongo \
 http://localhost:8081
 ```
 
+
+### CORS
+
+if you access by chrome, you have to set CORS.
+this is example to configure CORS in nginx.
+
+```
+$ vim /etc/nginx/conf.d/proxy.conf
+
+add_header 'Access-Control-Allow-Origin' '*';
+add_header 'Access-Control-Allow-Credentials' 'true';
+add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+add_header 'Access-Control-Allow-Headers' 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+```
+
 ## CAUTION
 
 * change 3a-classic-server info in 3a-classic-ui
