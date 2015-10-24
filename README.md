@@ -71,6 +71,17 @@ add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
 add_header 'Access-Control-Allow-Headers' 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
 ```
 
+### WEBSOCKET
+
+if you use webdocket, you have to set below in nginx.
+
+```
+$ vim /etc/nginx/conf.d/proxy.conf
+
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection upgrade;
+```
+
 ## CAUTION
 
 * change 3a-classic-server info in 3a-classic-ui
