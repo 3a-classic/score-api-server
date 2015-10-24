@@ -141,7 +141,7 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 
 func GetEntireScorePageData() (*EntireScore, error) {
 
-	rowSize := 25
+	rowSize := 27
 	columnSize := len(players) + 2
 	rankMap := make(map[string]bool)
 
@@ -157,6 +157,8 @@ func GetEntireScorePageData() (*EntireScore, error) {
 
 	rows[1][0] = "ホール"
 	rows[1][1] = "パー"
+	rows[2][1] = "OUT"
+	rows[12][1] = "IN"
 	rows[20][0] = "Gross"
 	rows[20][1] = "-"
 	rows[21][0] = "Net"
@@ -180,12 +182,19 @@ func GetEntireScorePageData() (*EntireScore, error) {
 			var gross int
 			var net int
 			for holeIndex, field := range fields {
-				holeRowNum := holeIndex + 2
+				holeRowNum := holeIndex + 3
+				if holeRowNum > 11 {
+					holeRowNum = holeIndex + 4
+				}
 				if playerIndex == 0 {
+					holeNum := field.Hole
+					if holeNum > 9 {
+						holeNum = holeNum - 9
+					}
 					if field.Ignore {
-						rows[holeRowNum][0] = "-i" + strconv.Itoa(field.Hole)
+						rows[holeRowNum][0] = "-i" + strconv.Itoa(holeNum)
 					} else {
-						rows[holeRowNum][0] = strconv.Itoa(field.Hole)
+						rows[holeRowNum][0] = strconv.Itoa(holeNum)
 					}
 					rows[holeRowNum][1] = strconv.Itoa(field.Par)
 				}
