@@ -40,3 +40,7 @@ admin = "M2E6Y2xhc3NpYw=="
   [PagesInfo.userRegistration]
   requireAuth = true
   paramaterLength = 1
+
+  [PagesInfo.timeLine]
+  requireAuth = false
+  paramaterLength = 1
