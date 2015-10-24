@@ -28,6 +28,13 @@
 			"path": "/context"
 		},
 		{
+			"importpath": "golang.org/x/net/websocket",
+			"repository": "https://go.googlesource.com/net",
+			"revision": "2cba614e8ff920c60240d2677bc019af32ee04e5",
+			"branch": "master",
+			"path": "/websocket"
+		},
+		{
 			"importpath": "google.golang.org/appengine",
 			"repository": "https://github.com/golang/appengine",
 			"revision": "75a29a66d4850a15c19eb6d70a31f5c453572be0",
