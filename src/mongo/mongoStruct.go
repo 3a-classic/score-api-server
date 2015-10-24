@@ -64,6 +64,21 @@ type Sum struct {
 	Score []int `json:"score"`
 }
 
+type Reaction struct {
+	Name        string `json:"mame"`
+	ContentType int    `json:"contentType"`
+	Content     string `json:"content"`
+}
+
+type Thread struct {
+	ThreadId  string     `json:"threadId"`
+	Msg       string     `json:"msg"`
+	ImgUrl    string     `json:"imgUrl"`
+	ColorCode string     `json:"colorCode"`
+	Positive  bool       `json:"positive"`
+	Reactions []Reaction `json:"reactions"`
+}
+
 type sortByScore []UserScore
 
 type Index struct {
@@ -97,6 +112,10 @@ type ScoreViewSheet struct {
 
 type EntireScore struct {
 	Rows [][]string `json:"rows"`
+}
+
+type TimeLine struct {
+	Threads []Thread `json:"threads"`
 }
 
 type PostApplyScore struct {

@@ -1,6 +1,7 @@
 package route
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"path"
@@ -45,6 +46,7 @@ func basicAuthenticate(req *restful.Request, resp *restful.Response, chain *rest
 			http.StatusNotFound,
 			"404: Page is not found.",
 		)
+		log.Println("Param Num is not correct")
 		return
 	}
 	if conf.PagesInfo[param[0]].RequireAuth {

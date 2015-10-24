@@ -24,9 +24,6 @@ func getCol(req *restful.Request, resp *restful.Response) {
 }
 
 func getPage(req *restful.Request, resp *restful.Response) {
-	//	page := req.PathParameter("page")
-	//	team := req.PathParameter("team")
-	//	hole := req.PathParameter("hole")
 	var page, team, hole string
 
 	url := (strings.Split(req.PathParameter("page"), "/"))
@@ -81,6 +78,14 @@ func getPage(req *restful.Request, resp *restful.Response) {
 	case "entireScore":
 
 		data, err := mongo.GetEntireScorePageData()
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(data)
+
+	case "timeLine":
+
+		data, err := mongo.GetTimeLinePageData()
 		if err != nil {
 			panic(err)
 		}

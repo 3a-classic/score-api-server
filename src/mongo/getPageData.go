@@ -237,6 +237,50 @@ func GetEntireScorePageData() (*EntireScore, error) {
 	return &EntireScore, nil
 }
 
+func GetTimeLinePageData() (*TimeLine, error) {
+
+	var timeLine TimeLine
+
+	reaction1 := Reaction{
+		Name:        "matsuno",
+		ContentType: 1,
+		Content:     "https://s3-ap-northeast-1.amazonaws.com/3a-classic/reaction-icon/angry.png",
+	}
+
+	reaction2 := Reaction{
+		Name:        "kiyota",
+		ContentType: 1,
+		Content:     "https://s3-ap-northeast-1.amazonaws.com/3a-classic/reaction-icon/like.png",
+	}
+
+	var reactions []Reaction
+	reactions = append(reactions, reaction1)
+	reactions = append(reactions, reaction2)
+
+	thread1 := Thread{
+		ThreadId:  "GSHDLKFJSDLK",
+		Msg:       "kiyotaさんがホール13でアルバトロスを出しました！",
+		ImgUrl:    "https://s3-ap-northeast-1.amazonaws.com/3a-classic/test/emotion-img/positive-dummy.jpg",
+		ColorCode: "#FF0000",
+		Reactions: reactions,
+		Positive:  true,
+	}
+
+	thread2 := Thread{
+		ThreadId:  "GSHDGSFJSGDS",
+		Msg:       "matsunoさんがホール2で+12を出しました。。",
+		ImgUrl:    "https://s3-ap-northeast-1.amazonaws.com/3a-classic/test/emotion-img/negative-dummy.jpg",
+		ColorCode: "#FFFF00",
+		Reactions: reactions,
+		Positive:  false,
+	}
+
+	timeLine.Threads = append(timeLine.Threads, thread1)
+	timeLine.Threads = append(timeLine.Threads, thread2)
+
+	return &timeLine, nil
+}
+
 // sort
 // http://grokbase.com/t/gg/golang-nuts/132d2rt3hh/go-nuts-how-to-sort-an-array-of-struct-by-field
 func (s sortByScore) Len() int           { return len(s) }
