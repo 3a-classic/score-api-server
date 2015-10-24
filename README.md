@@ -9,7 +9,7 @@ This is api server for 3a-classic
 * [3a-classic-ui](http://git.sadayuki-matsuno.com/3aclassic/3a-classic-ui)
 * mongo
 
-## REQUIRED CONFIGURE
+## REQUIRED CONFIGURATION
 
 
 ## USAGE
