@@ -69,6 +69,29 @@ add_header 'Access-Control-Allow-Origin' '*';
 add_header 'Access-Control-Allow-Credentials' 'true';
 add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
 add_header 'Access-Control-Allow-Headers' 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+
+if ($request_method = 'OPTIONS') {
+        return 204;
+}
+```
+
+if you use [nginx-proxy](https://github.com/jwilder/nginx-proxy), add file below.
+
+```
+$ vim /etc/nginx/vhost.d/default_location 
+
+  add_header Access-Control-Allow-Origin '$http_origin';
+  add_header 'Access-Control-Allow-Credentials' 'true';
+  add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
+  add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With';
+
+if ($request_method = 'OPTIONS') {
+        return 204;
+}
+
+if ($request_method = 'POST') {
+  add_header Access-Control-Allow-Origin '';
+}
 ```
 
 ### WEBSOCKET
