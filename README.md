@@ -80,7 +80,7 @@ if you use [nginx-proxy](https://github.com/jwilder/nginx-proxy), add file below
 ```
 $ vim /etc/nginx/vhost.d/default_location 
 
-  add_header Access-Control-Allow-Origin '$http_origin';
+  add_header 'Access-Control-Allow-Origin' '$http_origin';
   add_header 'Access-Control-Allow-Credentials' 'true';
   add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
   add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With';
