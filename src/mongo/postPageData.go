@@ -8,6 +8,26 @@ import (
 	"labix.org/v2/mgo/bson"
 )
 
+func PostLoginPageData(loginInfo *PostLogin) (*Status, error) {
+
+	fmt.Println(loginInfo.Name + "さんがアクセスしました。")
+	canLogin := false
+	for _, player := range players {
+		if player.Name == loginInfo.Name {
+			canLogin = true
+		}
+	}
+
+	if canLogin {
+		fmt.Println(loginInfo.Name + "さんがログインしました。")
+		return &Status{"success"}, nil
+	}
+
+	fmt.Println(loginInfo.Name + "さんがログインに失敗しました。")
+	return &Status{"failed"}, nil
+
+}
+
 func PostApplyScoreData(teamName string, registeredApplyScore *PostApplyScore) (*Status, error) {
 
 	fmt.Println("Team : " + teamName + " 申請スコアを登録します。")
@@ -38,7 +58,7 @@ func PostScoreViewSheetPageData(teamName string, definedTeam *PostDefinedTeam) (
 
 	fmt.Println("Team : " + teamName + "のデータを確定します。")
 
-	targetTeam := Team{}
+	targetTeam := TeamCol{}
 	for _, team := range teams {
 		if team.Team == teamName {
 			targetTeam = team
@@ -74,7 +94,7 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, updatedTeam
 	holeNum, _ := strconv.Atoi(holeString)
 	holeIndex := holeNum - 1
 
-	targetTeam := Team{}
+	targetTeam := TeamCol{}
 	for _, team := range teams {
 		if team.Team == teamName {
 			targetTeam = team

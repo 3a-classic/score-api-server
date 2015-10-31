@@ -1,8 +1,10 @@
 package mongo
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
+	"time"
 )
 
 func GetIndexPageData() (*Index, error) {
@@ -58,7 +60,7 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 	field := fields[holeIndex]
 	playersInTheTeam := GetPlayersDataInTheTeam(teamName)
 
-	targetTeam := Team{}
+	targetTeam := TeamCol{}
 	for _, team := range teams {
 		if team.Team == teamName {
 			targetTeam = team
@@ -248,18 +250,24 @@ func GetEntireScorePageData() (*EntireScore, error) {
 
 func GetTimeLinePageData() (*TimeLine, error) {
 
+	//	const longForm = "Jan 2, 2006 at 3:04pm (JST)"
+	//	t, _ := time.Parse(longForm, time.Now())
+	fmt.Println(time.Now())
+
 	var timeLine TimeLine
 
 	reaction1 := Reaction{
 		Name:        "matsuno",
 		ContentType: 1,
 		Content:     "https://s3-ap-northeast-1.amazonaws.com/3a-classic/reaction-icon/angry.png",
+		DateTime:    time.Now().String(),
 	}
 
 	reaction2 := Reaction{
 		Name:        "kiyota",
 		ContentType: 1,
 		Content:     "https://s3-ap-northeast-1.amazonaws.com/3a-classic/reaction-icon/like.png",
+		DateTime:    time.Now().String(),
 	}
 
 	var reactions []Reaction
@@ -273,6 +281,7 @@ func GetTimeLinePageData() (*TimeLine, error) {
 		ColorCode: "#FF0000",
 		Reactions: reactions,
 		Positive:  true,
+		CreatedAt: time.Now().String(),
 	}
 
 	thread2 := Thread{
@@ -282,6 +291,7 @@ func GetTimeLinePageData() (*TimeLine, error) {
 		ColorCode: "#FFFF00",
 		Reactions: reactions,
 		Positive:  false,
+		CreatedAt: time.Now().String(),
 	}
 
 	timeLine.Threads = append(timeLine.Threads, thread1)

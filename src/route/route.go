@@ -1,11 +1,13 @@
 package route
 
-import "github.com/emicklei/go-restful"
+import (
+	"github.com/emicklei/go-restful"
+)
 
 func Register() {
 	ws := new(restful.WebService)
 	ws.
-		Path("/api").
+		Path("/v1").
 		Consumes(restful.MIME_JSON).
 		Produces(restful.MIME_JSON)
 
@@ -22,6 +24,11 @@ func Register() {
 		Param(ws.PathParameter("page", "identifier of the page index").DataType("string")))
 
 	//Post URL
+	ws.Route(ws.POST("/page/{page}").
+		To(postOne).
+		Doc("update apply score").
+		Param(ws.BodyParameter("PostLogin", "a PostLogin  (JSON)").DataType("mongo.PostLoginPageData")))
+
 	ws.Route(ws.POST("/page/{page}/{team}").
 		To(postOne).
 		Doc("update apply score").

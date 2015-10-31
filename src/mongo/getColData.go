@@ -21,11 +21,11 @@ func GetAllColData(collectionName string) (*[]interface{}, error) {
 	return &results, nil
 }
 
-func GetAllPlayerCol() []Player {
+func GetAllPlayerCol() []PlayerCol {
 	db, session := mongoInit()
 	col := db.C("player")
 	defer session.Close()
-	players := []Player{}
+	players := []PlayerCol{}
 	err := col.Find(nil).All(&players)
 	if err != nil {
 		panic(err)
@@ -33,11 +33,11 @@ func GetAllPlayerCol() []Player {
 	return players
 }
 
-func GetAllFieldCol() []Field {
+func GetAllFieldCol() []FieldCol {
 	db, session := mongoInit()
 	col := db.C("field")
 	defer session.Close()
-	fields := []Field{}
+	fields := []FieldCol{}
 	err := col.Find(nil).All(&fields)
 	if err != nil {
 		panic(err)
@@ -45,11 +45,11 @@ func GetAllFieldCol() []Field {
 	return fields
 }
 
-func GetAllTeamCol() []Team {
+func GetAllTeamCol() []TeamCol {
 	db, session := mongoInit()
 	col := db.C("team")
 	defer session.Close()
-	teams := []Team{}
+	teams := []TeamCol{}
 	err := col.Find(nil).All(&teams)
 	if err != nil {
 		panic(err)
@@ -57,17 +57,29 @@ func GetAllTeamCol() []Team {
 	return teams
 }
 
-func GetPlayersDataInTheTeam(teamName string) []Player {
+//func GetAllThreadCol() []TeamCol {
+//	db, session := mongoInit()
+//	col := db.C("team")
+//	defer session.Close()
+//	teams := []Team{}
+//	err := col.Find(nil).All(&teams)
+//	if err != nil {
+//		panic(err)
+//	}
+//	return teams
+//}
+
+func GetPlayersDataInTheTeam(teamName string) []PlayerCol {
 	db, session := mongoInit()
 	col := db.C("team")
 	defer session.Close()
-	player := Player{}
-	team := Team{}
+	player := PlayerCol{}
+	team := TeamCol{}
 
 	if err := col.Find(bson.M{"team": teamName}).One(&team); err != nil {
 		panic(err)
 	}
-	players := make([]Player, len(team.Member))
+	players := make([]PlayerCol, len(team.Member))
 	for i, teamPlayer := range team.Member {
 		if err := session.FindRef(&teamPlayer.Player).One(&player); err != nil {
 			panic(err)

@@ -14,7 +14,7 @@ type Config struct {
 }
 
 // Structs for Collections
-type Player struct {
+type PlayerCol struct {
 	Id       bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Name     string        `json:"name"`
 	Apply    int           `json:"apply"`
@@ -23,7 +23,7 @@ type Player struct {
 	Team     mgo.DBRef     `json:"team"`
 }
 
-type Team struct {
+type TeamCol struct {
 	Id     bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Member []struct {
 		Player mgo.DBRef `json:"player"`
@@ -33,7 +33,7 @@ type Team struct {
 	Excnt   []int  `json:"excnt"`
 }
 
-type Field struct {
+type FieldCol struct {
 	Id             bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Hole           int           `json:"hole"`
 	DrivingContest bool          `json:"drivingContest"`
@@ -42,6 +42,9 @@ type Field struct {
 	NearPin        bool          `json:"nearPin"`
 	Par            int           `json:"par"`
 	Yard           int           `json:"yard"`
+}
+
+type ThreadCol struct {
 }
 
 // Structs for Page
@@ -65,9 +68,10 @@ type Sum struct {
 }
 
 type Reaction struct {
-	Name        string `json:"mame"`
+	Name        string `json:"name"`
 	ContentType int    `json:"contentType"`
 	Content     string `json:"content"`
+	DateTime    string `json:"dateTime"`
 }
 
 type Thread struct {
@@ -77,6 +81,7 @@ type Thread struct {
 	ColorCode string     `json:"colorCode"`
 	Positive  bool       `json:"positive"`
 	Reactions []Reaction `json:"reactions"`
+	CreatedAt string     `json:"createdAt"`
 }
 
 type sortByScore []UserScore
@@ -118,6 +123,10 @@ type TimeLine struct {
 	Threads []Thread `json:"threads"`
 }
 
+type PostLogin struct {
+	Name string `json:"name"`
+}
+
 type PostApplyScore struct {
 	Member []string `json:"member"`
 	Apply  []int    `json:"apply"`
@@ -136,4 +145,10 @@ type PostTeamScore struct {
 
 type Status struct {
 	Status string `json:"status"`
+}
+
+// websocket struct
+
+type TimeLineWs struct {
+	Msg string `json:"msg"`
 }

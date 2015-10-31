@@ -4,6 +4,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	"labix.org/v2/mgo"
@@ -14,9 +15,11 @@ import (
 
 var (
 	conf    *Config
-	players []Player
-	fields  []Field
-	teams   []Team
+	players []PlayerCol
+	fields  []FieldCol
+	teams   []TeamCol
+
+//	threads []ThreadCol
 )
 
 func init() {
@@ -31,6 +34,16 @@ func init() {
 	players = GetAllPlayerCol()
 	fields = GetAllFieldCol()
 	teams = GetAllTeamCol()
+	//	threads = GetAllThreadCol()
+
+	const location = "Asia/Tokyo"
+
+	loc, err := time.LoadLocation(location)
+	if err != nil {
+		loc = time.FixedZone(location, 9*60*60)
+	}
+	time.Local = loc
+
 }
 
 func mongoInit() (*mgo.Database, *mgo.Session) {

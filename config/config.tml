@@ -30,15 +30,15 @@ admin = "M2E6Y2xhc3NpYw=="
   paramaterLength = 2
   
   [PagesInfo.entireScore]
-  requireAuth = true
+  requireAuth = false
   paramaterLength = 1
   
   [PagesInfo.holeInformationRegistration]
-  requireAuth = true
+  requireAuth = false
   paramaterLength = 1
   
   [PagesInfo.userRegistration]
-  requireAuth = true
+  requireAuth = false
   paramaterLength = 1
 
   [PagesInfo.timeLine]

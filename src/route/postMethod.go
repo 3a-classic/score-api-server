@@ -21,6 +21,24 @@ func postOne(req *restful.Request, resp *restful.Response) {
 	log.Println(req)
 	log.Println(resp)
 	switch page {
+
+	case "login":
+
+		loginInfo := new(mongo.PostLogin)
+		err := req.ReadEntity(loginInfo)
+		log.Println(loginInfo)
+		if err != nil { // bad request
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		status, err := mongo.PostLoginPageData(loginInfo)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(status)
+		log.Println("login user name :" + loginInfo.Name)
+
 	case "scoreViewSheet":
 
 		definedTeam := new(mongo.PostDefinedTeam)
