@@ -57,17 +57,17 @@ func GetAllTeamCol() []TeamCol {
 	return teams
 }
 
-//func GetAllThreadCol() []TeamCol {
-//	db, session := mongoInit()
-//	col := db.C("team")
-//	defer session.Close()
-//	teams := []Team{}
-//	err := col.Find(nil).All(&teams)
-//	if err != nil {
-//		panic(err)
-//	}
-//	return teams
-//}
+func GetAllThreadCol() []ThreadCol {
+	db, session := mongoInit()
+	col := db.C("thread")
+	defer session.Close()
+	threads := []ThreadCol{}
+	err := col.Find(nil).All(&threads)
+	if err != nil {
+		panic(err)
+	}
+	return threads
+}
 
 func GetPlayersDataInTheTeam(teamName string) []PlayerCol {
 	db, session := mongoInit()

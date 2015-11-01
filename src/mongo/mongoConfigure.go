@@ -18,8 +18,8 @@ var (
 	players []PlayerCol
 	fields  []FieldCol
 	teams   []TeamCol
-
-//	threads []ThreadCol
+	threads []ThreadCol
+	err     error
 )
 
 func init() {
@@ -34,7 +34,7 @@ func init() {
 	players = GetAllPlayerCol()
 	fields = GetAllFieldCol()
 	teams = GetAllTeamCol()
-	//	threads = GetAllThreadCol()
+	threads = GetAllThreadCol()
 
 	const location = "Asia/Tokyo"
 
@@ -43,7 +43,6 @@ func init() {
 		loc = time.FixedZone(location, 9*60*60)
 	}
 	time.Local = loc
-
 }
 
 func mongoInit() (*mgo.Database, *mgo.Session) {

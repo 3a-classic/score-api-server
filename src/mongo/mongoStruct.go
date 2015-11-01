@@ -45,6 +45,14 @@ type FieldCol struct {
 }
 
 type ThreadCol struct {
+	Id        bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	ThreadId  string        `json:"threadId"`
+	Msg       string        `json:"msg"`
+	ImgUrl    string        `json:"imgUrl"`
+	ColorCode string        `json:"colorCode"`
+	Positive  bool          `json:"positive"`
+	Reactions []bson.M      `json:"reactions"`
+	CreatedAt string        `json:"createdAt"`
 }
 
 // Structs for Page

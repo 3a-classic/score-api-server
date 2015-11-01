@@ -1,10 +1,13 @@
 package route
 
 import (
-	"fmt"
 	"golang.org/x/net/websocket"
 	"log"
 	"mongo"
+)
+
+var (
+	ActiveClients = make(map[ClientConn]int)
 )
 
 type ClientConn struct {
@@ -13,7 +16,6 @@ type ClientConn struct {
 }
 
 func EchoHandler(ws *websocket.Conn) {
-	ActiveClients := make(map[ClientConn]int)
 
 	defer func() {
 		if err := ws.Close(); err != nil {
@@ -23,8 +25,7 @@ func EchoHandler(ws *websocket.Conn) {
 	client := ws.Request().RemoteAddr
 	log.Println("Client connected:", client)
 	sockCli := ClientConn{ws, client}
-	fmt.Println("sockCli")
-	fmt.Println(sockCli)
+
 	ActiveClients[sockCli] = 0
 	log.Println("Number of clients connected ...", len(ActiveClients))
 
@@ -37,6 +38,10 @@ func EchoHandler(ws *websocket.Conn) {
 			return
 		}
 
+		if err := mongo.UpsertNewTimeLine(&thread); err != nil {
+			log.Println("cannot insert data to mongo", err.Error())
+		}
+
 		for cs, _ := range ActiveClients {
 			//		if err = Message.Send(cs.websocket, clientMessage); err != nil {
 			if err := websocket.JSON.Send(cs.websocket, thread); err != nil {
@@ -44,8 +49,5 @@ func EchoHandler(ws *websocket.Conn) {
 				log.Println("Could not send message to ", cs.clientIP, err.Error())
 			}
 		}
-
-		log.Printf("thread=%#v\n", thread)
 	}
-	// send JSON type T
 }

@@ -1,10 +1,8 @@
 package mongo
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
-	"time"
 )
 
 func GetIndexPageData() (*Index, error) {
@@ -159,8 +157,8 @@ func GetEntireScorePageData() (*EntireScore, error) {
 
 	rows[1][0] = "ホール"
 	rows[1][1] = "パー"
-	rows[2][1] = "OUT"
-	rows[12][1] = "IN"
+	rows[2][0] = "OUT"
+	rows[12][0] = "IN"
 	rows[20][0] = "Gross"
 	rows[20][1] = "-"
 	rows[21][0] = "Net"
@@ -250,52 +248,31 @@ func GetEntireScorePageData() (*EntireScore, error) {
 
 func GetTimeLinePageData() (*TimeLine, error) {
 
-	//	const longForm = "Jan 2, 2006 at 3:04pm (JST)"
-	//	t, _ := time.Parse(longForm, time.Now())
-	fmt.Println(time.Now())
-
 	var timeLine TimeLine
+	var tmpThreads []Thread
+	var tmpThread Thread
+	var tmpReactions []Reaction
+	var tmpReaction Reaction
 
-	reaction1 := Reaction{
-		Name:        "matsuno",
-		ContentType: 1,
-		Content:     "https://s3-ap-northeast-1.amazonaws.com/3a-classic/reaction-icon/angry.png",
-		DateTime:    time.Now().String(),
+	for _, thread := range threads {
+		for _, reaction := range thread.Reactions {
+			tmpReaction.Name = reaction["name"].(string)
+			tmpReaction.ContentType = reaction["contenttype"].(int)
+			tmpReaction.Name = reaction["content"].(string)
+			tmpReaction.DateTime = reaction["datetime"].(string)
+			tmpReactions = append(tmpReactions, tmpReaction)
+		}
+		tmpThread.ThreadId = thread.ThreadId
+		tmpThread.Msg = thread.Msg
+		tmpThread.ImgUrl = thread.ImgUrl
+		tmpThread.ColorCode = thread.ColorCode
+		tmpThread.Positive = thread.Positive
+		tmpThread.CreatedAt = thread.CreatedAt
+		tmpThread.Reactions = tmpReactions
+		tmpThreads = append(tmpThreads, tmpThread)
 	}
 
-	reaction2 := Reaction{
-		Name:        "kiyota",
-		ContentType: 1,
-		Content:     "https://s3-ap-northeast-1.amazonaws.com/3a-classic/reaction-icon/like.png",
-		DateTime:    time.Now().String(),
-	}
-
-	var reactions []Reaction
-	reactions = append(reactions, reaction1)
-	reactions = append(reactions, reaction2)
-
-	thread1 := Thread{
-		ThreadId:  "GSHDLKFJSDLK",
-		Msg:       "kiyotaさんがホール13でアルバトロスを出しました！",
-		ImgUrl:    "https://s3-ap-northeast-1.amazonaws.com/3a-classic/test/emotion-img/positive-dummy.jpg",
-		ColorCode: "#FF0000",
-		Reactions: reactions,
-		Positive:  true,
-		CreatedAt: time.Now().String(),
-	}
-
-	thread2 := Thread{
-		ThreadId:  "GSHDGSFJSGDS",
-		Msg:       "matsunoさんがホール2で+12を出しました。。",
-		ImgUrl:    "https://s3-ap-northeast-1.amazonaws.com/3a-classic/test/emotion-img/negative-dummy.jpg",
-		ColorCode: "#FFFF00",
-		Reactions: reactions,
-		Positive:  false,
-		CreatedAt: time.Now().String(),
-	}
-
-	timeLine.Threads = append(timeLine.Threads, thread1)
-	timeLine.Threads = append(timeLine.Threads, thread2)
+	timeLine.Threads = tmpThreads
 
 	return &timeLine, nil
 }
