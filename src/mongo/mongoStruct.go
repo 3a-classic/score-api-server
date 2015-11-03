@@ -36,7 +36,8 @@ type PlayerCol struct {
 	Editable bool          `json:"editable"`
 	Score    []bson.M      `json:"score"`
 	//	Team     mgo.DBRef     `json:"team"`
-	Date string `json:"Date"`
+	Date  string `json:"Date"`
+	Admin bool   `json:"admin"`
 }
 
 type TeamCol struct {
