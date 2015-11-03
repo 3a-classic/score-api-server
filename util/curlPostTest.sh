@@ -4,4 +4,7 @@
 #curl -X POST -H "Content-Type : application/json"  -d @testDataOfPostLogin.json test.3a-classic.com/api/page/login
 
 ## userRegister
-curl -X POST -H "Content-Type : application/json"  -d @testUserRegister.json test.3a-classic.com/v1/register/user
+#curl -X POST -H "Content-Type : application/json"  -d @testUserRegister.json test.3a-classic.com/v1/register/user
+
+## teamRegister
+curl -X POST -H "Content-Type : application/json"  -d @testTeamRegister.json test.3a-classic.com/v1/register/20151121/team

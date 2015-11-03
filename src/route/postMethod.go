@@ -80,7 +80,9 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		err := req.ReadEntity(registeredApplyScore)
 		log.Println("registeredApplyScore")
 		log.Println(registeredApplyScore)
-		if err != nil { // bad request      resp.WriteErrorString(http.StatusBadRequest, err.Error())      return
+		if err != nil {
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
 		}
 
 		status, err := mongo.PostApplyScoreData(team, registeredApplyScore)
@@ -93,7 +95,7 @@ func postOne(req *restful.Request, resp *restful.Response) {
 }
 
 func register(req *restful.Request, resp *restful.Response) {
-	//	date := req.PathParameter("date")
+	date := req.PathParameter("date")
 	collection := req.PathParameter("collection")
 	log.Println("collection " + collection)
 	if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
@@ -121,5 +123,22 @@ func register(req *restful.Request, resp *restful.Response) {
 		resp.WriteAsJson(status)
 		log.Println("register users below:")
 		log.Println(userCols)
+
+	case "team":
+
+		teamCols := new([]mongo.TeamCol)
+		log.Println(teamCols)
+		if err := req.ReadEntity(teamCols); err != nil {
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		status, err := mongo.RegisterTeamColData(date, *teamCols)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(status)
+		log.Println("register team below:")
+		log.Println(teamCols)
 	}
 }

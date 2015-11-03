@@ -13,6 +13,13 @@ type Config struct {
 }
 
 // Structs for Collections
+
+//type Score struct {
+//	Hole  int `json:"hole"`
+//	Putt  int `json:"putt"`
+//	Total int `json:"total"`
+//}
+
 type UserCol struct {
 	Id            bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	UserId        string        `json:"userId"`

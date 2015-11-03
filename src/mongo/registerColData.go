@@ -43,3 +43,57 @@ func RegisterUserColData(userCols []UserCol) (*Status, error) {
 
 	return &Status{"success"}, nil
 }
+
+func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
+
+	db, session := mongoInit()
+	playerC := db.C("player")
+	teamC := db.C("team")
+	defer session.Close()
+	log.Println("team playerの登録を開始します。")
+
+	var OneBeforebyteOfA byte = 64
+	alphabet := make([]byte, 1)
+	alphabet[0] = OneBeforebyteOfA
+
+	totalHoleNum := 18
+
+	for _, teamCol := range teamCols {
+		if len(teamCol.UserIds) == 0 {
+			continue
+		}
+
+		alphabet[0] += 1
+		teamCol.Name = string(alphabet)
+		teamCol.Defined = false
+		teamCol.Date = date
+
+		if err := teamC.Insert(teamCol); err != nil {
+			return &Status{"can not insert"}, err
+		}
+
+		for _, userId := range teamCol.UserIds {
+			scores := []bson.M{}
+			for holeNum := 1; holeNum <= totalHoleNum; holeNum++ {
+				score := bson.M{
+					"hole":  holeNum,
+					"putt":  0,
+					"total": 0,
+				}
+				scores = append(scores, score)
+
+			}
+
+			player := PlayerCol{
+				UserId:   userId,
+				Editable: false,
+				Score:    scores,
+				Date:     date,
+			}
+			if err := playerC.Insert(player); err != nil {
+				return &Status{"can not insert"}, err
+			}
+		}
+	}
+	return &Status{"success"}, nil
+}
