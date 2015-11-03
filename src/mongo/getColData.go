@@ -1,6 +1,8 @@
 package mongo
 
-import "labix.org/v2/mgo/bson"
+import (
+	"labix.org/v2/mgo/bson"
+)
 
 //for debug
 //return all collection data
@@ -21,70 +23,153 @@ func GetAllColData(collectionName string) (*[]interface{}, error) {
 	return &results, nil
 }
 
-func GetAllPlayerCol() []PlayerCol {
+func SetAllUserCol() {
+	db, session := mongoInit()
+	col := db.C("user")
+	defer session.Close()
+	usersCol := []UserCol{}
+	if err = col.Find(nil).All(&usersCol); err != nil {
+		panic(err)
+	}
+
+	for _, userCol := range usersCol {
+		users[userCol.UserId] = userCol
+	}
+}
+
+func SetUserCol(userIds []string) {
+	db, session := mongoInit()
+	col := db.C("user")
+	defer session.Close()
+
+	for _, userId := range userIds {
+
+		userCol := UserCol{}
+		findQuery := bson.M{"userId": userId}
+
+		if err = col.Find(findQuery).One(&userCol); err != nil {
+			panic(err)
+		}
+
+		users[userId] = userCol
+	}
+}
+
+func SetAllPlayerCol() {
 	db, session := mongoInit()
 	col := db.C("player")
 	defer session.Close()
-	players := []PlayerCol{}
-	err := col.Find(nil).All(&players)
-	if err != nil {
+	playersCol := []PlayerCol{}
+	if err = col.Find(nil).All(&playersCol); err != nil {
 		panic(err)
 	}
-	return players
+
+	for _, playerCol := range playersCol {
+		players[playerCol.UserId] = playerCol
+	}
 }
 
-func GetAllFieldCol() []FieldCol {
+func SetPlayerCol(userIds []string) {
+	db, session := mongoInit()
+	col := db.C("player")
+	defer session.Close()
+
+	for _, userId := range userIds {
+
+		playerCol := PlayerCol{}
+		findQuery := bson.M{"userrId": userId}
+
+		if err = col.Find(findQuery).One(&playerCol); err != nil {
+			panic(err)
+		}
+
+		players[userId] = playerCol
+	}
+}
+
+func SetAllFieldCol() {
 	db, session := mongoInit()
 	col := db.C("field")
 	defer session.Close()
-	fields := []FieldCol{}
-	err := col.Find(nil).All(&fields)
-	if err != nil {
+	fieldsCol := []FieldCol{}
+	if err = col.Find(nil).All(&fieldsCol); err != nil {
 		panic(err)
 	}
-	return fields
+
+	for _, fieldCol := range fieldsCol {
+		fields[fieldCol.Hole] = fieldCol
+	}
 }
 
-func GetAllTeamCol() []TeamCol {
+func SetFieldCol(hole int) {
+	db, session := mongoInit()
+	col := db.C("field")
+	defer session.Close()
+
+	fieldCol := FieldCol{}
+	findQuery := bson.M{"hole": hole}
+
+	if err = col.Find(findQuery).One(&fieldCol); err != nil {
+		panic(err)
+	}
+
+	fields[hole] = fieldCol
+}
+
+func SetAllTeamCol() {
 	db, session := mongoInit()
 	col := db.C("team")
 	defer session.Close()
-	teams := []TeamCol{}
-	err := col.Find(nil).All(&teams)
-	if err != nil {
+	teamsCol := []TeamCol{}
+	if err = col.Find(nil).All(&teamsCol); err != nil {
 		panic(err)
 	}
-	return teams
+
+	for _, teamCol := range teamsCol {
+		teams[teamCol.Name] = teamCol
+	}
 }
 
-func GetAllThreadCol() []ThreadCol {
+func SetTeamCol(teamName string) {
+	db, session := mongoInit()
+	col := db.C("team")
+	defer session.Close()
+
+	teamCol := TeamCol{}
+	findQuery := bson.M{"name": teamName}
+
+	if err = col.Find(findQuery).One(&teamCol); err != nil {
+		panic(err)
+	}
+
+	teams[teamName] = teamCol
+}
+
+func SetAllThreadCol() {
 	db, session := mongoInit()
 	col := db.C("thread")
 	defer session.Close()
-	threads := []ThreadCol{}
-	err := col.Find(nil).All(&threads)
-	if err != nil {
+	threadsCol := []ThreadCol{}
+	if err = col.Find(nil).All(&threadsCol); err != nil {
 		panic(err)
 	}
-	return threads
+
+	for _, threadCol := range threadsCol {
+		threads[threadCol.ThreadId] = threadCol
+	}
 }
 
-func GetPlayersDataInTheTeam(teamName string) []PlayerCol {
+func SetThreadCol(threadId string) {
 	db, session := mongoInit()
-	col := db.C("team")
+	col := db.C("thread")
 	defer session.Close()
-	player := PlayerCol{}
-	team := TeamCol{}
 
-	if err := col.Find(bson.M{"team": teamName}).One(&team); err != nil {
+	threadCol := ThreadCol{}
+	findQuery := bson.M{"threadId": threadId}
+
+	if err = col.Find(findQuery).One(&threadCol); err != nil {
 		panic(err)
 	}
-	players := make([]PlayerCol, len(team.Member))
-	for i, teamPlayer := range team.Member {
-		if err := session.FindRef(&teamPlayer.Player).One(&player); err != nil {
-			panic(err)
-		}
-		players[i] = player
-	}
-	return players
+
+	threads[threadId] = threadCol
 }

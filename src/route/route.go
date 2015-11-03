@@ -39,5 +39,15 @@ func Register() {
 		Doc("update or create team score").
 		Param(ws.BodyParameter("PostTeamScore", "a PostTeamScore (JSON)").DataType("mongo.PostTeamScore")))
 
+	//register
+	ws.Route(ws.POST("/register/{collection}").
+		To(register).
+		Doc("register data").
+		Param(ws.BodyParameter("Register", "a PostLogin  (JSON)").DataType("mongo.UserCol")))
+
+	ws.Route(ws.POST("/register/{date}/{collection}").
+		To(register).
+		Doc("register data").
+		Param(ws.BodyParameter("Register", "a PostLogin  (JSON)").DataType("mongo.UserCol")))
 	restful.Add(ws)
 }

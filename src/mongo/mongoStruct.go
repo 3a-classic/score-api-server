@@ -1,7 +1,6 @@
 package mongo
 
 import (
-	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 )
 
@@ -14,23 +13,31 @@ type Config struct {
 }
 
 // Structs for Collections
+type UserCol struct {
+	Id            bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	UserId        string        `json:"userId"`
+	Name          string        `json:"name"`
+	CreatedAt     string        `json:"createdAt"`
+	ImgUrl        string        `json:"imgUrl"`
+	Participation []bson.M      `json:"participation"`
+}
+
 type PlayerCol struct {
 	Id       bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Name     string        `json:"name"`
+	UserId   string        `json:"userId"`
 	Apply    int           `json:"apply"`
 	Editable bool          `json:"editable"`
 	Score    []bson.M      `json:"score"`
-	Team     mgo.DBRef     `json:"team"`
+	//	Team     mgo.DBRef     `json:"team"`
+	Date string `json:"Date"`
 }
 
 type TeamCol struct {
-	Id     bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	Member []struct {
-		Player mgo.DBRef `json:"player"`
-	} `json:"member"`
-	Team    string `json:"team"`
-	Defined bool   `json:"defined"`
-	Excnt   []int  `json:"excnt"`
+	Id      bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	UserIds []string      `json:"userIds"`
+	Name    string        `json:"name"`
+	Defined bool          `json:"defined"`
+	Date    string        `json:"Date"`
 }
 
 type FieldCol struct {
@@ -42,6 +49,7 @@ type FieldCol struct {
 	NearPin        bool          `json:"nearPin"`
 	Par            int           `json:"par"`
 	Yard           int           `json:"yard"`
+	Date           string        `json:"Date"`
 }
 
 type ThreadCol struct {
@@ -53,6 +61,7 @@ type ThreadCol struct {
 	Positive  bool          `json:"positive"`
 	Reactions []bson.M      `json:"reactions"`
 	CreatedAt string        `json:"createdAt"`
+	Date      string        `json:"Date"`
 }
 
 // Structs for Page
@@ -73,6 +82,7 @@ type Hole struct {
 type Sum struct {
 	Par   int   `json:"par"`
 	Score []int `json:"score"`
+	Putt  []int `json:"putt"`
 }
 
 type Reaction struct {
@@ -117,6 +127,7 @@ type ScoreEntrySheet struct {
 type ScoreViewSheet struct {
 	Team    string   `json:"team"`
 	Member  []string `json:"member"`
+	UserIds []string `json:"userIds"`
 	Apply   []int    `json:"apply"`
 	Hole    []Hole   `json:"hole"`
 	Sum     Sum      `json:"sum"`
@@ -136,8 +147,8 @@ type PostLogin struct {
 }
 
 type PostApplyScore struct {
-	Member []string `json:"member"`
-	Apply  []int    `json:"apply"`
+	UserIds []string `json:"userIds"`
+	Apply   []int    `json:"apply"`
 }
 
 type PostDefinedTeam struct {
@@ -151,8 +162,18 @@ type PostTeamScore struct {
 	Excnt  int      `json:"excnt"`
 }
 
+// reponse status
+
 type Status struct {
 	Status string `json:"status"`
+}
+
+type RequestTakePictureStatus struct {
+	Status      string `json:"status"`
+	TargetName  string `json:"targetname"`
+	ThreadTitle string `json:"threadtitle"`
+	QueueId     string `json:"queueid"`
+	PhotoUrl    string `json:"photourl"`
 }
 
 // websocket struct

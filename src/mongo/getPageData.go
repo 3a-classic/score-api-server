@@ -1,23 +1,24 @@
 package mongo
 
 import (
+	"errors"
 	"sort"
 	"strconv"
 )
 
 func GetIndexPageData() (*Index, error) {
 
-	teamArray := make([]string, len(teams))
-	for i, team := range teams {
-		teamArray[i] = team.Team
+	var teamArray []string
+	for name, _ := range teams {
+		teamArray = append(teamArray, name)
 	}
 
 	sort.Strings(teamArray)
-	idx := &Index{
+	index := &Index{
 		Team:   teamArray,
 		Length: len(teams),
 	}
-	return idx, nil
+	return index, nil
 }
 
 func GetLeadersBoardPageData() (*LeadersBoard, error) {
@@ -38,7 +39,7 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 		userScore = UserScore{
 			Score: totalScore - totalPar,
 			Total: totalScore,
-			Name:  player.Name,
+			Name:  users[player.UserId].Name,
 			Hole:  passedHoleCnt,
 		}
 		leadersBoard.Ranking = append(leadersBoard.Ranking, userScore)
@@ -50,28 +51,21 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 
 func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntrySheet, error) {
 	if len(holeString) == 0 {
-		return nil, nil
+		return nil, errors.New("hole string is nil")
 	}
 	holeNum, _ := strconv.Atoi(holeString)
 	holeIndex := holeNum - 1
 
-	field := fields[holeIndex]
-	playersInTheTeam := GetPlayersDataInTheTeam(teamName)
+	field := fields[holeNum]
 
-	targetTeam := TeamCol{}
-	for _, team := range teams {
-		if team.Team == teamName {
-			targetTeam = team
-		}
-	}
-
-	member := make([]string, len(playersInTheTeam))
-	total := make([]int, len(playersInTheTeam))
-	putt := make([]int, len(playersInTheTeam))
-	for playerIndex, player := range playersInTheTeam {
-		member[playerIndex] = player.Name
-		total[playerIndex], _ = player.Score[holeIndex]["total"].(int)
-		putt[playerIndex], _ = player.Score[holeIndex]["putt"].(int)
+	userIds := teams[teamName].UserIds
+	member := make([]string, len(userIds))
+	total := make([]int, len(userIds))
+	putt := make([]int, len(userIds))
+	for i, userId := range userIds {
+		member[i] = users[userId].Name
+		total[i] = players[userId].Score[holeIndex]["total"].(int)
+		putt[i] = players[userId].Score[holeIndex]["putt"].(int)
 	}
 
 	scoreEntrySheet := ScoreEntrySheet{
@@ -82,41 +76,40 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 		Yard:   field.Yard,
 		Total:  total,
 		Putt:   putt,
-		Excnt:  targetTeam.Excnt[holeIndex],
+		Excnt:  excnt[teamName][holeNum],
 	}
 	return &scoreEntrySheet, nil
 }
 
 func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 
-	playersInTheTeam := GetPlayersDataInTheTeam(teamName)
-
-	member := make([]string, len(playersInTheTeam))
-	apply := make([]int, len(playersInTheTeam))
+	userIds := teams[teamName].UserIds
+	member := make([]string, len(userIds))
+	apply := make([]int, len(userIds))
+	totalScore := make([]int, len(userIds))
+	totalPutt := make([]int, len(userIds))
 	holes := make([]Hole, len(fields))
-	totalScore := make([]int, len(playersInTheTeam))
-	var defined bool
 
-	for _, team := range teams {
-		if team.Team == teamName {
-			defined = team.Defined
-		}
-	}
 	var totalPar int
-	for holeIndex, field := range fields {
+	for holeNum, field := range fields {
+		holeIndex := holeNum - 1
 
 		totalPar += field.Par
-		score := make([]int, len(playersInTheTeam))
-		for playerIndex, player := range playersInTheTeam {
-			score[playerIndex], _ = player.Score[holeIndex]["total"].(int)
-			totalScore[playerIndex] += score[playerIndex]
+		score := make([]int, len(userIds))
+		for playerIndex, userId := range userIds {
+			scoreAHole := players[userId].Score[holeIndex]["total"].(int)
+			puttAHole := players[userId].Score[holeIndex]["putt"].(int)
+
+			score[playerIndex] = scoreAHole
+			totalScore[playerIndex] += scoreAHole
+			totalPutt[playerIndex] += puttAHole
 			if holeIndex == 0 {
-				member[playerIndex] = player.Name
-				apply[playerIndex] = player.Apply
+				member[playerIndex] = users[userId].Name
+				apply[playerIndex] = players[userId].Apply
 			}
 		}
 		holes[holeIndex] = Hole{
-			Hole:  holeIndex + 1,
+			Hole:  holeNum,
 			Par:   field.Par,
 			Yard:  field.Yard,
 			Score: score,
@@ -126,14 +119,16 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 	sum := Sum{
 		Par:   totalPar,
 		Score: totalScore,
+		Putt:  totalPutt,
 	}
 	scoreViewSheet := ScoreViewSheet{
 		Team:    teamName,
 		Member:  member,
+		UserIds: userIds,
 		Apply:   apply,
 		Hole:    holes,
 		Sum:     sum,
-		Defined: defined,
+		Defined: teams[teamName].Defined,
 	}
 
 	return &scoreViewSheet, nil
@@ -141,6 +136,34 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 
 func GetEntireScorePageData() (*EntireScore, error) {
 
+	//rows[*][0] ホール rows[*][1] パー rows[*][2->n] PlayerName
+	//rows[0] チーム名
+	//rows[1] プレーヤー名
+	//rows[2] IN
+	//rows[3] ホール1
+	//rows[4] ホール2
+	//rows[5] ホール3
+	//rows[6] ホール4
+	//rows[7] ホール5
+	//rows[8] ホール6
+	//rows[9] ホール7
+	//rows[10] ホール8
+	//rows[11] ホール9
+	//rows[12] OUT
+	//rows[13] ホール1
+	//rows[14] ホール2
+	//rows[15] ホール3
+	//rows[16] ホール4
+	//rows[17] ホール5
+	//rows[18] ホール6
+	//rows[19] ホール7
+	//rows[20] ホール8
+	//rows[21] ホール9
+	//rows[22] Gross
+	//rows[23] Net
+	//rows[24] 申請
+	//rows[25] スコア差
+	//rows[26] 順位
 	rowSize := 27
 	columnSize := len(players) + 2
 	rankMap := make(map[string]bool)
@@ -153,72 +176,70 @@ func GetEntireScorePageData() (*EntireScore, error) {
 			rows[i] = make([]string, columnSize)
 		}
 	}
-	mainColumnNum := 2
 
-	rows[1][0] = "ホール"
-	rows[1][1] = "パー"
-	rows[2][0] = "OUT"
-	rows[12][0] = "IN"
-	rows[20][0] = "Gross"
-	rows[20][1] = "-"
-	rows[21][0] = "Net"
-	rows[21][1] = "-"
-	rows[22][0] = "申請"
-	rows[22][1] = "-"
-	rows[23][0] = "スコア差"
-	rows[23][1] = "-"
-	rows[24][0] = "順位"
-	rows[24][1] = "-"
+	rows[1][0], rows[1][1] = "ホール", "パー"
+	rows[2][0], rows[2][1] = "OUT", "ー"
+	rows[12][0], rows[12][1] = "IN", "ー"
+	rows[20][0], rows[20][1] = "Gross", "ー"
+	rows[21][0], rows[21][1] = "Net", "ー"
+	rows[22][0], rows[22][1] = "申請", "ー"
+	rows[23][0], rows[23][1] = "スコア差", "ー"
+	rows[24][0], rows[24][1] = "順位", "ー"
 
 	var passedPlayerNum int
-	for teamIndex, team := range teams {
-		rows[0][teamIndex*2] = strconv.Itoa(len(team.Member))
-		rows[0][teamIndex*2+1] = "TEAM " + team.Team
-		playerInTheTeam := GetPlayersDataInTheTeam(team.Team)
-		for playerIndex, player := range playerInTheTeam {
-			userDataIndex := playerIndex + passedPlayerNum + mainColumnNum
-			rows[1][userDataIndex] = player.Name
-
+	var teamIndex int
+	var headingColumnNum = 2
+	var inColumNum = 1
+	var outColumNum = 1
+	for teamName, team := range teams {
+		rows[0][teamIndex*2] = strconv.Itoa(len(team.UserIds))
+		rows[0][teamIndex*2+1] = "TEAM " + teamName
+		userIds := team.UserIds
+		for playerIndex, userId := range userIds {
 			var gross int
 			var net int
-			for holeIndex, field := range fields {
-				holeRowNum := holeIndex + 3
-				if holeRowNum > 11 {
-					holeRowNum = holeIndex + 4
+			userDataIndex := playerIndex + passedPlayerNum + headingColumnNum
+			rows[1][userDataIndex] = users[userId].Name
+
+			for holeNum, field := range fields {
+				holeIndex := holeNum - 1
+				halfHoleNum := len(fields) / 2
+				holeRowNum := holeIndex + headingColumnNum + inColumNum
+				inOutBorderline := headingColumnNum + inColumNum + halfHoleNum
+				if holeRowNum >= inOutBorderline {
+					holeRowNum = holeRowNum + outColumNum
 				}
 				if playerIndex == 0 {
-					holeNum := field.Hole
-					if holeNum > 9 {
-						holeNum = holeNum - 9
+					if holeNum > halfHoleNum {
+						holeNum = holeNum - halfHoleNum
 					}
 					if field.Ignore {
-						rows[holeRowNum][0] = "-i" + strconv.Itoa(holeNum)
-					} else {
-						rows[holeRowNum][0] = strconv.Itoa(holeNum)
+						rows[holeRowNum][0] = "-i"
 					}
+					rows[holeRowNum][0] += strconv.Itoa(holeNum)
 					rows[holeRowNum][1] = strconv.Itoa(field.Par)
 				}
-				playerTotal, _ := player.Score[holeIndex]["total"].(int)
+				playerTotal := players[userId].Score[holeIndex]["total"].(int)
 				gross += playerTotal
 				if field.Ignore {
 					net += field.Par
 				} else {
 					net += playerTotal
-
 				}
 				rows[holeRowNum][userDataIndex] = strconv.Itoa(playerTotal)
 			}
 			rows[20][userDataIndex] = strconv.Itoa(gross)
 			rows[21][userDataIndex] = strconv.Itoa(net)
-			rows[22][userDataIndex] = strconv.Itoa(player.Apply)
-			diff := player.Apply - net
-			if diff < 0 {
-				diff = diff * -1
+			rows[22][userDataIndex] = strconv.Itoa(players[userId].Apply)
+			scoreDiff := players[userId].Apply - net
+			if scoreDiff < 0 {
+				scoreDiff = scoreDiff * -1
 			}
-			rows[23][userDataIndex] = strconv.Itoa(diff)
-			rankMap[strconv.Itoa(diff)] = true
+			rows[23][userDataIndex] = strconv.Itoa(scoreDiff)
+			rankMap[strconv.Itoa(scoreDiff)] = true
 		}
-		passedPlayerNum += len(playerInTheTeam)
+		passedPlayerNum += len(userIds)
+		teamIndex++
 	}
 
 	var rank []int
@@ -254,7 +275,7 @@ func GetTimeLinePageData() (*TimeLine, error) {
 	var tmpReactions []Reaction
 	var tmpReaction Reaction
 
-	for _, thread := range threads {
+	for threadId, thread := range threads {
 		for _, reaction := range thread.Reactions {
 			tmpReaction.Name = reaction["name"].(string)
 			tmpReaction.ContentType = reaction["contenttype"].(int)
@@ -262,7 +283,7 @@ func GetTimeLinePageData() (*TimeLine, error) {
 			tmpReaction.DateTime = reaction["datetime"].(string)
 			tmpReactions = append(tmpReactions, tmpReaction)
 		}
-		tmpThread.ThreadId = thread.ThreadId
+		tmpThread.ThreadId = threadId
 		tmpThread.Msg = thread.Msg
 		tmpThread.ImgUrl = thread.ImgUrl
 		tmpThread.ColorCode = thread.ColorCode

@@ -14,12 +14,15 @@ import (
 // future or home
 
 var (
-	conf    *Config
-	players []PlayerCol
-	fields  []FieldCol
-	teams   []TeamCol
-	threads []ThreadCol
-	err     error
+	conf           *Config
+	users          map[string]UserCol
+	players        map[string]PlayerCol
+	fields         map[int]FieldCol
+	teams          map[string]TeamCol
+	threads        map[string]ThreadCol
+	datetimeFormat string
+	excnt          map[string]map[int]int
+	err            error
 )
 
 func init() {
@@ -31,18 +34,15 @@ func init() {
 	if _, err := toml.DecodeFile(path.Join(dir, "../config/config.tml"), &conf); err != nil {
 		panic(err)
 	}
-	players = GetAllPlayerCol()
-	fields = GetAllFieldCol()
-	teams = GetAllTeamCol()
-	threads = GetAllThreadCol()
-
-	const location = "Asia/Tokyo"
-
-	loc, err := time.LoadLocation(location)
-	if err != nil {
-		loc = time.FixedZone(location, 9*60*60)
-	}
-	time.Local = loc
+	initMap()
+	SetAllUserCol()
+	SetAllPlayerCol()
+	SetAllFieldCol()
+	SetAllTeamCol()
+	SetAllThreadCol()
+	setLocalTime()
+	initExcnt()
+	datetimeFormat = "2006/01/02 15:04:05 MST"
 }
 
 func mongoInit() (*mgo.Database, *mgo.Session) {
@@ -55,4 +55,32 @@ func mongoInit() (*mgo.Database, *mgo.Session) {
 	db := session.DB(conf.Mongo.Database)
 
 	return db, session
+}
+
+func setLocalTime() {
+	const location = "Asia/Tokyo"
+
+	loc, err := time.LoadLocation(location)
+	if err != nil {
+		loc = time.FixedZone(location, 9*60*60)
+	}
+	time.Local = loc
+}
+
+func initMap() {
+	users = map[string]UserCol{}
+	players = map[string]PlayerCol{}
+	fields = map[int]FieldCol{}
+	teams = map[string]TeamCol{}
+	threads = map[string]ThreadCol{}
+}
+
+func initExcnt() {
+	excnt = map[string]map[int]int{}
+	for _, team := range teams {
+		excnt[team.Name] = map[int]int{}
+		for _, field := range fields {
+			excnt[team.Name][field.Hole] = 0
+		}
+	}
 }

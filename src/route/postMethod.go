@@ -91,3 +91,35 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		log.Println("updating apply score:" + team)
 	}
 }
+
+func register(req *restful.Request, resp *restful.Response) {
+	//	date := req.PathParameter("date")
+	collection := req.PathParameter("collection")
+	log.Println("collection " + collection)
+	if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
+		if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
+			resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
+		}
+	}
+	log.Println(req)
+	log.Println(resp)
+	switch collection {
+
+	case "user":
+
+		userCols := new([]mongo.UserCol)
+		log.Println(userCols)
+		if err := req.ReadEntity(userCols); err != nil {
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		status, err := mongo.RegisterUserColData(*userCols)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(status)
+		log.Println("register users below:")
+		log.Println(userCols)
+	}
+}
