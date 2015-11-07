@@ -124,14 +124,15 @@ type LeadersBoard struct {
 }
 
 type ScoreEntrySheet struct {
-	Team   string   `json:"team"`
-	Hole   int      `json:"hole"`
-	Member []string `json:"member"`
-	Par    int      `json:"par"`
-	Yard   int      `json:"yard"`
-	Total  []int    `json:"total"`
-	Putt   []int    `json:"putt"`
-	Excnt  int      `json:"excnt"`
+	Team    string   `json:"team"`
+	Hole    int      `json:"hole"`
+	Member  []string `json:"member"`
+	UserIds []string `json:"userIds"`
+	Par     int      `json:"par"`
+	Yard    int      `json:"yard"`
+	Total   []int    `json:"total"`
+	Putt    []int    `json:"putt"`
+	Excnt   int      `json:"excnt"`
 }
 
 type ScoreViewSheet struct {
@@ -181,11 +182,12 @@ type Status struct {
 }
 
 type RequestTakePictureStatus struct {
-	Status    string `json:"status"`
-	UserId    string `json:"userId"`
-	Name      string `json:"name"`
-	ThreadMsg string `json:"threadMsg"`
-	PhotoUrl  string `json:"photoUrl"`
+	Status      string   `json:"status"`
+	UserId      string   `json:"userId"`
+	TeamUserIds []string `json:"teamUserIds"`
+	Name        string   `json:"name"`
+	ThreadMsg   string   `json:"threadMsg"`
+	PhotoUrl    string   `json:"photoUrl"`
 }
 
 // websocket struct

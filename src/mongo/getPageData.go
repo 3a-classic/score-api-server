@@ -71,14 +71,15 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 	}
 
 	scoreEntrySheet := ScoreEntrySheet{
-		Team:   teamName,
-		Hole:   holeNum,
-		Member: member,
-		Par:    field.Par,
-		Yard:   field.Yard,
-		Total:  total,
-		Putt:   putt,
-		Excnt:  excnt[teamName][holeNum],
+		Team:    teamName,
+		Hole:    holeNum,
+		Member:  member,
+		UserIds: userIds,
+		Par:     field.Par,
+		Yard:    field.Yard,
+		Total:   total,
+		Putt:    putt,
+		Excnt:   excnt[teamName][holeNum],
 	}
 	return &scoreEntrySheet, nil
 }

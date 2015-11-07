@@ -198,11 +198,12 @@ func RequestTakePicture(userIds []string) (*RequestTakePictureStatus, error) {
 
 		if len(threadCol.Id) != 0 {
 			requestTakePictureStatus := &RequestTakePictureStatus{
-				Status:    "take a picture",
-				UserId:    threadCol.UserId,
-				Name:      users[threadCol.UserId].Name,
-				ThreadMsg: threadCol.Msg,
-				PhotoUrl:  "",
+				Status:      "take a picture",
+				UserId:      threadCol.UserId,
+				TeamUserIds: userIds,
+				Name:        users[threadCol.UserId].Name,
+				ThreadMsg:   threadCol.Msg,
+				PhotoUrl:    "",
 			}
 
 			return requestTakePictureStatus, nil

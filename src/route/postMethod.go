@@ -121,8 +121,7 @@ func register(req *restful.Request, resp *restful.Response) {
 			panic(err)
 		}
 		resp.WriteAsJson(status)
-		log.Println("register users below:")
-		log.Println(userCols)
+		log.Println("register users : ", userCols)
 
 	case "team":
 
@@ -138,8 +137,7 @@ func register(req *restful.Request, resp *restful.Response) {
 			panic(err)
 		}
 		resp.WriteAsJson(status)
-		log.Println("register team below:")
-		log.Println(teamCols)
+		log.Println("register team : ", teamCols)
 
 	case "field":
 
@@ -155,7 +153,22 @@ func register(req *restful.Request, resp *restful.Response) {
 			panic(err)
 		}
 		resp.WriteAsJson(status)
-		log.Println("register field below:")
-		log.Println(fieldCols)
+		log.Println("register field : ", fieldCols)
+
+	case "thread":
+
+		requestTakePictureStatus := new(mongo.RequestTakePictureStatus)
+		log.Println(requestTakePictureStatus)
+		if err := req.ReadEntity(requestTakePictureStatus); err != nil {
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		status, err := mongo.RegisterThreadImg(requestTakePictureStatus)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(status)
+		log.Println("register thread img:", requestTakePictureStatus)
 	}
 }
