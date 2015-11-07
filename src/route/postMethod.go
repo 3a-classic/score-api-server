@@ -67,19 +67,19 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		}
 
 		status, err := mongo.PostScoreEntrySheetPageData(team, hole, updatedTeamScore)
+		log.Println("status:", status)
 		if err != nil {
 			panic(err)
 		}
 		resp.WriteAsJson(status)
 		log.Println("updating score team:" + team + ", hole: " + hole)
+
 	case "applyScore":
 		if hole != "" {
 			return
 		}
 		registeredApplyScore := new(mongo.PostApplyScore)
 		err := req.ReadEntity(registeredApplyScore)
-		log.Println("registeredApplyScore")
-		log.Println(registeredApplyScore)
 		if err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return

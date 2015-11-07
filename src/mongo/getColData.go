@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"labix.org/v2/mgo/bson"
+	"log"
 )
 
 //for debug
@@ -77,10 +78,10 @@ func SetPlayerCol(userIds []string) {
 	for _, userId := range userIds {
 
 		playerCol := PlayerCol{}
-		findQuery := bson.M{"userrId": userId}
+		findQuery := bson.M{"userId": userId}
 
 		if err = col.Find(findQuery).One(&playerCol); err != nil {
-			panic(err)
+			log.Println("player is not found", err)
 		}
 
 		players[userId] = playerCol

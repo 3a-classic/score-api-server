@@ -13,13 +13,6 @@ type Config struct {
 }
 
 // Structs for Collections
-
-//type Score struct {
-//	Hole  int `json:"hole"`
-//	Putt  int `json:"putt"`
-//	Total int `json:"total"`
-//}
-
 type UserCol struct {
 	Id            bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	UserId        string        `json:"userId"`
@@ -35,9 +28,8 @@ type PlayerCol struct {
 	Apply    int           `json:"apply"`
 	Editable bool          `json:"editable"`
 	Score    []bson.M      `json:"score"`
-	//	Team     mgo.DBRef     `json:"team"`
-	Date  string `json:"Date"`
-	Admin bool   `json:"admin"`
+	Date     string        `json:"Date"`
+	Admin    bool          `json:"admin"`
 }
 
 type TeamCol struct {

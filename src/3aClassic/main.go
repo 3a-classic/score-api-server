@@ -14,7 +14,6 @@ import (
 func main() {
 	route.Register()
 	go route.H.Run()
-	//	http.Handle("/ws/timeLine", websocket.Handler(route.EchoHandler))
 	http.HandleFunc("/ws/timeLine", route.ServeWs)
 	http.ListenAndServe(":80", nil)
 	shutdownHook()

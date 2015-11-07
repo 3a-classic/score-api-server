@@ -98,16 +98,20 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 			return &RequestTakePictureStatus{Status: "failed update score"}, err
 		}
 	}
-	//Thread登録
-	RegisterThreadOfScore(holeString, teamScore)
+	//	Thread登録
+	if err := RegisterThreadOfScore(holeString, teamScore); err != nil {
+		return nil, err
+	}
 
-	//チーム内に写真リクエストがあるか確認する
+	//	チーム内に写真リクエストがあるか確認する
 	requestTakePictureStatus, err := RequestTakePicture(userIds)
 	if err != nil {
 		return nil, err
 	}
 
+	log.Println(requestTakePictureStatus)
 	return requestTakePictureStatus, nil
+	//	return nil, nil
 }
 
 func UpsertNewTimeLine(thread *Thread) error {
@@ -197,5 +201,6 @@ func UpsertNewTimeLine(thread *Thread) error {
 			}
 		}
 	}
+	log.Println("upsert thread done")
 	return nil
 }

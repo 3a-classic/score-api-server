@@ -137,6 +137,7 @@ func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, 
 	if err != nil {
 		return nil, err
 	}
+
 	//	if requestTakePictureStatus.
 	//	db, session := mongoInit()
 	//	fieldC := db.C("field")

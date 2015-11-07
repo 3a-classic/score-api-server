@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/base32"
 	"io"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -52,9 +53,11 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 	holeNum, _ := strconv.Atoi(holeString)
 	//	holeIndex := holeNum - 1
 
-	var threadMsg map[string]string
-	var threadPositive map[string]bool
+	threadMsg := make(map[string]string)
+	threadPositive := make(map[string]bool)
 
+	log.Println("holeInOne", holeInOne)
+	log.Println("threadMsg[holeInOne] ", threadMsg[holeInOne])
 	threadMsg[holeInOne] = "ホールインワン"
 	threadMsg[albatross] = "アルバトロス"
 	threadMsg[eagle] = "イーグル"
@@ -90,16 +93,16 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 			if teamScore.Total[playerIndex] > int(float64(parInThisHole)*2.5) {
 				threadKey = twoPointFiveTimes
 			} else {
-				return nil
+				continue
 			}
 		}
 
 		if holeNum > 9 {
 			holeInOutNum = holeNum - 9
-			inOut = "OUT"
+			inOut = "IN"
 		} else {
 			holeInOutNum = holeNum
-			inOut = "IN"
+			inOut = "OUT"
 		}
 		holeInOutString := strconv.Itoa(holeInOutNum)
 
@@ -118,15 +121,17 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 			Positive: threadPositive[threadKey],
 		}
 
-		if err := UpsertNewTimeLine(thread); err != nil {
-			return err
-		}
+		log.Println("thread : ", thread)
+		//	if err := UpsertNewTimeLine(thread); err != nil {
+		//		return err
+		//	}
 	}
 
-	//	var holeThreadScore map[string]int
-	//	var holeThreadUserId map[string]string
-	//	var holeThreadMsg map[string]string
-	//	var holeThreadPositive map[string]string
+	log.Println("thread insert done")
+	//	holeThreadScore := make(map[string]int)
+	//	holeThreadUserId := make(map[string]string)
+	//	holeThreadMsg := make(map[string]string)
+	//	holeThreadPositive := make(map[string]string)
 	//
 	//	holeThreadScore[bestTheHole] = parInThisHole * 3
 	//	holeThreadScore[worstTheHole] = 0
@@ -196,7 +201,7 @@ func RequestTakePicture(userIds []string) (*RequestTakePictureStatus, error) {
 			return nil, err
 		}
 
-		if len(threadCol.Id) != 0 {
+		if len(threadCol.ThreadId) != 0 {
 			requestTakePictureStatus := &RequestTakePictureStatus{
 				Status:      "take a picture",
 				UserId:      threadCol.UserId,
