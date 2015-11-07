@@ -90,19 +90,37 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 	apply := make([]int, len(userIds))
 	totalScore := make([]int, len(userIds))
 	totalPutt := make([]int, len(userIds))
+	outTotalScore := make([]int, len(userIds))
+	outTotalPutt := make([]int, len(userIds))
+	inTotalScore := make([]int, len(userIds))
+	inTotalPutt := make([]int, len(userIds))
 	holes := make([]Hole, len(fields))
 
 	var totalPar int
+	var outTotalPar int
+	var inTotalPar int
 	for holeNum, field := range fields {
 		holeIndex := holeNum - 1
 
 		totalPar += field.Par
+		if holeNum < 10 {
+			outTotalPar += field.Par
+		} else {
+			inTotalPar += field.Par
+		}
 		score := make([]int, len(userIds))
 		for playerIndex, userId := range userIds {
 			scoreAHole := players[userId].Score[holeIndex]["total"].(int)
 			puttAHole := players[userId].Score[holeIndex]["putt"].(int)
 
 			score[playerIndex] = scoreAHole
+			if holeNum < 10 {
+				outTotalScore[playerIndex] += scoreAHole
+				outTotalPutt[playerIndex] += puttAHole
+			} else {
+				inTotalScore[playerIndex] += scoreAHole
+				inTotalPutt[playerIndex] += puttAHole
+			}
 			totalScore[playerIndex] += scoreAHole
 			totalPutt[playerIndex] += puttAHole
 			if holeIndex == 0 {
@@ -118,6 +136,16 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 		}
 	}
 
+	outSum := Sum{
+		Par:   outTotalPar,
+		Score: outTotalScore,
+		Putt:  outTotalPutt,
+	}
+	inSum := Sum{
+		Par:   inTotalPar,
+		Score: inTotalScore,
+		Putt:  inTotalPutt,
+	}
 	sum := Sum{
 		Par:   totalPar,
 		Score: totalScore,
@@ -129,6 +157,8 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 		UserIds: userIds,
 		Apply:   apply,
 		Hole:    holes,
+		OutSum:  outSum,
+		InSum:   inSum,
 		Sum:     sum,
 		Defined: teams[teamName].Defined,
 	}

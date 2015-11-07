@@ -4,7 +4,7 @@ import (
 	//	"golang.org/x/net/websocket"
 	"github.com/gorilla/websocket"
 	"log"
-	//	"mongo"
+	"mongo"
 	"net/http"
 	//	"runtime"
 	"time"
@@ -41,6 +41,7 @@ type connection struct {
 
 // readPump pumps messages from the websocket connection to the hub.
 func (c *connection) readPump() {
+	var thread *mongo.Thread
 	defer func() {
 		H.Unregister <- c
 		c.ws.Close()
@@ -49,11 +50,14 @@ func (c *connection) readPump() {
 	c.ws.SetReadDeadline(time.Now().Add(pongWait))
 	c.ws.SetPongHandler(func(string) error { c.ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		_, message, err := c.ws.ReadMessage()
+		//		_, message, err := c.ws.ReadMessage()
+		err := c.ws.ReadJSON(thread)
+		log.Println(thread)
 		if err != nil {
 			break
 		}
-		H.Broadcast <- message
+		//		H.Broadcast <- message
+		H.Broadcast <- nil
 	}
 }
 

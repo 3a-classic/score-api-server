@@ -140,6 +140,8 @@ type ScoreViewSheet struct {
 	UserIds []string `json:"userIds"`
 	Apply   []int    `json:"apply"`
 	Hole    []Hole   `json:"hole"`
+	OutSum  Sum      `json:"outSum"`
+	InSum   Sum      `json:"inSum"`
 	Sum     Sum      `json:"sum"`
 	Defined bool     `json:"defined"`
 }
