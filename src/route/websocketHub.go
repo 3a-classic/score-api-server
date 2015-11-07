@@ -48,8 +48,8 @@ func (h *Hub) Run() {
 			}
 		case m := <-h.Broadcast:
 			for c := range h.Connections {
-				log.Println("broadcaset", c)
-				log.Println("broadcaset m", m)
+				//				log.Println("broadcaset", c)
+				//				log.Println("broadcaset m", m)
 				select {
 				case c.send <- m:
 				default:

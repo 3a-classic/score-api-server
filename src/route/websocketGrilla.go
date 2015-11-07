@@ -56,7 +56,7 @@ func (c *connection) readPump() {
 		//		fmt.Printf("%+v\n", thread)
 		if err != nil {
 			log.Println("JSON Read ERR", err)
-			//	break
+			break
 		}
 		//		H.Broadcast <- message
 
