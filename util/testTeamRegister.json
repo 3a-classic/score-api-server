@@ -1,8 +1,34 @@
 [
   {
-    "userIds": ["243125125","5GPJON3JTSNDTVDBK3FA"]
+    "userids": [
+      "kiyota",
+      "usami",
+      "yanagihara",
+      "tsukahara"
+    ]
   },
   {
-    "userIds": ["VRKT725NRTILYPGXIUZU","HFYJRDE7MOEBIIF77ONM"]
+    "userids": [
+      "ogita",
+      "nobuta",
+      "kusu",
+      "hozumi"
+    ]
+  },
+  {
+    "userids": [
+      "miyahara",
+      "takanashi",
+      "honda",
+      "soeda"
+    ]
+  },
+  {
+    "userids": [
+      "nihei",
+      "matsuno",
+      "noguchi",
+      "nakamura"
+    ]
   }
 ]

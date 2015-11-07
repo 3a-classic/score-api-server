@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"errors"
+	"log"
 	"sort"
 	"strconv"
 )
@@ -18,6 +19,7 @@ func GetIndexPageData() (*Index, error) {
 		Team:   teamArray,
 		Length: len(teams),
 	}
+	log.Println(index)
 	return index, nil
 }
 
