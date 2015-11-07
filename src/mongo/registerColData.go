@@ -1,6 +1,7 @@
 package mongo
 
 import (
+	"errors"
 	"log"
 	"strconv"
 	"time"
@@ -133,12 +134,23 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 
 func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, error) {
 
+	if len(r.ThreadId) == 0 {
+		return nil, errors.New("there is not thread id")
+	}
+
+	if len(r.PhotoUrl) == 0 {
+		return nil, errors.New("there is not pthoto url ")
+	}
+
 	requestTakePictureStatus, err := RequestTakePicture(r.TeamUserIds)
 	if err != nil {
 		return nil, err
 	}
 
-	//	if requestTakePictureStatus.
+	if len(requestTakePictureStatus.ThreadId) != 0 {
+		return requestTakePictureStatus, nil
+	}
+
 	//	db, session := mongoInit()
 	//	fieldC := db.C("field")
 	//	defer session.Close()
