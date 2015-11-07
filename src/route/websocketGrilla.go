@@ -75,6 +75,7 @@ func (c *connection) writePump() {
 		case message, ok := <-c.send:
 			log.Println("messange", message)
 			if !ok {
+				//				c.write(websocket.CloseMessage, []byte{})
 				c.write(websocket.CloseMessage, []byte{})
 				return
 			}

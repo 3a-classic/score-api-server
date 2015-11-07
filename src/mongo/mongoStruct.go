@@ -153,7 +153,7 @@ type TimeLine struct {
 }
 
 type PostLogin struct {
-	Name string `json:"name"`
+	UserId string `json:"userId"`
 }
 
 type PostApplyScore struct {

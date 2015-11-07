@@ -12,22 +12,22 @@ import (
 
 func PostLoginPageData(loginInfo *PostLogin) (*Status, error) {
 
-	fmt.Println(loginInfo.Name + "さんがアクセスしました。")
-	canLogin := false
-	for userId, _ := range players {
-		if users[userId].Name == loginInfo.Name {
-			canLogin = true
-		}
-	}
-
-	if canLogin {
-		fmt.Println(loginInfo.Name + "さんがログインしました。")
+	fmt.Println(loginInfo.UserId + "さんがアクセスしました。")
+	//	canLogin := false
+	//	for userId, _ := range users {
+	//		if users[userId].Name == loginInfo.Name {
+	//			canLogin = true
+	//		}
+	//	}
+	_, ok := users[loginInfo.UserId]
+	if ok {
+		fmt.Println(users[loginInfo.UserId].Name + "さんがログインしました。")
 		return &Status{"success"}, nil
+	} else {
+
+		fmt.Println(loginInfo.UserId + "さんがログインに失敗しました。")
+		return &Status{"failed"}, nil
 	}
-
-	fmt.Println(loginInfo.Name + "さんがログインに失敗しました。")
-	return &Status{"failed"}, nil
-
 }
 
 func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, error) {

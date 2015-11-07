@@ -37,7 +37,7 @@ func postOne(req *restful.Request, resp *restful.Response) {
 			panic(err)
 		}
 		resp.WriteAsJson(status)
-		log.Println("login user name :" + loginInfo.Name)
+		log.Println("login user ID :" + loginInfo.UserId)
 
 	case "scoreViewSheet":
 
