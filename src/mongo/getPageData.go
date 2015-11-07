@@ -136,7 +136,6 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 			Score: score,
 		}
 	}
-
 	outSum := Sum{
 		Par:   outTotalPar,
 		Score: outTotalScore,

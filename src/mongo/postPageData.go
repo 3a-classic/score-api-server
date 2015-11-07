@@ -38,7 +38,7 @@ func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, e
 	for playerIndex, userId := range ApplyScore.UserIds {
 
 		findQuery := bson.M{"userid": userId}
-		setQuery := bson.M{"apply": ApplyScore.Apply[playerIndex]}
+		setQuery := bson.M{"$set": bson.M{"apply": ApplyScore.Apply[playerIndex]}}
 		if err = UpdateMongoData("player", findQuery, setQuery); err != nil {
 			return &Status{"failed"}, err
 		}
@@ -76,15 +76,16 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 	holeIndex := holeNum - 1
 	holeIndexString := strconv.Itoa(holeIndex)
 
-	if teamScore.Excnt != excnt[teamName][holeIndex] {
+	if teamScore.Excnt != excnt[teamName][holeNum] {
 		return &RequestTakePictureStatus{Status: "other updated"}, nil
 	} else {
-		excnt[teamName][holeIndex]++
+		excnt[teamName][holeNum]++
 	}
 
 	fmt.Println("Team : " + teamName + ", Hole : " + holeString + "にデータを挿入します。")
 
 	for playerIndex, userId := range teamScore.UserIds {
+		log.Println(userId)
 		total, putt := teamScore.Total[playerIndex], teamScore.Putt[playerIndex]
 
 		findQuery := bson.M{"userid": userId}
@@ -109,7 +110,7 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 		return nil, err
 	}
 
-	log.Println(requestTakePictureStatus)
+	log.Println("before return : ", requestTakePictureStatus)
 	return requestTakePictureStatus, nil
 }
 

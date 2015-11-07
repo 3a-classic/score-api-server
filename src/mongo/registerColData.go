@@ -142,6 +142,25 @@ func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, 
 		return nil, errors.New("there is not pthoto url ")
 	}
 
+	findQuery := bson.M{"threadid": r.ThreadId}
+	setQuery := bson.M{"$set": bson.M{"imgurl": r.PhotoUrl}}
+	if err = UpdateMongoData("thread", findQuery, setQuery); err != nil {
+		return &RequestTakePictureStatus{Status: "failed"}, err
+	}
+
+	SetAllThreadCol()
+	thread := &Thread{
+		ThreadId:  r.ThreadId,
+		UserId:    threads[r.ThreadId].UserId,
+		Msg:       threads[r.ThreadId].Msg,
+		ImgUrl:    threads[r.ThreadId].ImgUrl,
+		ColorCode: threads[r.ThreadId].ColorCode,
+		Positive:  threads[r.ThreadId].Positive,
+		CreatedAt: threads[r.ThreadId].CreatedAt,
+	}
+
+	ThreadChan <- thread
+
 	requestTakePictureStatus, err := RequestTakePicture(r.TeamUserIds)
 	if err != nil {
 		return nil, err
@@ -151,33 +170,6 @@ func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, 
 		return requestTakePictureStatus, nil
 	}
 
-	//	db, session := mongoInit()
-	//	fieldC := db.C("field")
-	//	defer session.Close()
-	//	log.Println("field playerの登録を開始します。")
-	//
-	//	var createCnt, updateCnt int
-	//	for _, fieldCol := range fieldCols {
-	//		if fieldCol.Hole > 18 || fieldCol.Hole < 0 {
-	//			continue
-	//		}
-	//
-	//		fieldCol.Ignore = false
-	//		fieldCol.Date = date
-	//		findQuery := bson.M{"hole": fieldCol.Hole}
-	//
-	//		change, err := fieldC.Upsert(findQuery, fieldCol)
-	//		if err != nil {
-	//			return &Status{"can not upsert"}, err
-	//		}
-	//		if change.Updated == 0 {
-	//			createCnt += 1
-	//		} else {
-	//			updateCnt += 1
-	//		}
-	//	}
-	//	log.Println(strconv.Itoa(createCnt) + "件作成されました。")
-	//	log.Println(strconv.Itoa(updateCnt) + "件更新されました。")
+	return &RequestTakePictureStatus{Status: "finish taking pictures"}, nil
 
-	return requestTakePictureStatus, nil
 }

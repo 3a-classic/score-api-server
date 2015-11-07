@@ -56,8 +56,6 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 	threadMsg := make(map[string]string)
 	threadPositive := make(map[string]bool)
 
-	log.Println("holeInOne", holeInOne)
-	log.Println("threadMsg[holeInOne] ", threadMsg[holeInOne])
 	threadMsg[holeInOne] = "ホールインワン"
 	threadMsg[albatross] = "アルバトロス"
 	threadMsg[eagle] = "イーグル"
@@ -207,6 +205,7 @@ func RequestTakePicture(userIds []string) (*RequestTakePictureStatus, error) {
 				UserId:      threadCol.UserId,
 				TeamUserIds: userIds,
 				Name:        users[threadCol.UserId].Name,
+				Positive:    threadCol.Positive,
 				ThreadId:    threadCol.ThreadId,
 				ThreadMsg:   threadCol.Msg,
 				PhotoUrl:    "",

@@ -78,10 +78,10 @@ func SetPlayerCol(userIds []string) {
 	for _, userId := range userIds {
 
 		playerCol := PlayerCol{}
-		findQuery := bson.M{"userId": userId}
+		findQuery := bson.M{"userid": userId}
 
 		if err = col.Find(findQuery).One(&playerCol); err != nil {
-			log.Println("player is not found", err)
+			log.Println("can not find player from mongo", err)
 		}
 
 		players[userId] = playerCol

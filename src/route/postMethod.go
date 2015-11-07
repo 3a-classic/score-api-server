@@ -67,7 +67,6 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		}
 
 		status, err := mongo.PostScoreEntrySheetPageData(team, hole, updatedTeamScore)
-		log.Println("status:", status)
 		if err != nil {
 			panic(err)
 		}
