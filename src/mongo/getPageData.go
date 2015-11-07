@@ -211,11 +211,11 @@ func GetEntireScorePageData() (*EntireScore, error) {
 	rows[1][0], rows[1][1] = "ホール", "パー"
 	rows[2][0], rows[2][1] = "OUT", "ー"
 	rows[12][0], rows[12][1] = "IN", "ー"
-	rows[22][0], rows[20][1] = "Gross", "ー"
-	rows[23][0], rows[21][1] = "Net", "ー"
-	rows[24][0], rows[22][1] = "申請", "ー"
-	rows[25][0], rows[23][1] = "スコア差", "ー"
-	rows[26][0], rows[24][1] = "順位", "ー"
+	rows[22][0], rows[22][1] = "Gross", "ー"
+	rows[23][0], rows[23][1] = "Net", "ー"
+	rows[24][0], rows[24][1] = "申請", "ー"
+	rows[25][0], rows[25][1] = "スコア差", "ー"
+	rows[26][0], rows[26][1] = "順位", "ー"
 
 	var passedPlayerNum int
 	var teamIndex int
