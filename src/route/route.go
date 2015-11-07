@@ -49,5 +49,7 @@ func Register() {
 		To(register).
 		Doc("register data").
 		Param(ws.BodyParameter("Register", "a PostLogin  (JSON)").DataType("mongo.UserCol")))
+
 	restful.Add(ws)
+
 }

@@ -13,9 +13,14 @@ import (
 // utils
 func RequestTakePicture(userIds []string) *RequestTakePictureStatus {
 
-	return &RequestTakePictureStatus{Status: "success"}
+	return nil
+
 }
 
+func RegisterThread() error {
+
+	return nil
+}
 func getFeelingFromAWSUrl(url string) string {
 	regexpString := "https://s3-ap-northeast-1.amazonaws.com/3a-classic/reaction-icon/(.+).png"
 	re := regexp.MustCompile(regexpString)

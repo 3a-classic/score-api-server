@@ -62,6 +62,7 @@ type FieldCol struct {
 
 type ThreadCol struct {
 	Id        bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	UserId    string        `json:"userId"`
 	ThreadId  string        `json:"threadId"`
 	Msg       string        `json:"msg"`
 	ImgUrl    string        `json:"imgUrl"`
@@ -102,6 +103,7 @@ type Reaction struct {
 
 type Thread struct {
 	ThreadId  string     `json:"threadId"`
+	UserId    string     `json:"userId"`
 	Msg       string     `json:"msg"`
 	ImgUrl    string     `json:"imgUrl"`
 	ColorCode string     `json:"colorCode"`

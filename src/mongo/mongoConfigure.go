@@ -23,6 +23,8 @@ var (
 	datetimeFormat string
 	excnt          map[string]map[int]int
 	err            error
+	ErrChan        chan string
+	FinChan        chan bool
 )
 
 func init() {

@@ -4,6 +4,7 @@ import (
 	"golang.org/x/net/websocket"
 	"log"
 	"mongo"
+	"runtime"
 )
 
 var (
@@ -31,6 +32,8 @@ func EchoHandler(ws *websocket.Conn) {
 
 	var thread mongo.Thread
 	for {
+		log.Println("goroutine num", runtime.NumGoroutine())
+
 		if err := websocket.JSON.Receive(ws, &thread); err != nil {
 			log.Println("Websocket Disconnected waiting", err.Error())
 			delete(ActiveClients, sockCli)
@@ -42,6 +45,7 @@ func EchoHandler(ws *websocket.Conn) {
 			log.Println("cannot insert data to mongo", err.Error())
 		}
 
+		log.Println("Number of channel ", len(mongo.FinChan))
 		for cs, _ := range ActiveClients {
 			//		if err = Message.Send(cs.websocket, clientMessage); err != nil {
 			if err := websocket.JSON.Send(cs.websocket, thread); err != nil {

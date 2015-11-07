@@ -68,14 +68,14 @@ func PostScoreViewSheetPageData(teamName string, definedTeam *PostDefinedTeam) (
 	return &Status{"success"}, nil
 }
 
-func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *PostTeamScore) (*RequestTakePictureStatus, error) {
+func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *PostTeamScore) (*Status, error) {
 
 	userIds := teams[teamName].UserIds
 	//更新情報をGlobal変数に格納する
 	defer SetPlayerCol(userIds)
 
 	if len(holeString) == 0 {
-		return &RequestTakePictureStatus{Status: "failed"}, errors.New("hole is not string")
+		return &Status{Status: "failed"}, errors.New("hole is not string")
 	}
 
 	holeNum, _ := strconv.Atoi(holeString)
@@ -83,7 +83,7 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 	holeIndexString := strconv.Itoa(holeIndex)
 
 	if teamScore.Excnt != excnt[teamName][holeIndex] {
-		return &RequestTakePictureStatus{Status: "other updated"}, nil
+		return &Status{Status: "other updated"}, nil
 	} else {
 		excnt[teamName][holeIndex]++
 	}
@@ -101,15 +101,16 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 			},
 		}
 		if err = UpdateMongoData("player", findQuery, setQuery); err != nil {
-			return &RequestTakePictureStatus{Status: "failed update score"}, err
+			return &Status{Status: "failed update score"}, err
 		}
 	}
+	//Thread登録
+	go RegisterThread()
 
 	//チーム内に写真リクエストがあるか確認する
-	requestTakePictureStatus := RequestTakePicture(userIds)
+	go RequestTakePicture(userIds)
 
-	return requestTakePictureStatus, nil
-	//	return &RequestTakePictureStatus{Status : "success"}, nil
+	return &Status{"success"}, nil
 }
 
 func UpsertNewTimeLine(thread *Thread) error {

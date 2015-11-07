@@ -140,5 +140,22 @@ func register(req *restful.Request, resp *restful.Response) {
 		resp.WriteAsJson(status)
 		log.Println("register team below:")
 		log.Println(teamCols)
+
+	case "field":
+
+		fieldCols := new([]mongo.FieldCol)
+		log.Println(fieldCols)
+		if err := req.ReadEntity(fieldCols); err != nil {
+			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		status, err := mongo.RegisterFieldColData(date, *fieldCols)
+		if err != nil {
+			panic(err)
+		}
+		resp.WriteAsJson(status)
+		log.Println("register field below:")
+		log.Println(fieldCols)
 	}
 }
