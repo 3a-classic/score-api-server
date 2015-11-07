@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/net/websocket"
+	//	"golang.org/x/net/websocket"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,7 +13,9 @@ import (
 
 func main() {
 	route.Register()
-	http.Handle("/ws/timeLine", websocket.Handler(route.EchoHandler))
+	go route.H.Run()
+	//	http.Handle("/ws/timeLine", websocket.Handler(route.EchoHandler))
+	http.HandleFunc("/ws/timeLine", route.ServeWs)
 	http.ListenAndServe(":80", nil)
 	shutdownHook()
 }
