@@ -2,7 +2,7 @@ package route
 
 import (
 	//	"golang.org/x/net/websocket"
-	"fmt"
+	//	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
 	"mongo"
@@ -53,12 +53,17 @@ func (c *connection) readPump() {
 	for {
 		//		_, message, err := c.ws.ReadMessage()
 		err := c.ws.ReadJSON(&thread)
-		fmt.Printf("%+v\n", thread)
+		//		fmt.Printf("%+v\n", thread)
 		if err != nil {
 			log.Println("JSON Read ERR", err)
-			break
+			//	break
 		}
 		//		H.Broadcast <- message
+
+		if err := mongo.UpsertNewTimeLine(thread); err != nil {
+			log.Println("reaction update err", err)
+		}
+
 		H.Broadcast <- thread
 	}
 }
