@@ -179,6 +179,7 @@ type RequestTakePictureStatus struct {
 	TeamUserIds []string `json:"teamUserIds"`
 	Name        string   `json:"name"`
 	ThreadMsg   string   `json:"threadMsg"`
+	ThreadId    string   `json:"threadId"`
 	PhotoUrl    string   `json:"photoUrl"`
 }
 

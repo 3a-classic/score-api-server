@@ -207,6 +207,7 @@ func RequestTakePicture(userIds []string) (*RequestTakePictureStatus, error) {
 				UserId:      threadCol.UserId,
 				TeamUserIds: userIds,
 				Name:        users[threadCol.UserId].Name,
+				ThreadId:    threadCol.ThreadId,
 				ThreadMsg:   threadCol.Msg,
 				PhotoUrl:    "",
 			}

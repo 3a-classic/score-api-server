@@ -111,7 +111,6 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 
 	log.Println(requestTakePictureStatus)
 	return requestTakePictureStatus, nil
-	//	return nil, nil
 }
 
 func UpsertNewTimeLine(thread *Thread) error {
