@@ -31,7 +31,7 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 	for _, player := range players {
 		var totalPar, totalScore, passedHoleCnt int
 		for holeIndex, playerScore := range player.Score {
-			if playerScore["total"] != 0 {
+			if playerScore["total"].(int) != 0 {
 				totalPar += fields[holeIndex].Par
 				total, _ := playerScore["total"].(int)
 				totalScore += total
@@ -46,6 +46,7 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 		}
 		leadersBoard.Ranking = append(leadersBoard.Ranking, userScore)
 	}
+	sort.Sort(sortByHole(leadersBoard.Ranking))
 	sort.Sort(sortByScore(leadersBoard.Ranking))
 
 	return &leadersBoard, nil
@@ -338,3 +339,7 @@ func GetTimeLinePageData() (*TimeLine, error) {
 func (s sortByScore) Len() int           { return len(s) }
 func (s sortByScore) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 func (s sortByScore) Less(i, j int) bool { return s[i].Score < s[j].Score }
+
+func (s sortByHole) Len() int           { return len(s) }
+func (s sortByHole) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s sortByHole) Less(i, j int) bool { return s[i].Hole > s[j].Hole }

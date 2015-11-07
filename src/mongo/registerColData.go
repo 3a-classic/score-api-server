@@ -86,10 +86,9 @@ func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
 			}
 
 			player := PlayerCol{
-				UserId:   userId,
-				Editable: false,
-				Score:    scores,
-				Date:     date,
+				UserId: userId,
+				Score:  scores,
+				Date:   date,
 			}
 			if err := playerC.Insert(player); err != nil {
 				return &Status{"can not insert"}, err
@@ -134,6 +133,8 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 
 func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, error) {
 
+	defer SetPlayerCol([]string{r.UserId})
+
 	if len(r.ThreadId) == 0 {
 		return nil, errors.New("there is not thread id")
 	}
@@ -142,9 +143,22 @@ func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, 
 		return nil, errors.New("there is not pthoto url ")
 	}
 
-	findQuery := bson.M{"threadid": r.ThreadId}
-	setQuery := bson.M{"$set": bson.M{"imgurl": r.PhotoUrl}}
-	if err = UpdateMongoData("thread", findQuery, setQuery); err != nil {
+	threadFindQuery := bson.M{"threadid": r.ThreadId}
+	threadSetQuery := bson.M{"$set": bson.M{"imgurl": r.PhotoUrl}}
+	if err = UpdateMongoData("thread", threadFindQuery, threadSetQuery); err != nil {
+		return &RequestTakePictureStatus{Status: "failed"}, err
+	}
+
+	var photoKey string
+	if r.Positive {
+		photoKey = "positivephotourl"
+	} else {
+		photoKey = "negativephotourl"
+	}
+	playerFindQuery := bson.M{"userid": r.UserId}
+	playerSetQuery := bson.M{"$set": bson.M{photoKey: r.PhotoUrl}}
+
+	if err = UpdateMongoData("player", playerFindQuery, playerSetQuery); err != nil {
 		return &RequestTakePictureStatus{Status: "failed"}, err
 	}
 
@@ -170,6 +184,6 @@ func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, 
 		return requestTakePictureStatus, nil
 	}
 
-	return &RequestTakePictureStatus{Status: "finish taking pictures"}, nil
+	return &RequestTakePictureStatus{Status: "success"}, nil
 
 }

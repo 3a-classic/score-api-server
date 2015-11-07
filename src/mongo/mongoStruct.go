@@ -23,13 +23,15 @@ type UserCol struct {
 }
 
 type PlayerCol struct {
-	Id       bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	UserId   string        `json:"userId"`
-	Apply    int           `json:"apply"`
-	Editable bool          `json:"editable"`
-	Score    []bson.M      `json:"score"`
-	Date     string        `json:"Date"`
-	Admin    bool          `json:"admin"`
+	Id               bson.ObjectId `json:"id" bson:"_id,omitempty"`
+	UserId           string        `json:"userId"`
+	Apply            int           `json:"apply"`
+	PositivePhotoUrl string        `json:"positivePhotoUrl"`
+	NegativePhotoUrl string        `json:"negativePhotoUrl"`
+	//	Editable bool          `json:"editable"`
+	Score []bson.M `json:"score"`
+	Date  string   `json:"date"`
+	Admin bool     `json:"admin"`
 }
 
 type TeamCol struct {
@@ -37,7 +39,7 @@ type TeamCol struct {
 	UserIds []string      `json:"userIds"`
 	Name    string        `json:"name"`
 	Defined bool          `json:"defined"`
-	Date    string        `json:"Date"`
+	Date    string        `json:"date"`
 }
 
 type FieldCol struct {
@@ -49,7 +51,7 @@ type FieldCol struct {
 	NearPin        bool          `json:"nearPin"`
 	Par            int           `json:"par"`
 	Yard           int           `json:"yard"`
-	Date           string        `json:"Date"`
+	Date           string        `json:"date"`
 }
 
 type ThreadCol struct {
@@ -105,6 +107,7 @@ type Thread struct {
 }
 
 type sortByScore []UserScore
+type sortByHole []UserScore
 
 type Index struct {
 	Team   []string `json:"team"`

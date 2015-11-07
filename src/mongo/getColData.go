@@ -30,7 +30,7 @@ func SetAllUserCol() {
 	defer session.Close()
 	usersCol := []UserCol{}
 	if err = col.Find(nil).All(&usersCol); err != nil {
-		panic(err)
+		log.Println("can not find user from mongo", err)
 	}
 
 	for _, userCol := range usersCol {
@@ -49,7 +49,7 @@ func SetUserCol(userIds []string) {
 		findQuery := bson.M{"userId": userId}
 
 		if err = col.Find(findQuery).One(&userCol); err != nil {
-			panic(err)
+			log.Println("can not find user from mongo", err)
 		}
 
 		users[userId] = userCol
@@ -62,7 +62,7 @@ func SetAllPlayerCol() {
 	defer session.Close()
 	playersCol := []PlayerCol{}
 	if err = col.Find(nil).All(&playersCol); err != nil {
-		panic(err)
+		log.Println("can not find player from mongo", err)
 	}
 
 	for _, playerCol := range playersCol {
@@ -94,7 +94,7 @@ func SetAllFieldCol() {
 	defer session.Close()
 	fieldsCol := []FieldCol{}
 	if err = col.Find(nil).All(&fieldsCol); err != nil {
-		panic(err)
+		log.Println("can not find field from mongo", err)
 	}
 
 	for _, fieldCol := range fieldsCol {
@@ -111,7 +111,7 @@ func SetFieldCol(hole int) {
 	findQuery := bson.M{"hole": hole}
 
 	if err = col.Find(findQuery).One(&fieldCol); err != nil {
-		panic(err)
+		log.Println("can not find field from mongo", err)
 	}
 
 	fields[hole] = fieldCol
@@ -123,7 +123,7 @@ func SetAllTeamCol() {
 	defer session.Close()
 	teamsCol := []TeamCol{}
 	if err = col.Find(nil).All(&teamsCol); err != nil {
-		panic(err)
+		log.Println("can not find team from mongo", err)
 	}
 
 	for _, teamCol := range teamsCol {
@@ -140,7 +140,7 @@ func SetTeamCol(teamName string) {
 	findQuery := bson.M{"name": teamName}
 
 	if err = col.Find(findQuery).One(&teamCol); err != nil {
-		panic(err)
+		log.Println("can not find team from mongo", err)
 	}
 
 	teams[teamName] = teamCol
@@ -152,7 +152,7 @@ func SetAllThreadCol() {
 	defer session.Close()
 	threadsCol := []ThreadCol{}
 	if err = col.Find(nil).All(&threadsCol); err != nil {
-		panic(err)
+		log.Println("can not find thread from mongo", err)
 	}
 
 	for _, threadCol := range threadsCol {
@@ -169,7 +169,7 @@ func SetThreadCol(threadId string) {
 	findQuery := bson.M{"threadId": threadId}
 
 	if err = col.Find(findQuery).One(&threadCol); err != nil {
-		panic(err)
+		log.Println("can not find thread from mongo", err)
 	}
 
 	threads[threadId] = threadCol

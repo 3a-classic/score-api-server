@@ -34,7 +34,7 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.PostLoginPageData(loginInfo)
 		if err != nil {
-			panic(err)
+			log.Println("PostLoginPageData err")
 		}
 		resp.WriteAsJson(status)
 		log.Println("login user ID :" + loginInfo.UserId)
@@ -51,7 +51,7 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.PostScoreViewSheetPageData(team, definedTeam)
 		if err != nil {
-			panic(err)
+			log.Println("PostScoreViewSheetPageData err")
 		}
 		resp.WriteAsJson(status)
 		log.Println("defineding score team:" + team)
@@ -68,7 +68,7 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.PostScoreEntrySheetPageData(team, hole, updatedTeamScore)
 		if err != nil {
-			panic(err)
+			log.Println("PostScoreEntrySheetPageData err")
 		}
 		resp.WriteAsJson(status)
 		log.Println("updating score team:" + team + ", hole: " + hole)
@@ -86,7 +86,7 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.PostApplyScoreData(team, registeredApplyScore)
 		if err != nil {
-			panic(err)
+			log.Println("PostApplyScoreData err")
 		}
 		resp.WriteAsJson(status)
 		log.Println("updating apply score:" + team)
@@ -117,7 +117,7 @@ func register(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.RegisterUserColData(*userCols)
 		if err != nil {
-			panic(err)
+			log.Println("RegisterUserColData err")
 		}
 		resp.WriteAsJson(status)
 		log.Println("register users : ", userCols)
@@ -133,7 +133,7 @@ func register(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.RegisterTeamColData(date, *teamCols)
 		if err != nil {
-			panic(err)
+			log.Println("RegisterTeamColData err")
 		}
 		resp.WriteAsJson(status)
 		log.Println("register team : ", teamCols)
@@ -149,7 +149,7 @@ func register(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.RegisterFieldColData(date, *fieldCols)
 		if err != nil {
-			panic(err)
+			log.Println("RegisterFieldColData err")
 		}
 		resp.WriteAsJson(status)
 		log.Println("register field : ", fieldCols)
@@ -165,7 +165,7 @@ func register(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.RegisterThreadImg(requestTakePictureStatus)
 		if err != nil {
-			panic(err)
+			log.Println("RegisterThreadImg( err")
 		}
 		resp.WriteAsJson(status)
 		log.Println("register thread img:", requestTakePictureStatus)

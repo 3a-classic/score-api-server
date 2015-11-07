@@ -35,8 +35,11 @@ func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, e
 	if players[AUserIdInTheTeam].Apply != 0 {
 		return &Status{"already registered"}, nil
 	}
+	log.Println(ApplyScore.Apply)
+	log.Println(ApplyScore.UserIds)
 	for playerIndex, userId := range ApplyScore.UserIds {
 
+		log.Println(ApplyScore.Apply[playerIndex])
 		findQuery := bson.M{"userid": userId}
 		setQuery := bson.M{"$set": bson.M{"apply": ApplyScore.Apply[playerIndex]}}
 		if err = UpdateMongoData("player", findQuery, setQuery); err != nil {
@@ -85,7 +88,6 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 	fmt.Println("Team : " + teamName + ", Hole : " + holeString + "にデータを挿入します。")
 
 	for playerIndex, userId := range teamScore.UserIds {
-		log.Println(userId)
 		total, putt := teamScore.Total[playerIndex], teamScore.Putt[playerIndex]
 
 		findQuery := bson.M{"userid": userId}

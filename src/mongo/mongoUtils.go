@@ -104,6 +104,16 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 		}
 		holeInOutString := strconv.Itoa(holeInOutNum)
 
+		if threadPositive[threadKey] {
+			if len(players[userId].PositivePhotoUrl) != 0 {
+				imgUrl = players[userId].PositivePhotoUrl
+			}
+		} else {
+			if len(players[userId].NegativePhotoUrl) != 0 {
+				imgUrl = players[userId].NegativePhotoUrl
+			}
+		}
+
 		msg := makeScoreThreadMsg(
 			threadPositive[threadKey],
 			inOut,
@@ -120,9 +130,9 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 		}
 
 		log.Println("thread : ", thread)
-		//	if err := UpsertNewTimeLine(thread); err != nil {
-		//		return err
-		//	}
+		if err := UpsertNewTimeLine(thread); err != nil {
+			return err
+		}
 	}
 
 	log.Println("thread insert done")
@@ -196,7 +206,7 @@ func RequestTakePicture(userIds []string) (*RequestTakePictureStatus, error) {
 	for _, userId := range userIds {
 		findQuery := bson.M{"imgurl": "", "userid": userId}
 		if err = col.Find(findQuery).One(&threadCol); err != nil {
-			return nil, err
+			log.Println("request is completed!", userId)
 		}
 
 		if len(threadCol.ThreadId) != 0 {
