@@ -6,6 +6,7 @@ package route
 
 import (
 	"log"
+	"mongo"
 )
 
 // hub maintains the set of active connections and broadcasts messages to the
@@ -15,7 +16,7 @@ type Hub struct {
 	Connections map[*connection]bool
 
 	// Inbound messages from the connections.
-	Broadcast chan []byte
+	Broadcast chan *mongo.Thread
 
 	// Register requests from the connections.
 	Register chan *connection
@@ -25,13 +26,15 @@ type Hub struct {
 }
 
 var H = Hub{
-	Broadcast:   make(chan []byte),
+	Broadcast:   make(chan *mongo.Thread),
 	Register:    make(chan *connection),
 	Unregister:  make(chan *connection),
 	Connections: make(map[*connection]bool),
 }
 
 func (h *Hub) Run() {
+	go newThreadCheck()
+
 	for {
 		select {
 		case c := <-h.Register:
@@ -46,6 +49,7 @@ func (h *Hub) Run() {
 		case m := <-h.Broadcast:
 			for c := range h.Connections {
 				log.Println("broadcaset", c)
+				log.Println("broadcaset m", m)
 				select {
 				case c.send <- m:
 				default:
@@ -53,6 +57,16 @@ func (h *Hub) Run() {
 					delete(h.Connections, c)
 				}
 			}
+		}
+	}
+}
+
+func newThreadCheck() {
+	for {
+		select {
+		case t := <-mongo.ThreadChan:
+			log.Println("newThread", "t")
+			H.Broadcast <- t
 		}
 	}
 }

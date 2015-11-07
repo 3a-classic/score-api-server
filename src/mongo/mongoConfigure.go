@@ -23,6 +23,7 @@ var (
 	datetimeFormat string
 	excnt          map[string]map[int]int
 	err            error
+	ThreadChan     chan *Thread
 	ErrChan        chan string
 	FinChan        chan bool
 )
@@ -45,6 +46,8 @@ func init() {
 	setLocalTime()
 	initExcnt()
 	datetimeFormat = "2006/01/02 15:04:05 MST"
+
+	ThreadChan = make(chan *Thread, 2)
 }
 
 func mongoInit() (*mgo.Database, *mgo.Session) {

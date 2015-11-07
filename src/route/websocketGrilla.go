@@ -2,6 +2,7 @@ package route
 
 import (
 	//	"golang.org/x/net/websocket"
+	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
 	"mongo"
@@ -29,6 +30,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
+var thread *mongo.Thread
 
 // connection is an middleman between the websocket connection and the hub.
 type connection struct {
@@ -36,12 +38,11 @@ type connection struct {
 	ws *websocket.Conn
 
 	// Buffered channel of outbound messages.
-	send chan []byte
+	send chan *mongo.Thread
 }
 
 // readPump pumps messages from the websocket connection to the hub.
 func (c *connection) readPump() {
-	var thread *mongo.Thread
 	defer func() {
 		H.Unregister <- c
 		c.ws.Close()
@@ -51,13 +52,14 @@ func (c *connection) readPump() {
 	c.ws.SetPongHandler(func(string) error { c.ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		//		_, message, err := c.ws.ReadMessage()
-		err := c.ws.ReadJSON(thread)
-		log.Println(thread)
+		err := c.ws.ReadJSON(&thread)
+		fmt.Printf("%+v\n", thread)
 		if err != nil {
+			log.Println("JSON Read ERR", err)
 			break
 		}
 		//		H.Broadcast <- message
-		H.Broadcast <- nil
+		H.Broadcast <- thread
 	}
 }
 
@@ -76,14 +78,13 @@ func (c *connection) writePump() {
 	}()
 	for {
 		select {
-		case message, ok := <-c.send:
-			log.Println("messange", message)
+		case threadToWrite, ok := <-c.send:
 			if !ok {
-				//				c.write(websocket.CloseMessage, []byte{})
 				c.write(websocket.CloseMessage, []byte{})
 				return
 			}
-			if err := c.write(websocket.TextMessage, message); err != nil {
+			//			if err := c.write(websocket.TextMessage, message); err != nil {
+			if err := c.ws.WriteJSON(threadToWrite); err != nil {
 				return
 			}
 		case <-ticker.C:
@@ -101,7 +102,8 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	c := &connection{send: make(chan []byte, 256), ws: ws}
+	//	c := &connection{send: make(chan []byte, 256), ws: ws}
+	c := &connection{send: make(chan *mongo.Thread, 256), ws: ws}
 	H.Register <- c
 	go c.writePump()
 	c.readPump()
