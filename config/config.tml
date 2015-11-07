@@ -4,7 +4,8 @@
 host="mongo"
 port = ""
 #database = "testa"
-database = "20150926"
+#database = "20150926"
+database = "20151121"
 
 [auth]
 # echo -n 'user:password' | base64
