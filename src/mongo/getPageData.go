@@ -308,6 +308,9 @@ func GetTimeLinePageData() (*TimeLine, error) {
 	var tmpReaction Reaction
 
 	for threadId, thread := range threads {
+		if len(thread.ImgUrl) == 0 {
+			continue
+		}
 		for _, reaction := range thread.Reactions {
 			tmpReaction.Name = reaction["name"].(string)
 			tmpReaction.ContentType = reaction["contenttype"].(int)

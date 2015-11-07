@@ -168,10 +168,10 @@ type PostDefinedTeam struct {
 }
 
 type PostTeamScore struct {
-	Member []string `json:"member"`
-	Total  []int    `json:"total"`
-	Putt   []int    `json:"putt"`
-	Excnt  int      `json:"excnt"`
+	UserIds []string `json:"userIds"`
+	Total   []int    `json:"total"`
+	Putt    []int    `json:"putt"`
+	Excnt   int      `json:"excnt"`
 }
 
 // reponse status
@@ -181,11 +181,11 @@ type Status struct {
 }
 
 type RequestTakePictureStatus struct {
-	Status      string `json:"status"`
-	TargetName  string `json:"targetname"`
-	ThreadTitle string `json:"threadtitle"`
-	QueueId     string `json:"queueid"`
-	PhotoUrl    string `json:"photourl"`
+	Status    string `json:"status"`
+	UserId    string `json:"userId"`
+	Name      string `json:"name"`
+	ThreadMsg string `json:"threadMsg"`
+	PhotoUrl  string `json:"photoUrl"`
 }
 
 // websocket struct
