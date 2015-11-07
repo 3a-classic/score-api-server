@@ -108,6 +108,7 @@ type Thread struct {
 
 type sortByScore []UserScore
 type sortByRank []FinalRanking
+type sortByDate []ThreadDate
 
 type Index struct {
 	Team   []string `json:"team"`

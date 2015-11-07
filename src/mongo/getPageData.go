@@ -31,8 +31,9 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 	for _, player := range players {
 		var totalPar, totalScore, passedHoleCnt int
 		for holeIndex, playerScore := range player.Score {
+			holeNum := holeIndex + 1
 			if playerScore["total"].(int) != 0 {
-				totalPar += fields[holeIndex].Par
+				totalPar += fields[holeNum].Par
 				total, _ := playerScore["total"].(int)
 				totalScore += total
 				passedHoleCnt += 1
@@ -312,6 +313,11 @@ type FinalRanking struct {
 	Gross     int
 }
 
+type ThreadDate struct {
+	ThreadId  string
+	CreatedAt string
+}
+
 func GetTimeLinePageData() (*TimeLine, error) {
 
 	var timeLine TimeLine
@@ -320,11 +326,20 @@ func GetTimeLinePageData() (*TimeLine, error) {
 	var tmpReactions []Reaction
 	var tmpReaction Reaction
 
-	for threadId, thread := range threads {
-		if len(thread.ImgUrl) == 0 {
+	threadsKeys := sortByDate{}
+	for k, v := range threads {
+		t := ThreadDate{k, v.CreatedAt}
+		threadsKeys = append(threadsKeys, t)
+	}
+
+	sort.Sort(threadsKeys)
+
+	for _, threadKey := range threadsKeys {
+		threadId := threadKey.ThreadId
+		if len(threads[threadId].ImgUrl) == 0 {
 			continue
 		}
-		for _, reaction := range thread.Reactions {
+		for _, reaction := range threads[threadId].Reactions {
 			tmpReaction.Name = reaction["name"].(string)
 			tmpReaction.ContentType = reaction["contenttype"].(int)
 			tmpReaction.Name = reaction["content"].(string)
@@ -332,11 +347,11 @@ func GetTimeLinePageData() (*TimeLine, error) {
 			tmpReactions = append(tmpReactions, tmpReaction)
 		}
 		tmpThread.ThreadId = threadId
-		tmpThread.Msg = thread.Msg
-		tmpThread.ImgUrl = thread.ImgUrl
-		tmpThread.ColorCode = thread.ColorCode
-		tmpThread.Positive = thread.Positive
-		tmpThread.CreatedAt = thread.CreatedAt
+		tmpThread.Msg = threads[threadId].Msg
+		tmpThread.ImgUrl = threads[threadId].ImgUrl
+		tmpThread.ColorCode = threads[threadId].ColorCode
+		tmpThread.Positive = threads[threadId].Positive
+		tmpThread.CreatedAt = threads[threadId].CreatedAt
 		tmpThread.Reactions = tmpReactions
 		tmpThreads = append(tmpThreads, tmpThread)
 	}
@@ -367,3 +382,7 @@ func (s sortByRank) Less(i, j int) bool {
 	}
 	return s[i].ScoreDiff < s[j].ScoreDiff
 }
+
+func (s sortByDate) Len() int           { return len(s) }
+func (s sortByDate) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s sortByDate) Less(i, j int) bool { return s[i].CreatedAt < s[j].CreatedAt }
