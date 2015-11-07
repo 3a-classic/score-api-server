@@ -46,7 +46,6 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 		}
 		leadersBoard.Ranking = append(leadersBoard.Ranking, userScore)
 	}
-	sort.Sort(sortByHole(leadersBoard.Ranking))
 	sort.Sort(sortByScore(leadersBoard.Ranking))
 
 	return &leadersBoard, nil
@@ -199,7 +198,6 @@ func GetEntireScorePageData() (*EntireScore, error) {
 	//rows[26] 順位
 	rowSize := 27
 	columnSize := len(players) + 2
-	rankMap := make(map[string]bool)
 
 	rows := make([][]string, rowSize)
 	for i := 0; i < rowSize; i++ {
@@ -213,22 +211,32 @@ func GetEntireScorePageData() (*EntireScore, error) {
 	rows[1][0], rows[1][1] = "ホール", "パー"
 	rows[2][0], rows[2][1] = "OUT", "ー"
 	rows[12][0], rows[12][1] = "IN", "ー"
-	rows[20][0], rows[20][1] = "Gross", "ー"
-	rows[21][0], rows[21][1] = "Net", "ー"
-	rows[22][0], rows[22][1] = "申請", "ー"
-	rows[23][0], rows[23][1] = "スコア差", "ー"
-	rows[24][0], rows[24][1] = "順位", "ー"
+	rows[22][0], rows[20][1] = "Gross", "ー"
+	rows[23][0], rows[21][1] = "Net", "ー"
+	rows[24][0], rows[22][1] = "申請", "ー"
+	rows[25][0], rows[23][1] = "スコア差", "ー"
+	rows[26][0], rows[24][1] = "順位", "ー"
 
 	var passedPlayerNum int
 	var teamIndex int
 	var headingColumnNum = 2
 	var inColumNum = 1
 	var outColumNum = 1
-	for teamName, team := range teams {
-		rows[0][teamIndex*2] = strconv.Itoa(len(team.UserIds))
+	var userIdArrayOrder []string
+
+	var keys []string
+	for k := range teams {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	finalRankings := []FinalRanking{}
+	for _, teamName := range keys {
+		rows[0][teamIndex*2] = strconv.Itoa(len(teams[teamName].UserIds))
 		rows[0][teamIndex*2+1] = "TEAM " + teamName
-		userIds := team.UserIds
+		userIds := teams[teamName].UserIds
 		for playerIndex, userId := range userIds {
+			userIdArrayOrder = append(userIdArrayOrder, userId)
 			var gross int
 			var net int
 			userDataIndex := playerIndex + passedPlayerNum + headingColumnNum
@@ -247,9 +255,9 @@ func GetEntireScorePageData() (*EntireScore, error) {
 						holeNum = holeNum - halfHoleNum
 					}
 					if field.Ignore {
-						rows[holeRowNum][0] = "-i"
+						rows[holeRowNum][0] = "-i" + strconv.Itoa(holeNum)
 					}
-					rows[holeRowNum][0] += strconv.Itoa(holeNum)
+					rows[holeRowNum][0] = strconv.Itoa(holeNum)
 					rows[holeRowNum][1] = strconv.Itoa(field.Par)
 				}
 				playerTotal := players[userId].Score[holeIndex]["total"].(int)
@@ -261,35 +269,33 @@ func GetEntireScorePageData() (*EntireScore, error) {
 				}
 				rows[holeRowNum][userDataIndex] = strconv.Itoa(playerTotal)
 			}
-			rows[20][userDataIndex] = strconv.Itoa(gross)
-			rows[21][userDataIndex] = strconv.Itoa(net)
-			rows[22][userDataIndex] = strconv.Itoa(players[userId].Apply)
+			rows[22][userDataIndex] = strconv.Itoa(gross)
+			rows[23][userDataIndex] = strconv.Itoa(net)
+			rows[24][userDataIndex] = strconv.Itoa(players[userId].Apply)
 			scoreDiff := players[userId].Apply - net
 			if scoreDiff < 0 {
 				scoreDiff = scoreDiff * -1
 			}
-			rows[23][userDataIndex] = strconv.Itoa(scoreDiff)
-			rankMap[strconv.Itoa(scoreDiff)] = true
+			rows[25][userDataIndex] = strconv.Itoa(scoreDiff)
+			finalRanking := FinalRanking{
+				UserId:    userId,
+				ScoreDiff: scoreDiff,
+				Gross:     gross,
+			}
+			finalRankings = append(finalRankings, finalRanking)
 		}
 		passedPlayerNum += len(userIds)
 		teamIndex++
 	}
 
-	var rank []int
-	for k := range rankMap {
-		intK, _ := strconv.Atoi(k)
-		rank = append(rank, intK)
-	}
-
-	sort.Ints(rank)
-	for i := 0; i < len(rows[24])-2; i++ {
-		userDataIndex := i + 2
-		for j := 0; j < len(rank); j++ {
-			if rows[23][userDataIndex] != strconv.Itoa(rank[j]) {
+	sort.Sort(sortByRank(finalRankings))
+	for userIdIndex, userId := range userIdArrayOrder {
+		userDataIndex := userIdIndex + 2
+		for rankingIndex, ranking := range finalRankings {
+			if userId != ranking.UserId {
 				continue
-			} else {
-				rows[24][userDataIndex] = strconv.Itoa(j + 1)
 			}
+			rows[26][userDataIndex] = strconv.Itoa(rankingIndex + 1)
 		}
 	}
 
@@ -298,6 +304,12 @@ func GetEntireScorePageData() (*EntireScore, error) {
 	}
 
 	return &EntireScore, nil
+}
+
+type FinalRanking struct {
+	UserId    string
+	ScoreDiff int
+	Gross     int
 }
 
 func GetTimeLinePageData() (*TimeLine, error) {
@@ -336,10 +348,22 @@ func GetTimeLinePageData() (*TimeLine, error) {
 
 // sort
 // http://grokbase.com/t/gg/golang-nuts/132d2rt3hh/go-nuts-how-to-sort-an-array-of-struct-by-field
-func (s sortByScore) Len() int           { return len(s) }
-func (s sortByScore) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s sortByScore) Less(i, j int) bool { return s[i].Score < s[j].Score }
+// 1 : Score Sort
+// 2 : Passed Hole Sort
+func (s sortByScore) Len() int      { return len(s) }
+func (s sortByScore) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+func (s sortByScore) Less(i, j int) bool {
+	if s[i].Score == s[j].Score {
+		return s[i].Hole > s[j].Hole
+	}
+	return s[i].Score < s[j].Score
+}
 
-func (s sortByHole) Len() int           { return len(s) }
-func (s sortByHole) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s sortByHole) Less(i, j int) bool { return s[i].Hole > s[j].Hole }
+func (s sortByRank) Len() int      { return len(s) }
+func (s sortByRank) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+func (s sortByRank) Less(i, j int) bool {
+	if s[i].ScoreDiff == s[j].ScoreDiff {
+		return s[i].Gross < s[j].Gross
+	}
+	return s[i].ScoreDiff < s[j].ScoreDiff
+}
