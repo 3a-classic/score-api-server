@@ -46,7 +46,7 @@ func SetUserCol(userIds []string) {
 	for _, userId := range userIds {
 
 		userCol := UserCol{}
-		findQuery := bson.M{"userId": userId}
+		findQuery := bson.M{"userid": userId}
 
 		if err = col.Find(findQuery).One(&userCol); err != nil {
 			log.Println("can not find user from mongo", err)
@@ -166,7 +166,7 @@ func SetThreadCol(threadId string) {
 	defer session.Close()
 
 	threadCol := ThreadCol{}
-	findQuery := bson.M{"threadId": threadId}
+	findQuery := bson.M{"threadid": threadId}
 
 	if err = col.Find(findQuery).One(&threadCol); err != nil {
 		log.Println("can not find thread from mongo", err)
