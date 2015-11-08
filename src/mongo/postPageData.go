@@ -10,17 +10,22 @@ import (
 	"labix.org/v2/mgo/bson"
 )
 
-func PostLoginPageData(loginInfo *PostLogin) (*Status, error) {
+func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 
 	fmt.Println(loginInfo.UserId + "さんがアクセスしました。")
 	_, ok := users[loginInfo.UserId]
 	if ok {
 		fmt.Println(users[loginInfo.UserId].Name + "さんがログインしました。")
-		return &Status{"success"}, nil
+		loginStatus := &LoginStatus{
+			Status:   "success",
+			UserId:   loginInfo.UserId,
+			UserName: users[loginInfo.UserId].Name,
+			Admin:    players[loginInfo.UserId].Admin,
+		}
+		return loginStatus, nil
 	} else {
-
 		fmt.Println(loginInfo.UserId + "さんがログインに失敗しました。")
-		return &Status{"failed"}, nil
+		return &LoginStatus{Status: "failed"}, nil
 	}
 }
 

@@ -154,6 +154,7 @@ type TimeLine struct {
 
 type PostLogin struct {
 	UserId string `json:"userId"`
+	Date   string `json:"date"`
 }
 
 type PostApplyScore struct {
@@ -173,6 +174,12 @@ type PostTeamScore struct {
 }
 
 // reponse status
+type LoginStatus struct {
+	Status   string `json:"status"`
+	UserId   string `json:"userId"`
+	UserName string `json:"userName"`
+	Admin    bool   `json:"admin"`
+}
 
 type Status struct {
 	Status string `json:"status"`
