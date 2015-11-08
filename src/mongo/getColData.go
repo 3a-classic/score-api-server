@@ -30,7 +30,7 @@ func SetAllUserCol() {
 	defer session.Close()
 	usersCol := []UserCol{}
 	if err = col.Find(nil).All(&usersCol); err != nil {
-		log.Println("can not find user from mongo", err)
+		log.Println("can not find all user from mongo", err)
 	}
 
 	for _, userCol := range usersCol {
@@ -62,7 +62,7 @@ func SetAllPlayerCol() {
 	defer session.Close()
 	playersCol := []PlayerCol{}
 	if err = col.Find(nil).All(&playersCol); err != nil {
-		log.Println("can not find player from mongo", err)
+		log.Println("can not find all player from mongo", err)
 	}
 
 	for _, playerCol := range playersCol {
@@ -94,7 +94,7 @@ func SetAllFieldCol() {
 	defer session.Close()
 	fieldsCol := []FieldCol{}
 	if err = col.Find(nil).All(&fieldsCol); err != nil {
-		log.Println("can not find field from mongo", err)
+		log.Println("can not find all field from mongo", err)
 	}
 
 	for _, fieldCol := range fieldsCol {
@@ -123,7 +123,7 @@ func SetAllTeamCol() {
 	defer session.Close()
 	teamsCol := []TeamCol{}
 	if err = col.Find(nil).All(&teamsCol); err != nil {
-		log.Println("can not find team from mongo", err)
+		log.Println("can not find all team from mongo", err)
 	}
 
 	for _, teamCol := range teamsCol {
@@ -152,7 +152,7 @@ func SetAllThreadCol() {
 	defer session.Close()
 	threadsCol := []ThreadCol{}
 	if err = col.Find(nil).All(&threadsCol); err != nil {
-		log.Println("can not find thread from mongo", err)
+		log.Println("can not find all thread from mongo", err)
 	}
 
 	for _, threadCol := range threadsCol {

@@ -119,7 +119,7 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 func UpsertNewTimeLine(thread *Thread) error {
 	targetThreadId := thread.ThreadId
 	//更新情報をGlobal変数に格納する
-	defer SetThreadCol(targetThreadId)
+	defer SetAllThreadCol()
 
 	colorFeeling := make(map[string]string)
 	colorFeeling["default"] = "#FFFFFF"

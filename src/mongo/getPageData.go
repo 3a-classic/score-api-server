@@ -2,7 +2,7 @@ package mongo
 
 import (
 	"errors"
-	"log"
+	//	"log"
 	"sort"
 	"strconv"
 )
@@ -19,7 +19,6 @@ func GetIndexPageData() (*Index, error) {
 		Team:   teamArray,
 		Length: len(teams),
 	}
-	log.Println(index)
 	return index, nil
 }
 
@@ -343,10 +342,12 @@ func GetTimeLinePageData() (*TimeLine, error) {
 			tmpReaction.Name = reaction["name"].(string)
 			tmpReaction.ContentType = reaction["contenttype"].(int)
 			tmpReaction.Name = reaction["content"].(string)
+			tmpReaction.UserId = reaction["userid"].(string)
 			tmpReaction.DateTime = reaction["datetime"].(string)
 			tmpReactions = append(tmpReactions, tmpReaction)
 		}
 		tmpThread.ThreadId = threadId
+		tmpThread.UserId = threads[threadId].UserId
 		tmpThread.Msg = threads[threadId].Msg
 		tmpThread.ImgUrl = threads[threadId].ImgUrl
 		tmpThread.ColorCode = threads[threadId].ColorCode

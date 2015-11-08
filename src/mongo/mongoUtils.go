@@ -34,6 +34,7 @@ const (
 
 // utils
 func RegisterThreadOfTotal() error {
+	defer SetAllThreadCol()
 	//	var threadMsg map[string]string
 	//	var threadPositive map[string]bool
 
@@ -50,6 +51,8 @@ func RegisterThreadOfTotal() error {
 }
 
 func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
+
+	defer SetAllThreadCol()
 	holeNum, _ := strconv.Atoi(holeString)
 	//	holeIndex := holeNum - 1
 
