@@ -386,4 +386,4 @@ func (s sortByRank) Less(i, j int) bool {
 
 func (s sortByDate) Len() int           { return len(s) }
 func (s sortByDate) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s sortByDate) Less(i, j int) bool { return s[i].CreatedAt < s[j].CreatedAt }
+func (s sortByDate) Less(i, j int) bool { return s[i].CreatedAt > s[j].CreatedAt }
