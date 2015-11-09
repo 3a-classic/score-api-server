@@ -178,6 +178,7 @@ type LoginStatus struct {
 	Status   string `json:"status"`
 	UserId   string `json:"userId"`
 	UserName string `json:"userName"`
+	Team     string `json:"team"`
 	Admin    bool   `json:"admin"`
 }
 

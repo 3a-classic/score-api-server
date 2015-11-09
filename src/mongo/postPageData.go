@@ -15,11 +15,22 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 	fmt.Println(loginInfo.UserId + "さんがアクセスしました。")
 	_, ok := users[loginInfo.UserId]
 	if ok {
+
+		var teamName string
+		for _, team := range teams {
+			for _, userid := range team.UserIds {
+				if userid == loginInfo.UserId {
+					teamName = team.Name
+				}
+			}
+		}
+
 		fmt.Println(users[loginInfo.UserId].Name + "さんがログインしました。")
 		loginStatus := &LoginStatus{
 			Status:   "success",
 			UserId:   loginInfo.UserId,
 			UserName: users[loginInfo.UserId].Name,
+			Team:     teamName,
 			Admin:    players[loginInfo.UserId].Admin,
 		}
 		return loginStatus, nil
