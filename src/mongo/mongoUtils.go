@@ -177,7 +177,8 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 
 func makeScoreThreadMsg(positive bool, inOut string, holeString string, playerName string, threadMsg string) (msg string) {
 
-	msg = playerName + "さんが" + inOut + "の" + holeString + "番ホールで" + threadMsg
+	//msg = playerName + "さんが" + inOut + "の" + holeString + "番ホールで" + threadMsg
+	msg = inOut + "の" + holeString + "番ホールで" + threadMsg
 	if positive {
 		msg = msg + "を取りました！！"
 	} else {
@@ -189,7 +190,8 @@ func makeScoreThreadMsg(positive bool, inOut string, holeString string, playerNa
 
 func makeHoleThreadMsg(positive bool, inOut string, holeString string, playerName string, score string) (msg string) {
 
-	msg = playerName + "さんが" + inOut + "の" + holeString + "番ホールでスコア" + score + "を出して"
+	//	msg = playerName + "さんが" + inOut + "の" + holeString + "番ホールでスコア" + score + "を出して"
+	msg = inOut + "の" + holeString + "番ホールでスコア" + score + "を出して"
 	if positive {
 		msg = msg + "1番でした！！"
 	} else {
