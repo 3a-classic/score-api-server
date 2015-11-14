@@ -1,21 +1,29 @@
 package mongo
 
 import (
+	"logger"
+
 	"errors"
 	"fmt"
 	"log"
 	"strconv"
 	"time"
 
+	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
 )
 
 func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 
-	fmt.Println(loginInfo.UserId + "さんがアクセスしました。")
+	logger.Output(
+		logrus.Fields{
+			"User ID": loginInfo.UserId,
+		},
+		"There is an access",
+		logger.Debug,
+	)
 	_, ok := users[loginInfo.UserId]
 	if ok {
-
 		var teamName string
 		for _, team := range teams {
 			for _, userid := range team.UserIds {
@@ -25,7 +33,14 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 			}
 		}
 
-		fmt.Println(users[loginInfo.UserId].Name + "さんがログインしました。")
+		logger.Output(
+			logrus.Fields{
+				"User ID":   loginInfo.UserId,
+				"User Name": users[loginInfo.UserId].Name,
+			},
+			"login success",
+			logger.Debug,
+		)
 		loginStatus := &LoginStatus{
 			Status:   "success",
 			UserId:   loginInfo.UserId,
@@ -35,7 +50,13 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 		}
 		return loginStatus, nil
 	} else {
-		fmt.Println(loginInfo.UserId + "さんがログインに失敗しました。")
+		logger.Output(
+			logrus.Fields{
+				"User ID": loginInfo.UserId,
+			},
+			"login faild",
+			logger.Debug,
+		)
 		return &LoginStatus{Status: "failed"}, nil
 	}
 }
@@ -49,13 +70,17 @@ func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, e
 
 	AUserIdInTheTeam := teams[teamName].UserIds[0]
 	if players[AUserIdInTheTeam].Apply != 0 {
+		logger.Output(
+			logrus.Fields{
+				"User Apply": players[AUserIdInTheTeam].Apply,
+			},
+			"Apply score is already registered",
+			logger.Debug,
+		)
 		return &Status{"already registered"}, nil
 	}
-	log.Println(ApplyScore.Apply)
-	log.Println(ApplyScore.UserIds)
 	for playerIndex, userId := range ApplyScore.UserIds {
 
-		log.Println(ApplyScore.Apply[playerIndex])
 		findQuery := bson.M{"userid": userId}
 		setQuery := bson.M{"$set": bson.M{"apply": ApplyScore.Apply[playerIndex]}}
 		if err = UpdateMongoData("player", findQuery, setQuery); err != nil {

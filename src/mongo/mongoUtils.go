@@ -1,6 +1,8 @@
 package mongo
 
 import (
+	"logger"
+
 	"crypto/rand"
 	"encoding/base32"
 	"io"
@@ -9,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
 )
 
@@ -135,6 +138,15 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 
 		log.Println("thread : ", thread)
 		if err := UpsertNewTimeLine(thread); err != nil {
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:   err,
+					logger.TraceMsg: logger.Trace(),
+					"thread":        thread,
+				},
+				"can not upsert new timeline",
+				logger.Error,
+			)
 			return err
 		}
 	}
@@ -212,7 +224,11 @@ func RequestTakePicture(userIds []string) (*RequestTakePictureStatus, error) {
 	for _, userId := range userIds {
 		findQuery := bson.M{"imgurl": "", "userid": userId}
 		if err = col.Find(findQuery).One(&threadCol); err != nil {
-			log.Println("request is completed!", userId)
+			logger.Output(
+				logrus.Fields{"User Id": userId, "User Name": users[userId].Name},
+				"no picture task",
+				logger.Debug,
+			)
 		}
 
 		if len(threadCol.ThreadId) != 0 {
@@ -241,10 +257,15 @@ func getFeelingFromAWSUrl(url string) string {
 
 func make20lengthHashString() string {
 	b := make([]byte, 32)
-	_, err = io.ReadFull(rand.Reader, b)
-
-	if err != nil {
-		return err.Error()
+	if _, err := io.ReadFull(rand.Reader, b); err != nil {
+		logger.Output(
+			logrus.Fields{
+				logger.ErrMsg:   err,
+				logger.TraceMsg: logger.Trace(),
+			},
+			"can not make hash string",
+			logger.Error,
+		)
 	}
 	longHash := strings.TrimRight(base32.StdEncoding.EncodeToString(b), "=")
 
@@ -258,6 +279,16 @@ func UpdateMongoData(collection string, findQuery bson.M, updateQuery bson.M) er
 	defer session.Close()
 
 	if err = c.Update(findQuery, updateQuery); err != nil {
+		logger.Output(
+			logrus.Fields{
+				logger.ErrMsg:   err,
+				logger.TraceMsg: logger.Trace(),
+				"findQuery":     findQuery,
+				"updateQuery":   updateQuery,
+			},
+			"can not update query",
+			logger.Error,
+		)
 		return err
 	}
 	return nil

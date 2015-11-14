@@ -1,8 +1,10 @@
 package mongo
 
 import (
+	"logger"
+
+	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
-	"log"
 )
 
 //for debug
@@ -30,7 +32,11 @@ func SetAllUserCol() {
 	defer session.Close()
 	usersCol := []UserCol{}
 	if err = col.Find(nil).All(&usersCol); err != nil {
-		log.Println("can not find all user from mongo", err)
+		logger.Output(
+			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+			"can not find all user from mongo",
+			logger.Error,
+		)
 	}
 
 	for _, userCol := range usersCol {
@@ -49,7 +55,11 @@ func SetUserCol(userIds []string) {
 		findQuery := bson.M{"userid": userId}
 
 		if err = col.Find(findQuery).One(&userCol); err != nil {
-			log.Println("can not find user from mongo", err)
+			logger.Output(
+				logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+				"can not find user from mongo",
+				logger.Error,
+			)
 		}
 
 		users[userId] = userCol
@@ -62,7 +72,11 @@ func SetAllPlayerCol() {
 	defer session.Close()
 	playersCol := []PlayerCol{}
 	if err = col.Find(nil).All(&playersCol); err != nil {
-		log.Println("can not find all player from mongo", err)
+		logger.Output(
+			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+			"can not find all player from mongo",
+			logger.Error,
+		)
 	}
 
 	for _, playerCol := range playersCol {
@@ -81,7 +95,11 @@ func SetPlayerCol(userIds []string) {
 		findQuery := bson.M{"userid": userId}
 
 		if err = col.Find(findQuery).One(&playerCol); err != nil {
-			log.Println("can not find player from mongo", err)
+			logger.Output(
+				logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+				"can not find player from mongo",
+				logger.Error,
+			)
 		}
 
 		players[userId] = playerCol
@@ -94,7 +112,11 @@ func SetAllFieldCol() {
 	defer session.Close()
 	fieldsCol := []FieldCol{}
 	if err = col.Find(nil).All(&fieldsCol); err != nil {
-		log.Println("can not find all field from mongo", err)
+		logger.Output(
+			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+			"can not find all field from mongo",
+			logger.Error,
+		)
 	}
 
 	for _, fieldCol := range fieldsCol {
@@ -111,7 +133,11 @@ func SetFieldCol(hole int) {
 	findQuery := bson.M{"hole": hole}
 
 	if err = col.Find(findQuery).One(&fieldCol); err != nil {
-		log.Println("can not find field from mongo", err)
+		logger.Output(
+			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+			"can not find field from mongo",
+			logger.Error,
+		)
 	}
 
 	fields[hole] = fieldCol
@@ -123,7 +149,11 @@ func SetAllTeamCol() {
 	defer session.Close()
 	teamsCol := []TeamCol{}
 	if err = col.Find(nil).All(&teamsCol); err != nil {
-		log.Println("can not find all team from mongo", err)
+		logger.Output(
+			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+			"can not find all team from mongo",
+			logger.Error,
+		)
 	}
 
 	for _, teamCol := range teamsCol {
@@ -140,7 +170,11 @@ func SetTeamCol(teamName string) {
 	findQuery := bson.M{"name": teamName}
 
 	if err = col.Find(findQuery).One(&teamCol); err != nil {
-		log.Println("can not find team from mongo", err)
+		logger.Output(
+			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+			"can not find team from mongo",
+			logger.Error,
+		)
 	}
 
 	teams[teamName] = teamCol
@@ -152,7 +186,11 @@ func SetAllThreadCol() {
 	defer session.Close()
 	threadsCol := []ThreadCol{}
 	if err = col.Find(nil).All(&threadsCol); err != nil {
-		log.Println("can not find all thread from mongo", err)
+		logger.Output(
+			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+			"can not find all thread from mongo",
+			logger.Error,
+		)
 	}
 
 	for _, threadCol := range threadsCol {
@@ -169,7 +207,11 @@ func SetThreadCol(threadId string) {
 	findQuery := bson.M{"threadid": threadId}
 
 	if err = col.Find(findQuery).One(&threadCol); err != nil {
-		log.Println("can not find thread from mongo", err)
+		logger.Output(
+			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
+			"can not find thread from mongo",
+			logger.Error,
+		)
 	}
 
 	threads[threadId] = threadCol

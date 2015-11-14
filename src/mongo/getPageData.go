@@ -1,10 +1,13 @@
 package mongo
 
 import (
+	"logger"
+
 	"errors"
-	//	"log"
 	"sort"
 	"strconv"
+
+	"github.com/Sirupsen/logrus"
 )
 
 func GetIndexPageData() (*Index, error) {
@@ -19,6 +22,12 @@ func GetIndexPageData() (*Index, error) {
 		Team:   teamArray,
 		Length: len(teams),
 	}
+	trace := logger.Trace()
+	logger.Output(
+		logrus.Fields{"Stack Trace": trace},
+		"can not find all user from mongo",
+		"info",
+	)
 	return index, nil
 }
 
@@ -348,6 +357,7 @@ func GetTimeLinePageData() (*TimeLine, error) {
 		}
 		tmpThread.ThreadId = threadId
 		tmpThread.UserId = threads[threadId].UserId
+		tmpThread.UserName = threads[threadId].UserName
 		tmpThread.Msg = threads[threadId].Msg
 		tmpThread.ImgUrl = threads[threadId].ImgUrl
 		tmpThread.ColorCode = threads[threadId].ColorCode

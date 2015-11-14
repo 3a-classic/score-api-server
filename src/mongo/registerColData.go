@@ -171,6 +171,7 @@ func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, 
 	thread := &Thread{
 		ThreadId:  r.ThreadId,
 		UserId:    threads[r.ThreadId].UserId,
+		UserName:  threads[r.ThreadId].UserName,
 		Msg:       threads[r.ThreadId].Msg,
 		ImgUrl:    threads[r.ThreadId].ImgUrl,
 		ColorCode: threads[r.ThreadId].ColorCode,

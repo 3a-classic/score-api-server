@@ -57,6 +57,7 @@ type FieldCol struct {
 type ThreadCol struct {
 	Id        bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	UserId    string        `json:"userId"`
+	UserName  string        `json:"userName"`
 	ThreadId  string        `json:"threadId"`
 	Msg       string        `json:"msg"`
 	ImgUrl    string        `json:"imgUrl"`
@@ -199,7 +200,6 @@ type RequestTakePictureStatus struct {
 }
 
 // websocket struct
-
 type TimeLineWs struct {
 	Msg string `json:"msg"`
 }

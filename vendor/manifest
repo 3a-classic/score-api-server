@@ -8,6 +8,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/Sirupsen/logrus",
+			"repository": "https://github.com/Sirupsen/logrus",
+			"revision": "6f383a9b2998dd6f401704269c3e6e192f6175ad",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/emicklei/go-restful",
 			"repository": "https://github.com/emicklei/go-restful",
 			"revision": "f3b10ff408486b3e248197254514778285fbdea1",
@@ -27,11 +33,22 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "golang.org/x/net/context",
-			"repository": "https://go.googlesource.com/net",
-			"revision": "cd8c2701a5e10f044db915e65eac68f738399d22",
-			"branch": "master",
-			"path": "/context"
+			"importpath": "github.com/johntdyer/slack-go",
+			"repository": "https://github.com/johntdyer/slack-go",
+			"revision": "88736fd63eed11c942b478c3182bdd2f152971e5",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/johntdyer/slackrus",
+			"repository": "https://github.com/johntdyer/slackrus",
+			"revision": "c0ae47c54192c8c7c33c766cdfa61c2d24a4ccbf",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/weekface/mgorus",
+			"repository": "https://github.com/weekface/mgorus",
+			"revision": "9a3ff865bf11d949ab7084198479139d9746c68f",
+			"branch": "master"
 		},
 		{
 			"importpath": "golang.org/x/net/websocket",
