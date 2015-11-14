@@ -38,7 +38,7 @@ func PutInfo(msg string, obj1 interface{}, obj2 interface{}) {
 		SprintfType(obj2): Sprintf(obj2),
 	}
 
-	mongoLog.WithFields(*field).Error(msg)
+	mongoLog.WithFields(*field).Info(msg)
 }
 
 func Output(field logrus.Fields, msg string, level string) {

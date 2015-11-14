@@ -20,7 +20,7 @@ const (
 	E_M_Insert          = "Can not insert data : mongo"
 	E_M_Update          = "Can not update data : mongo"
 	E_M_RegisterThread  = "Can not register thread score : mongo"
-	E_M_RegisterUser    = "Can not register user"
+	E_M_RegisterUser    = "Can not register user : mongo"
 	E_M_SearchPhotoTask = "Can not search picture task : mongo"
 
 	I_M_GetPage     = "Get page data : mongo"
