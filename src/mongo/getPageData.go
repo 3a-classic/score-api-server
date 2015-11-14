@@ -1,6 +1,7 @@
 package mongo
 
 import (
+	"log"
 	l "logger"
 
 	"errors"
@@ -354,6 +355,16 @@ func GetTimeLinePageData() (*TimeLine, error) {
 			tmpReaction.DateTime = reaction["datetime"].(string)
 			tmpReactions = append(tmpReactions, tmpReaction)
 		}
+		log.Println("")
+		log.Println("")
+		log.Println("")
+		log.Println("")
+		log.Println("")
+		log.Println(tmpReactions)
+		log.Println("")
+		log.Println("")
+		log.Println("")
+		log.Println("")
 		tmpThread.ThreadId = threadId
 		tmpThread.UserId = threads[threadId].UserId
 		tmpThread.UserName = threads[threadId].UserName
