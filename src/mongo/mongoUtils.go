@@ -127,6 +127,7 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 
 		thread := &Thread{
 			UserId:   userId,
+			UserName: users[userId].Name,
 			Msg:      msg,
 			ImgUrl:   imgUrl,
 			Positive: threadPositive[threadKey],

@@ -99,6 +99,7 @@ type Reaction struct {
 type Thread struct {
 	ThreadId  string     `json:"threadId"`
 	UserId    string     `json:"userId"`
+	UserName  string     `json:"userName"`
 	Msg       string     `json:"msg"`
 	ImgUrl    string     `json:"imgUrl"`
 	ColorCode string     `json:"colorCode"`
