@@ -98,7 +98,15 @@ func (c *connection) writePump() {
 				return
 			}
 			if err := c.ws.WriteJSON(threadToResponse); err != nil {
-				l.PutErr(err, l.Trace(), l.E_R_WriteJSON, threadToResponse)
+				l.Output(
+					logrus.Fields{
+						l.ErrMsg:   l.Errorf(err),
+						l.TraceMsg: l.Trace(),
+						"Thread":   l.Sprintf(threadToResponse),
+					},
+					"can not write JSON",
+					l.Debug,
+				)
 				return
 			}
 		case <-ticker.C:
