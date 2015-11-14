@@ -10,6 +10,7 @@ import (
 )
 
 func RegisterUserColData(userCols []UserCol) (*Status, error) {
+	defer SetAllUserCol()
 
 	db, session := mongoInit()
 	col := db.C("user")
@@ -46,6 +47,9 @@ func RegisterUserColData(userCols []UserCol) (*Status, error) {
 }
 
 func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
+
+	defer SetAllPlayerCol()
+	defer SetAllTeamCol()
 
 	db, session := mongoInit()
 	playerC := db.C("player")
@@ -99,6 +103,7 @@ func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
 }
 
 func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
+	defer SetAllFieldCol()
 
 	db, session := mongoInit()
 	fieldC := db.C("field")
