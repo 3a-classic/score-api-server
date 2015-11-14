@@ -4,6 +4,7 @@ import (
 	"logger"
 	"mongo"
 
+	"fmt"
 	"net/http"
 	"time"
 
@@ -68,9 +69,9 @@ func (c *connection) readPump() {
 		if err := mongo.UpsertNewTimeLine(thread); err != nil {
 			logger.Output(
 				logrus.Fields{
-					logger.ErrMsg:   err,
+					logger.ErrMsg:   fmt.Errorf("%v", err),
 					logger.TraceMsg: logger.Trace(),
-					"Thread":        thread,
+					"Thread":        fmt.Sprintf("%+v\n", thread),
 				},
 				"can not upsert thread",
 				logger.Error,
