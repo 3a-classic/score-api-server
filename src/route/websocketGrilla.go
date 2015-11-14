@@ -53,26 +53,29 @@ func (c *connection) readPump() {
 	c.ws.SetPongHandler(func(string) error { c.ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 
-		//		fmt.Println("")
-		//		fmt.Println("")
-		//		fmt.Println("")
-		//		fmt.Printf("%v", c.ws)
-		//		fmt.Println("thread", thread)
-		//		fmt.Println("")
-		//		fmt.Println("")
-		//		fmt.Println("")
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Printf("%v", c.ws)
+		fmt.Println("thread", thread)
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Println("")
 		err := c.ws.ReadJSON(&thread)
 		if err != nil {
-			//			logger.Output(
-			//				logrus.Fields{
-			//					logger.ErrMsg:          fmt.Errorf("%v", err),
-			//					logger.TraceMsg:        logger.Trace(),
-			//					"Thread":               fmt.Sprintf("%+v\n", thread),
-			//					"Websocket Connection": fmt.Sprintf("%+v\n", c.ws),
-			//				},
-			//				"can not read JSON",
-			//				logger.Error,
-			//			)
+			if thread == nil {
+				break
+			}
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:          fmt.Errorf("%v", err),
+					logger.TraceMsg:        logger.Trace(),
+					"Thread":               fmt.Sprintf("%+v\n", thread),
+					"Websocket Connection": fmt.Sprintf("%+v\n", c.ws),
+				},
+				"can not read JSON",
+				logger.Error,
+			)
 			break
 		}
 
