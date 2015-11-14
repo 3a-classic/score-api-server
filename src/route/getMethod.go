@@ -1,8 +1,8 @@
 package route
 
 import (
-	"logger"
-	"mongo"
+	l "logger"
+	m "mongo"
 
 	"net/http"
 	"strings"
@@ -14,16 +14,14 @@ import (
 func getCol(req *restful.Request, resp *restful.Response) {
 	col := req.PathParameter("col")
 
-	logger.Output(
-		logrus.Fields{
-			"Collection": col,
-		},
+	l.Output(
+		logrus.Fields{"Collection": col},
 		"Get access to collection router",
-		logger.Debug,
+		l.Debug,
 	)
 
 	if col == "player" || col == "field" || col == "team" {
-		data, err := mongo.GetAllColData(col)
+		data, err := m.GetAllColData(col)
 		if err != nil {
 			panic(err)
 		}
@@ -35,15 +33,10 @@ func getPage(req *restful.Request, resp *restful.Response) {
 	var page, team, hole string
 	url := (strings.Split(req.PathParameter("page"), "/"))
 
-	logger.Output(
-		logrus.Fields{
-			"Page": page,
-			"Team": team,
-			"Hole": hole,
-			"URL":  url,
-		},
+	l.Output(
+		logrus.Fields{"Page": page, "Team": team, "Hole": hole, "URL": url},
 		"Get access to page router",
-		logger.Debug,
+		l.Debug,
 	)
 	page = url[0]
 	if len(url) > 1 {
@@ -58,7 +51,7 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		if team != "" || hole != "" {
 			return
 		}
-		data, err := mongo.GetIndexPageData()
+		data, err := m.GetIndexPageData()
 		if err != nil {
 			panic(err)
 		}
@@ -68,14 +61,14 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		if team != "" || hole != "" {
 			return
 		}
-		data, err := mongo.GetLeadersBoardPageData()
+		data, err := m.GetLeadersBoardPageData()
 		if err != nil {
 			panic(err)
 		}
 		resp.WriteAsJson(data)
 
 	case "scoreEntrySheet":
-		data, err := mongo.GetScoreEntrySheetPageData(team, hole)
+		data, err := m.GetScoreEntrySheetPageData(team, hole)
 		if err != nil {
 			panic(err)
 		}
@@ -85,7 +78,7 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		if hole != "" {
 			return
 		}
-		data, err := mongo.GetScoreViewSheetPageData(team)
+		data, err := m.GetScoreViewSheetPageData(team)
 		if err != nil {
 			panic(err)
 		}
@@ -93,7 +86,7 @@ func getPage(req *restful.Request, resp *restful.Response) {
 
 	case "entireScore":
 
-		data, err := mongo.GetEntireScorePageData()
+		data, err := m.GetEntireScorePageData()
 		if err != nil {
 			panic(err)
 		}
@@ -101,7 +94,7 @@ func getPage(req *restful.Request, resp *restful.Response) {
 
 	case "timeLine":
 
-		data, err := mongo.GetTimeLinePageData()
+		data, err := m.GetTimeLinePageData()
 		if err != nil {
 			panic(err)
 		}

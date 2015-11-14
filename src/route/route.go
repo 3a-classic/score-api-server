@@ -26,28 +26,28 @@ func Register() {
 	ws.Route(ws.POST("/page/{page}").
 		To(postOne).
 		Doc("update apply score").
-		Param(ws.BodyParameter("PostLogin", "a PostLogin  (JSON)").DataType("mongo.PostLoginPageData")))
+		Param(ws.BodyParameter("PostLogin", "a PostLogin  (JSON)").DataType("m.PostLoginPageData")))
 
 	ws.Route(ws.POST("/page/{page}/{team}").
 		To(postOne).
 		Doc("update apply score").
-		Param(ws.BodyParameter("PostApplyScore", "a PostApplyScore  (JSON)").DataType("mongo.PostApplyScore")))
+		Param(ws.BodyParameter("PostApplyScore", "a PostApplyScore  (JSON)").DataType("m.PostApplyScore")))
 
 	ws.Route(ws.POST("/page/{page}/{team}/{hole}").
 		To(postOne).
 		Doc("update or create team score").
-		Param(ws.BodyParameter("PostTeamScore", "a PostTeamScore (JSON)").DataType("mongo.PostTeamScore")))
+		Param(ws.BodyParameter("PostTeamScore", "a PostTeamScore (JSON)").DataType("m.PostTeamScore")))
 
 	//register
 	ws.Route(ws.POST("/register/{collection}").
 		To(register).
 		Doc("register data").
-		Param(ws.BodyParameter("Register", "a PostLogin  (JSON)").DataType("mongo.UserCol")))
+		Param(ws.BodyParameter("Register", "a PostLogin  (JSON)").DataType("m.UserCol")))
 
 	ws.Route(ws.POST("/register/{date}/{collection}").
 		To(register).
 		Doc("register data").
-		Param(ws.BodyParameter("Register", "a PostLogin  (JSON)").DataType("mongo.UserCol")))
+		Param(ws.BodyParameter("Register", "a PostLogin  (JSON)").DataType("m.UserCol")))
 
 	restful.Add(ws)
 

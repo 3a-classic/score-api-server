@@ -1,7 +1,7 @@
 package mongo
 
 import (
-	"logger"
+	l "logger"
 
 	"errors"
 	"sort"
@@ -11,11 +11,7 @@ import (
 )
 
 func GetIndexPageData() (*Index, error) {
-	logger.Output(
-		logrus.Fields{},
-		"Get page of index",
-		logger.Info,
-	)
+	l.Output(nil, l.I_M_GetPage, l.Info)
 
 	var teamArray []string
 	for name, _ := range teams {
@@ -31,11 +27,7 @@ func GetIndexPageData() (*Index, error) {
 }
 
 func GetLeadersBoardPageData() (*LeadersBoard, error) {
-	logger.Output(
-		logrus.Fields{},
-		"Get page of leaders board",
-		logger.Info,
-	)
+	l.Output(nil, l.I_M_GetPage, l.Info)
 
 	var leadersBoard LeadersBoard
 	var userScore UserScore
@@ -65,16 +57,14 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 }
 
 func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntrySheet, error) {
-	logger.Output(
-		logrus.Fields{
-			"Team Name":   teamName,
-			"Hole String": holeString,
-		},
-		"Get page of Score Entry Sheet",
-		logger.Info,
+	l.Output(
+		logrus.Fields{"Team Name": teamName, "Hole String": holeString},
+		l.I_M_GetPage,
+		l.Info,
 	)
 
 	if len(holeString) == 0 {
+		l.PutErr(nil, l.Trace(), l.E_Nil, teamName)
 		return nil, errors.New("hole string is nil")
 	}
 	holeNum, _ := strconv.Atoi(holeString)
@@ -107,12 +97,10 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 }
 
 func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
-	logger.Output(
-		logrus.Fields{
-			"Team Name": teamName,
-		},
-		"Get page of Score View Sheet",
-		logger.Info,
+	l.Output(
+		logrus.Fields{"Team Name": teamName},
+		l.I_M_GetPage,
+		l.Info,
 	)
 
 	userIds := teams[teamName].UserIds
@@ -196,11 +184,7 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 }
 
 func GetEntireScorePageData() (*EntireScore, error) {
-	logger.Output(
-		logrus.Fields{},
-		"Get page of Entire Score",
-		logger.Info,
-	)
+	l.Output(nil, l.I_M_GetPage, l.Info)
 
 	//rows[*][0] ホール rows[*][1] パー rows[*][2->n] PlayerName
 	//rows[0] チーム名
@@ -341,11 +325,7 @@ func GetEntireScorePageData() (*EntireScore, error) {
 }
 
 func GetTimeLinePageData() (*TimeLine, error) {
-	logger.Output(
-		logrus.Fields{},
-		"Get page of time line",
-		logger.Info,
-	)
+	l.Output(nil, l.I_M_GetPage, l.Info)
 
 	var timeLine TimeLine
 	var tmpThreads []Thread

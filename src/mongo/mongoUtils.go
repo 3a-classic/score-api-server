@@ -1,7 +1,7 @@
 package mongo
 
 import (
-	"logger"
+	l "logger"
 
 	"crypto/rand"
 	"encoding/base32"
@@ -136,15 +136,7 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 		}
 
 		if err := UpsertNewTimeLine(thread); err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:   err,
-					logger.TraceMsg: logger.Trace(),
-					"thread":        thread,
-				},
-				"can not upsert new timeline",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_M_Upsert, thread)
 			return err
 		}
 	}
@@ -221,10 +213,10 @@ func RequestTakePicture(userIds []string) (*RequestTakePictureStatus, error) {
 	for _, userId := range userIds {
 		findQuery := bson.M{"imgurl": "", "userid": userId}
 		if err = col.Find(findQuery).One(&threadCol); err != nil {
-			logger.Output(
+			l.Output(
 				logrus.Fields{"User Id": userId, "User Name": users[userId].Name},
-				"no picture task",
-				logger.Debug,
+				"Need not take any picture",
+				l.Debug,
 			)
 		}
 
@@ -255,14 +247,7 @@ func getFeelingFromAWSUrl(url string) string {
 func make20lengthHashString() string {
 	b := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {
-		logger.Output(
-			logrus.Fields{
-				logger.ErrMsg:   err,
-				logger.TraceMsg: logger.Trace(),
-			},
-			"can not make hash string",
-			logger.Error,
-		)
+		l.PutErr(err, l.Trace(), l.E_MakeHash, rand.Reader)
 	}
 	longHash := strings.TrimRight(base32.StdEncoding.EncodeToString(b), "=")
 
@@ -276,15 +261,11 @@ func UpdateMongoData(collection string, findQuery bson.M, updateQuery bson.M) er
 	defer session.Close()
 
 	if err = c.Update(findQuery, updateQuery); err != nil {
-		logger.Output(
-			logrus.Fields{
-				logger.ErrMsg:   err,
-				logger.TraceMsg: logger.Trace(),
-				"findQuery":     findQuery,
-				"updateQuery":   updateQuery,
+		l.PutErr(err, l.Trace(), l.E_M_Update,
+			map[string]bson.M{
+				"findQuery":   findQuery,
+				"updateQuery": updateQuery,
 			},
-			"can not update query",
-			logger.Error,
 		)
 		return err
 	}

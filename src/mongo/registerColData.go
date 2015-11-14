@@ -1,7 +1,7 @@
 package mongo
 
 import (
-	"logger"
+	l "logger"
 
 	"errors"
 	"time"
@@ -11,10 +11,10 @@ import (
 )
 
 func RegisterUserColData(userCols []UserCol) (*Status, error) {
-	logger.Output(
+	l.Output(
 		logrus.Fields{"User Collection": userCols},
-		"Register User",
-		logger.Info,
+		l.I_M_RegisterCol,
+		l.Info,
 	)
 
 	defer SetAllUserCol()
@@ -27,11 +27,7 @@ func RegisterUserColData(userCols []UserCol) (*Status, error) {
 
 	for _, userCol := range userCols {
 		if len(userCol.Name) == 0 {
-			logger.Output(
-				logrus.Fields{logger.TraceMsg: logger.Trace(), "User Name": userCol.Name},
-				"User name is not exist",
-				logger.Error,
-			)
+			l.PutErr(nil, l.Trace(), l.E_Nil, userCol.Name)
 			return &Status{"this user do not have name"}, nil
 		}
 		if len(userCol.UserId) == 0 {
@@ -43,16 +39,7 @@ func RegisterUserColData(userCols []UserCol) (*Status, error) {
 		findQuery := bson.M{"userid": userCol.UserId}
 		change, err := col.Upsert(findQuery, userCol)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:     err,
-					logger.TraceMsg:   logger.Trace(),
-					"Find Query":      findQuery,
-					"User Collection": userCol,
-				},
-				"can not upsert users",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_M_Upsert, userCol.UserId)
 			return &Status{"can not upsert"}, err
 		}
 		if change.Updated == 0 {
@@ -66,10 +53,10 @@ func RegisterUserColData(userCols []UserCol) (*Status, error) {
 }
 
 func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
-	logger.Output(
+	l.Output(
 		logrus.Fields{"Date": date, "Team Collection": teamCols},
-		"Register Team and Player",
-		logger.Info,
+		l.I_M_RegisterCol,
+		l.Info,
 	)
 
 	defer SetAllPlayerCol()
@@ -88,11 +75,7 @@ func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
 
 	for _, teamCol := range teamCols {
 		if len(teamCol.UserIds) == 0 {
-			logger.Output(
-				logrus.Fields{logger.TraceMsg: logger.Trace(), "User IDs": teamCol.UserIds},
-				"User IDs are not exist",
-				logger.Error,
-			)
+			l.PutErr(nil, l.Trace(), l.E_Nil, teamCol)
 			return &Status{"this team do not have user id"}, nil
 		}
 
@@ -102,15 +85,7 @@ func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
 		teamCol.Date = date
 
 		if err := teamC.Insert(teamCol); err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:     err,
-					logger.TraceMsg:   logger.Trace(),
-					"Team Collection": teamCol,
-				},
-				"can not insert team",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_M_Insert, teamCol)
 			return &Status{"can not insert"}, err
 		}
 
@@ -132,15 +107,7 @@ func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
 				Date:   date,
 			}
 			if err := playerC.Insert(player); err != nil {
-				logger.Output(
-					logrus.Fields{
-						logger.ErrMsg:       err,
-						logger.TraceMsg:     logger.Trace(),
-						"Player Collection": player,
-					},
-					"can not insert player",
-					logger.Error,
-				)
+				l.PutErr(err, l.Trace(), l.E_M_Insert, player)
 				return &Status{"can not insert"}, err
 			}
 		}
@@ -149,10 +116,10 @@ func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
 }
 
 func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
-	logger.Output(
+	l.Output(
 		logrus.Fields{"Date": date, "Field Collection": fieldCols},
-		"Register Field",
-		logger.Info,
+		l.I_M_RegisterCol,
+		l.Info,
 	)
 
 	defer SetAllFieldCol()
@@ -164,11 +131,7 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 	var createCnt, updateCnt int
 	for _, fieldCol := range fieldCols {
 		if fieldCol.Hole > 18 || fieldCol.Hole < 0 {
-			logger.Output(
-				logrus.Fields{logger.TraceMsg: logger.Trace(), "Hole": fieldCol.Hole},
-				"this is not hole number",
-				logger.Error,
-			)
+			l.PutErr(nil, l.Trace(), l.E_WrongData, fieldCol.Hole)
 			return &Status{"this is not hole number"}, err
 		}
 
@@ -178,16 +141,7 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 
 		change, err := fieldC.Upsert(findQuery, fieldCol)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:      err,
-					logger.TraceMsg:    logger.Trace(),
-					"Find Query":       findQuery,
-					"Field Collection": fieldCol,
-				},
-				"can not upsert field",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_M_Upsert, fieldCol.Hole)
 			return &Status{"can not upsert"}, err
 		}
 		if change.Updated == 0 {
@@ -201,10 +155,10 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 }
 
 func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, error) {
-	logger.Output(
+	l.Output(
 		logrus.Fields{"Request Take Picture Status": r},
-		"Register Thread Image",
-		logger.Info,
+		l.I_M_RegisterCol,
+		l.Info,
 	)
 
 	defer SetPlayerCol([]string{r.UserId})
@@ -220,16 +174,7 @@ func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, 
 	threadFindQuery := bson.M{"threadid": r.ThreadId}
 	threadSetQuery := bson.M{"$set": bson.M{"imgurl": r.PhotoUrl}}
 	if err = UpdateMongoData("thread", threadFindQuery, threadSetQuery); err != nil {
-		logger.Output(
-			logrus.Fields{
-				logger.ErrMsg:   err,
-				logger.TraceMsg: logger.Trace(),
-				"Find Query":    threadFindQuery,
-				"Set Query":     threadSetQuery,
-			},
-			"can not update thread",
-			logger.Error,
-		)
+		l.PutErr(err, l.Trace(), l.E_M_Update, r.PhotoUrl)
 		return &RequestTakePictureStatus{Status: "failed"}, err
 	}
 
@@ -243,16 +188,7 @@ func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, 
 	playerSetQuery := bson.M{"$set": bson.M{photoKey: r.PhotoUrl}}
 
 	if err = UpdateMongoData("player", playerFindQuery, playerSetQuery); err != nil {
-		logger.Output(
-			logrus.Fields{
-				logger.ErrMsg:   err,
-				logger.TraceMsg: logger.Trace(),
-				"Find Query":    playerFindQuery,
-				"Set Query":     playerSetQuery,
-			},
-			"can not update player",
-			logger.Error,
-		)
+		l.PutErr(err, l.Trace(), l.E_M_Update, r.PhotoUrl)
 		return &RequestTakePictureStatus{Status: "failed"}, err
 	}
 

@@ -1,8 +1,8 @@
 package route
 
 import (
-	"logger"
-	"mongo"
+	l "logger"
+	m "mongo"
 
 	"net/http"
 
@@ -20,7 +20,7 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		}
 	}
 
-	logger.Output(
+	l.Output(
 		logrus.Fields{
 			"Page":     page,
 			"Team":     team,
@@ -29,82 +29,52 @@ func postOne(req *restful.Request, resp *restful.Response) {
 			"Response": resp,
 		},
 		"Post access to page router",
-		logger.Debug,
+		l.Debug,
 	)
 	switch page {
 
 	case "login":
 
-		loginInfo := new(mongo.PostLogin)
+		loginInfo := new(m.PostLogin)
 		err := req.ReadEntity(loginInfo)
 		if err != nil { // bad request
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		status, err := mongo.PostLoginPageData(loginInfo)
+		status, err := m.PostLoginPageData(loginInfo)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:   err,
-					logger.TraceMsg: logger.Trace(),
-					"Status":        status,
-					"login Info":    loginInfo,
-				},
-				"PostLoginPageData Err",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_R_PostPage, loginInfo)
 		}
 		resp.WriteAsJson(status)
 
 	case "scoreViewSheet":
 
-		definedTeam := new(mongo.PostDefinedTeam)
+		definedTeam := new(m.PostDefinedTeam)
 		err := req.ReadEntity(definedTeam)
 		if err != nil { // bad request
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		status, err := mongo.PostScoreViewSheetPageData(team, definedTeam)
+		status, err := m.PostScoreViewSheetPageData(team, definedTeam)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:   err,
-					logger.TraceMsg: logger.Trace(),
-					"Status":        status,
-					"Team":          team,
-					"Defind Team":   definedTeam,
-				},
-				"PostScoreViewSheetPageData Err",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_R_PostPage, definedTeam)
 		}
 		resp.WriteAsJson(status)
 
 	case "scoreEntrySheet":
 
-		updatedTeamScore := new(mongo.PostTeamScore)
+		updatedTeamScore := new(m.PostTeamScore)
 		err := req.ReadEntity(updatedTeamScore)
 		if err != nil { // bad request
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		status, err := mongo.PostScoreEntrySheetPageData(team, hole, updatedTeamScore)
+		status, err := m.PostScoreEntrySheetPageData(team, hole, updatedTeamScore)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:        err,
-					logger.TraceMsg:      logger.Trace(),
-					"Status":             status,
-					"Team":               team,
-					"Hole":               hole,
-					"Updated Team Score": updatedTeamScore,
-				},
-				"PostScoreEntrySheetPageData Err",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_R_PostPage, updatedTeamScore)
 		}
 		resp.WriteAsJson(status)
 
@@ -112,26 +82,16 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		if hole != "" {
 			return
 		}
-		registeredApplyScore := new(mongo.PostApplyScore)
+		registeredApplyScore := new(m.PostApplyScore)
 		err := req.ReadEntity(registeredApplyScore)
 		if err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		status, err := mongo.PostApplyScoreData(team, registeredApplyScore)
+		status, err := m.PostApplyScoreData(team, registeredApplyScore)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:   err,
-					logger.TraceMsg: logger.Trace(),
-					"Status":        status,
-					"Team":          team,
-					"Registered Apply Score": registeredApplyScore,
-				},
-				"PostApplyScoreData Err",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_R_PostPage, registeredApplyScore)
 		}
 		resp.WriteAsJson(status)
 	}
@@ -146,7 +106,7 @@ func register(req *restful.Request, resp *restful.Response) {
 		}
 	}
 
-	logger.Output(
+	l.Output(
 		logrus.Fields{
 			"Date":       date,
 			"Collection": collection,
@@ -154,102 +114,64 @@ func register(req *restful.Request, resp *restful.Response) {
 			"Response":   resp,
 		},
 		"Post access to register router",
-		logger.Debug,
+		l.Debug,
 	)
 
 	switch collection {
 
 	case "user":
 
-		userCols := new([]mongo.UserCol)
+		userCols := new([]m.UserCol)
 		if err := req.ReadEntity(userCols); err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		status, err := mongo.RegisterUserColData(*userCols)
+		status, err := m.RegisterUserColData(*userCols)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:      err,
-					logger.TraceMsg:    logger.Trace(),
-					"Status":           status,
-					"User Collections": userCols,
-				},
-				"RegisterUserColData Err",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_R_RegisterCol, userCols)
 		}
 		resp.WriteAsJson(status)
 
 	case "team":
 
-		teamCols := new([]mongo.TeamCol)
+		teamCols := new([]m.TeamCol)
 		if err := req.ReadEntity(teamCols); err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		status, err := mongo.RegisterTeamColData(date, *teamCols)
+		status, err := m.RegisterTeamColData(date, *teamCols)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:      err,
-					logger.TraceMsg:    logger.Trace(),
-					"Status":           status,
-					"Date":             date,
-					"Team Collections": teamCols,
-				},
-				"RegisterTeamColData Err",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_R_RegisterCol, teamCols)
 		}
 		resp.WriteAsJson(status)
 
 	case "field":
 
-		fieldCols := new([]mongo.FieldCol)
+		fieldCols := new([]m.FieldCol)
 		if err := req.ReadEntity(fieldCols); err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		status, err := mongo.RegisterFieldColData(date, *fieldCols)
+		status, err := m.RegisterFieldColData(date, *fieldCols)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:       err,
-					logger.TraceMsg:     logger.Trace(),
-					"Status":            status,
-					"Date":              date,
-					"Field Collections": fieldCols,
-				},
-				"RegisterFieldColData Err",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_R_RegisterCol, fieldCols)
 		}
 		resp.WriteAsJson(status)
 
 	case "thread":
 
-		requestTakePictureStatus := new(mongo.RequestTakePictureStatus)
+		requestTakePictureStatus := new(m.RequestTakePictureStatus)
 		if err := req.ReadEntity(requestTakePictureStatus); err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		status, err := mongo.RegisterThreadImg(requestTakePictureStatus)
+		status, err := m.RegisterThreadImg(requestTakePictureStatus)
 		if err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:                 err,
-					logger.TraceMsg:               logger.Trace(),
-					"Status":                      status,
-					"Request Take Picture Status": requestTakePictureStatus,
-				},
-				"RegisterThreadImg Err",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_R_RegisterCol, requestTakePictureStatus)
 		}
 
 		resp.WriteAsJson(status)

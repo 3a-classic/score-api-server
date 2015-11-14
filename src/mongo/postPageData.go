@@ -1,7 +1,7 @@
 package mongo
 
 import (
-	"logger"
+	l "logger"
 
 	"errors"
 	"strconv"
@@ -13,10 +13,10 @@ import (
 
 func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 
-	logger.Output(
+	l.Output(
 		logrus.Fields{"Login Info": loginInfo},
-		"Post data of login",
-		logger.Info,
+		l.I_M_PostPage,
+		l.Info,
 	)
 	_, ok := users[loginInfo.UserId]
 	if ok {
@@ -29,13 +29,13 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 			}
 		}
 
-		logger.Output(
+		l.Output(
 			logrus.Fields{
 				"User ID":   loginInfo.UserId,
 				"User Name": users[loginInfo.UserId].Name,
 			},
 			"login success",
-			logger.Debug,
+			l.Debug,
 		)
 		loginStatus := &LoginStatus{
 			Status:   "success",
@@ -46,22 +46,22 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 		}
 		return loginStatus, nil
 	} else {
-		logger.Output(
+		l.Output(
 			logrus.Fields{
 				"User ID": loginInfo.UserId,
 			},
 			"login faild",
-			logger.Debug,
+			l.Debug,
 		)
 		return &LoginStatus{Status: "failed"}, nil
 	}
 }
 
 func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, error) {
-	logger.Output(
+	l.Output(
 		logrus.Fields{"Team": teamName, "Apply Socre": ApplyScore},
-		"Post data of apply score",
-		logger.Info,
+		l.I_M_PostPage,
+		l.Info,
 	)
 
 	//更新情報をGlobal変数に格納する
@@ -69,12 +69,12 @@ func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, e
 
 	AUserIdInTheTeam := teams[teamName].UserIds[0]
 	if players[AUserIdInTheTeam].Apply != 0 {
-		logger.Output(
+		l.Output(
 			logrus.Fields{
 				"User Apply": players[AUserIdInTheTeam].Apply,
 			},
 			"Apply score is already registered",
-			logger.Debug,
+			l.Debug,
 		)
 		return &Status{"already registered"}, nil
 	}
@@ -83,11 +83,7 @@ func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, e
 		findQuery := bson.M{"userid": userId}
 		setQuery := bson.M{"$set": bson.M{"apply": ApplyScore.Apply[playerIndex]}}
 		if err = UpdateMongoData("player", findQuery, setQuery); err != nil {
-			logger.Output(
-				logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
-				"can not update apply score",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_M_Update, ApplyScore.Apply[playerIndex])
 			return &Status{"failed"}, err
 		}
 	}
@@ -96,10 +92,10 @@ func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, e
 }
 
 func PostScoreViewSheetPageData(teamName string, definedTeam *PostDefinedTeam) (*Status, error) {
-	logger.Output(
+	l.Output(
 		logrus.Fields{"Team": teamName, "Define": definedTeam},
-		"Post data of  team score",
-		logger.Info,
+		l.I_M_PostPage,
+		l.Info,
 	)
 	//更新情報をGlobal変数に格納する
 	defer SetTeamCol(teamName)
@@ -107,11 +103,7 @@ func PostScoreViewSheetPageData(teamName string, definedTeam *PostDefinedTeam) (
 	findQuery := bson.M{"name": teamName}
 	setQuery := bson.M{"$set": bson.M{"defined": true}}
 	if err = UpdateMongoData("team", findQuery, setQuery); err != nil {
-		logger.Output(
-			logrus.Fields{logger.ErrMsg: err, logger.TraceMsg: logger.Trace()},
-			"can not update defined score flag",
-			logger.Error,
-		)
+		l.PutErr(err, l.Trace(), l.E_M_Update, teamName)
 		return &Status{"failed"}, err
 	}
 
@@ -119,14 +111,14 @@ func PostScoreViewSheetPageData(teamName string, definedTeam *PostDefinedTeam) (
 }
 
 func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *PostTeamScore) (*RequestTakePictureStatus, error) {
-	logger.Output(
+	l.Output(
 		logrus.Fields{
 			"Team":        teamName,
 			"Hole String": holeString,
 			"Team Score":  teamScore,
 		},
-		"Post data of  team score",
-		logger.Info,
+		l.I_M_PostPage,
+		l.Info,
 	)
 
 	userIds := teams[teamName].UserIds
@@ -134,11 +126,7 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 	defer SetPlayerCol(userIds)
 
 	if len(holeString) == 0 {
-		logger.Output(
-			logrus.Fields{"hole String": holeString, logger.TraceMsg: logger.Trace()},
-			"hole string is empty",
-			logger.Error,
-		)
+		l.PutErr(nil, l.Trace(), l.E_Nil, teamName)
 		return &RequestTakePictureStatus{Status: "failed"}, errors.New("hole is not string")
 	}
 
@@ -163,46 +151,20 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 			},
 		}
 		if err = UpdateMongoData("player", findQuery, setQuery); err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:   err,
-					logger.TraceMsg: logger.Trace(),
-					"Find Query":    findQuery,
-					"Set Query":     setQuery,
-				},
-				"can not update score",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_M_Update, userId)
 			return &RequestTakePictureStatus{Status: "failed update score"}, err
 		}
 	}
 	//	Thread登録
 	if err := RegisterThreadOfScore(holeString, teamScore); err != nil {
-		logger.Output(
-			logrus.Fields{
-				logger.ErrMsg:   err,
-				logger.TraceMsg: logger.Trace(),
-				"Hole String":   holeString,
-				"Team Score":    teamScore,
-			},
-			"can not register thread of score",
-			logger.Error,
-		)
+		l.PutErr(err, l.Trace(), l.E_M_RegisterThread, teamScore)
 		return nil, err
 	}
 
 	//	チーム内に写真リクエストがあるか確認する
 	requestTakePictureStatus, err := RequestTakePicture(userIds)
 	if err != nil {
-		logger.Output(
-			logrus.Fields{
-				logger.ErrMsg:   err,
-				logger.TraceMsg: logger.Trace(),
-				"User IDs":      userIds,
-			},
-			"can not look for picture task",
-			logger.Error,
-		)
+		l.PutErr(err, l.Trace(), l.E_M_SearchPhotoTask, userIds)
 		return nil, err
 	}
 
@@ -210,12 +172,10 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 }
 
 func UpsertNewTimeLine(thread *Thread) error {
-	logger.Output(
-		logrus.Fields{
-			"Thread": thread,
-		},
-		"Post data of thread",
-		logger.Info,
+	l.Output(
+		logrus.Fields{"Thread": thread},
+		l.I_M_PostPage,
+		l.Info,
 	)
 
 	targetThreadId := thread.ThreadId
@@ -229,51 +189,29 @@ func UpsertNewTimeLine(thread *Thread) error {
 	colorFeeling["sad"] = "#7fbfff"
 	colorFeeling["vexing"] = "#7fff7f"
 
-	db, session := mongoInit()
-	threadCol := db.C("thread")
-	defer session.Close()
-
 	//新規スレッドの時
 	if len(targetThreadId) == 0 {
+
+		db, session := mongoInit()
+		threadCol := db.C("thread")
+		defer session.Close()
 
 		thread.ThreadId = make20lengthHashString()
 		thread.CreatedAt = time.Now().Format(datetimeFormat)
 		thread.ColorCode = colorFeeling["default"]
 		if err = threadCol.Insert(thread); err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:   err,
-					logger.TraceMsg: logger.Trace(),
-					"Thread":        thread,
-				},
-				"can not insert thread",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_M_Insert, thread)
 			return err
 		}
 
 		//既存スレッドに対する反応の時
 	} else {
 		if len(thread.ColorCode) == 0 {
-			logger.Output(
-				logrus.Fields{
-					logger.TraceMsg: logger.Trace(),
-					"Color Code":    thread.ColorCode,
-				},
-				"current colorCode is not contain in posted thread",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_Nil, thread.ColorCode)
 			return errors.New("current colorCode is not contain in posted thread")
 		}
 		if len(thread.Reactions) > 1 {
-			logger.Output(
-				logrus.Fields{
-					logger.TraceMsg: logger.Trace(),
-					"Reactions":     thread.Reactions,
-				},
-				"too many reactions",
-				logger.Error,
-			)
+			l.PutErr(err, l.Trace(), l.E_TooManyData, thread.Reactions)
 			return errors.New("reactions is not 1")
 		}
 
@@ -291,17 +229,8 @@ func UpsertNewTimeLine(thread *Thread) error {
 		thread.Reactions[0].DateTime = time.Now().Format(datetimeFormat)
 		findQuery := bson.M{"threadid": targetThreadId}
 		pushQuery := bson.M{"$push": bson.M{"reactions": thread.Reactions[0]}}
-		if err = threadCol.Update(findQuery, pushQuery); err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:   err,
-					logger.TraceMsg: logger.Trace(),
-					"Find Query":    findQuery,
-					"Push Query":    pushQuery,
-				},
-				"can not update reactions",
-				logger.Error,
-			)
+		if err = UpdateMongoData("thread", findQuery, pushQuery); err != nil {
+			l.PutErr(err, l.Trace(), l.E_M_Update, thread.Reactions[0])
 			return err
 		}
 
@@ -332,17 +261,8 @@ func UpsertNewTimeLine(thread *Thread) error {
 
 			setQuery := bson.M{"$set": bson.M{"colorcode": setColor}}
 
-			if err = threadCol.Update(findQuery, setQuery); err != nil {
-				logger.Output(
-					logrus.Fields{
-						logger.ErrMsg:   err,
-						logger.TraceMsg: logger.Trace(),
-						"Find Query":    findQuery,
-						"Set Query":     setQuery,
-					},
-					"can not update thread color code",
-					logger.Error,
-				)
+			if err = UpdateMongoData("thread", findQuery, setQuery); err != nil {
+				l.PutErr(err, l.Trace(), l.E_M_Update, setColor)
 				return err
 			}
 		}

@@ -10,9 +10,6 @@ import (
 	"labix.org/v2/mgo"
 )
 
-// set env name existing mongo server
-// future or home
-
 var (
 	conf           *Config
 	users          map[string]UserCol

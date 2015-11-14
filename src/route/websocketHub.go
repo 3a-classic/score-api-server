@@ -5,8 +5,8 @@
 package route
 
 import (
-	"logger"
-	"mongo"
+	l "logger"
+	m "mongo"
 
 	"github.com/Sirupsen/logrus"
 )
@@ -18,7 +18,7 @@ type Hub struct {
 	Connections map[*connection]bool
 
 	// Inbound messages from the connections.
-	Broadcast chan *mongo.Thread
+	Broadcast chan *m.Thread
 
 	// Register requests from the connections.
 	Register chan *connection
@@ -28,7 +28,7 @@ type Hub struct {
 }
 
 var H = Hub{
-	Broadcast:   make(chan *mongo.Thread),
+	Broadcast:   make(chan *m.Thread),
 	Register:    make(chan *connection),
 	Unregister:  make(chan *connection),
 	Connections: make(map[*connection]bool),
@@ -41,39 +41,39 @@ func (h *Hub) Run() {
 		select {
 		case c := <-h.Register:
 			h.Connections[c] = true
-			logger.Output(
+			l.Output(
 				logrus.Fields{
 					"New Connection": c,
 					"Connections":    h.Connections,
 				},
 				"Register websocket",
-				logger.Debug,
+				l.Debug,
 			)
 		case c := <-h.Unregister:
 			if _, ok := h.Connections[c]; ok {
-				logger.Output(
+				l.Output(
 					logrus.Fields{
 						"New Connection": c,
 						"Connections":    h.Connections,
 					},
 					"Unregister websocket",
-					logger.Debug,
+					l.Debug,
 				)
 				delete(h.Connections, c)
 				close(c.send)
 			}
-		case m := <-h.Broadcast:
-			logger.Output(
+		case me := <-h.Broadcast:
+			l.Output(
 				logrus.Fields{
-					"Broad Cast":  m,
+					"Broad Cast":  me,
 					"Connections": h.Connections,
 				},
 				"Broad Cast websocket",
-				logger.Debug,
+				l.Debug,
 			)
 			for c := range h.Connections {
 				select {
-				case c.send <- m:
+				case c.send <- me:
 				default:
 					close(c.send)
 					delete(h.Connections, c)
@@ -86,13 +86,11 @@ func (h *Hub) Run() {
 func newThreadCheck() {
 	for {
 		select {
-		case t := <-mongo.ThreadChan:
-			logger.Output(
-				logrus.Fields{
-					"Threa Chain": t,
-				},
+		case t := <-m.ThreadChan:
+			l.Output(
+				logrus.Fields{"Threa Chain": t},
 				"New Thread websocket",
-				logger.Debug,
+				l.Debug,
 			)
 
 			H.Broadcast <- t

@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"reflect"
 	"runtime"
 
 	"github.com/BurntSushi/toml"
@@ -20,12 +21,38 @@ var (
 )
 
 const (
-	Fatal    = "fatal"
-	Error    = "error"
-	Info     = "info"
-	Debug    = "debug"
+	Fatal = "fatal"
+	Error = "error"
+	Info  = "info"
+	Debug = "debug"
+
 	ErrMsg   = "Error Message"
 	TraceMsg = "Stack Trace"
+
+	E_Nil         = "This variable is nil"
+	E_WrongData   = "This is not correct data"
+	E_TooManyData = "There are too many data"
+	E_MakeHash    = "Can not make hash string"
+
+	E_M_FindEntireCol  = "Can not find entire colection : mongo"
+	E_M_FindCol        = "Can not find colection : mongo"
+	E_M_Upsert         = "Can not upsert data : mongo"
+	E_M_Insert         = "Can not insert data : mongo"
+	E_M_Update         = "Can not update data : mongo"
+	E_M_RegisterThread = "Can not register thread score : mongo"
+	//	E_M_RegisterUser    = "Can not register user"
+	E_M_SearchPhotoTask = "Can not search picture task : mongo"
+
+	I_M_GetPage     = "Get page data : mongo"
+	I_M_PostPage    = "Post page data : mongo"
+	I_M_RegisterCol = "Register collection data : mongo"
+
+	E_R_PostPage    = "Can not post page data : route"
+	E_R_RegisterCol = "Can not register collection data : route"
+	E_R_Upsert      = "Can not upsert data : route"
+	E_R_WriteJSON   = "Can not write JSON : route"
+	E_R_PingMsg     = "Can not ping message : route"
+	E_R_Upgrader    = "Can not upgrader webdocket : route"
 )
 
 type Config struct {
@@ -69,15 +96,33 @@ func init() {
 
 }
 
+func PutFata(err error, trace string, msg string, obj interface{}) {
+
+	objType := fmt.Sprintf("%+v\n", reflect.ValueOf(obj).Type())
+	field := &logrus.Fields{
+		ErrMsg:   fmt.Errorf("%v", err),
+		TraceMsg: trace,
+		objType:  fmt.Sprintf("%+v\n", obj),
+	}
+	mongoLog.WithFields(*field).Fatal(msg)
+	slackLog.WithFields(*field).Fatal(msg)
+}
+
+func PutErr(err error, trace string, msg string, obj interface{}) {
+
+	objType := fmt.Sprintf("%+v\n", reflect.ValueOf(obj).Type())
+	field := &logrus.Fields{
+		ErrMsg:   Errorf(err),
+		TraceMsg: trace,
+		objType:  Sprintf(obj),
+	}
+	mongoLog.WithFields(*field).Error(msg)
+	slackLog.WithFields(*field).Error(msg)
+}
+
 func Output(field logrus.Fields, msg string, level string) {
 
 	switch level {
-	case Fatal:
-		mongoLog.WithFields(field).Fatal(msg)
-		slackLog.WithFields(field).Fatal(msg)
-	case Error:
-		mongoLog.WithFields(field).Error(msg)
-		slackLog.WithFields(field).Error(msg)
 	case Info:
 		mongoLog.WithFields(field).Info(msg)
 		slackLog.WithFields(field).Info(msg)
@@ -85,6 +130,14 @@ func Output(field logrus.Fields, msg string, level string) {
 		mongoLog.WithFields(field).Debug(msg)
 		slackLog.WithFields(field).Debug(msg)
 	}
+}
+
+func Errorf(err error) string {
+	return fmt.Sprintf("%v", err)
+}
+
+func Sprintf(obj interface{}) string {
+	return fmt.Sprintf("%+v\n", obj)
 }
 
 func Trace() string {

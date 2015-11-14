@@ -1,10 +1,9 @@
 package route
 
 import (
-	"logger"
-	"mongo"
+	l "logger"
+	m "mongo"
 
-	"fmt"
 	"net/http"
 	"time"
 
@@ -31,7 +30,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
-var thread *mongo.Thread
+var thread *m.Thread
 
 // connection is an middleman between the websocket connection and the hub.
 type connection struct {
@@ -39,7 +38,7 @@ type connection struct {
 	ws *websocket.Conn
 
 	// Buffered channel of outbound messages.
-	send chan *mongo.Thread
+	send chan *m.Thread
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -58,28 +57,20 @@ func (c *connection) readPump() {
 			if thread == nil {
 				break
 			}
-			logger.Output(
+			l.Output(
 				logrus.Fields{
-					logger.ErrMsg:   fmt.Errorf("%v", err),
-					logger.TraceMsg: logger.Trace(),
-					"Thread":        fmt.Sprintf("%+v\n", thread),
+					l.ErrMsg:   l.Errorf(err),
+					l.TraceMsg: l.Trace(),
+					"Thread":   l.Sprintf(thread),
 				},
 				"can not read JSON or Closed Websocket",
-				logger.Debug,
+				l.Debug,
 			)
 			break
 		}
 
-		if err := mongo.UpsertNewTimeLine(thread); err != nil {
-			logger.Output(
-				logrus.Fields{
-					logger.ErrMsg:   fmt.Errorf("%v", err),
-					logger.TraceMsg: logger.Trace(),
-					"Thread":        fmt.Sprintf("%+v\n", thread),
-				},
-				"can not upsert thread",
-				logger.Error,
-			)
+		if err := m.UpsertNewTimeLine(thread); err != nil {
+			l.PutErr(err, l.Trace(), l.E_R_Upsert, thread)
 		}
 
 		H.Broadcast <- thread
@@ -107,28 +98,12 @@ func (c *connection) writePump() {
 				return
 			}
 			if err := c.ws.WriteJSON(threadToResponse); err != nil {
-				logger.Output(
-					logrus.Fields{
-						logger.ErrMsg:        err,
-						logger.TraceMsg:      logger.Trace(),
-						"Thread To Response": threadToResponse,
-					},
-					"can not write thread",
-					logger.Error,
-				)
+				l.PutErr(err, l.Trace(), l.E_R_WriteJSON, threadToResponse)
 				return
 			}
 		case <-ticker.C:
 			if err := c.write(websocket.PingMessage, []byte{}); err != nil {
-				logger.Output(
-					logrus.Fields{
-						logger.ErrMsg:   err,
-						logger.TraceMsg: logger.Trace(),
-						"Ping Message":  websocket.PingMessage,
-					},
-					"can not ping message",
-					logger.Error,
-				)
+				l.PutErr(err, l.Trace(), l.E_R_PingMsg, websocket.PingMessage)
 				return
 			}
 		}
@@ -139,19 +114,10 @@ func (c *connection) writePump() {
 func ServeWs(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		logger.Output(
-			logrus.Fields{
-				logger.ErrMsg:         err,
-				logger.TraceMsg:       logger.Trace(),
-				"http.ResponseWriter": w,
-				"http.Request":        r,
-			},
-			"can not make websocket",
-			logger.Error,
-		)
+		l.PutErr(err, l.Trace(), l.E_R_Upgrader, nil)
 		return
 	}
-	c := &connection{send: make(chan *mongo.Thread, 256), ws: ws}
+	c := &connection{send: make(chan *m.Thread, 256), ws: ws}
 	H.Register <- c
 	go c.writePump()
 	c.readPump()
