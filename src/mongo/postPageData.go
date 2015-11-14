@@ -178,6 +178,8 @@ func UpsertNewTimeLine(thread *Thread) error {
 		return err
 	}
 
+	ThreadChan <- thread
+
 	return nil
 }
 
