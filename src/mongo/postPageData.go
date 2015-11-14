@@ -178,6 +178,38 @@ func UpsertNewTimeLine(thread *Thread) error {
 		l.Info,
 	)
 
+	//更新情報をGlobal変数に格納する
+	defer SetAllThreadCol()
+
+	defaultColor := "#c0c0c0"
+
+	if len(thread.ThreadId) == 0 {
+		l.PutErr(nil, l.Trace(), l.E_WrongData, thread)
+		return errors.New("thread id exists")
+	}
+
+	db, session := mongoInit()
+	threadCol := db.C("thread")
+	defer session.Close()
+
+	thread.ThreadId = make20lengthHashString()
+	thread.CreatedAt = time.Now().Format(datetimeFormat)
+	thread.ColorCode = defaultColor
+	if err = threadCol.Insert(thread); err != nil {
+		l.PutErr(err, l.Trace(), l.E_M_Insert, thread)
+		return err
+	}
+
+	return nil
+}
+
+func UpdateExistingTimeLine(thread *Thread) (*Thread, error) {
+	l.Output(
+		logrus.Fields{"Thread": thread},
+		l.I_M_PostPage,
+		l.Info,
+	)
+
 	targetThreadId := thread.ThreadId
 	//更新情報をGlobal変数に格納する
 	defer SetAllThreadCol()
@@ -189,83 +221,71 @@ func UpsertNewTimeLine(thread *Thread) error {
 	colorFeeling["sad"] = "#7fbfff"
 	colorFeeling["vexing"] = "#7fff7f"
 
-	//新規スレッドの時
 	if len(targetThreadId) == 0 {
+		l.PutErr(nil, l.Trace(), l.E_Nil, thread)
+		return nil, errors.New("thread id do not exist")
+	}
 
-		db, session := mongoInit()
-		threadCol := db.C("thread")
-		defer session.Close()
+	if len(thread.ColorCode) == 0 {
+		l.PutErr(err, l.Trace(), l.E_Nil, thread.ColorCode)
+		return nil, errors.New("current colorCode do not contain in posted thread")
+	}
+	if len(thread.Reactions) > 1 {
+		l.PutErr(err, l.Trace(), l.E_TooManyData, thread.Reactions)
+		return nil, errors.New("reactions is not 1")
+	}
 
-		thread.ThreadId = make20lengthHashString()
-		thread.CreatedAt = time.Now().Format(datetimeFormat)
-		thread.ColorCode = colorFeeling["default"]
-		if err = threadCol.Insert(thread); err != nil {
-			l.PutErr(err, l.Trace(), l.E_M_Insert, thread)
-			return err
-		}
+	currentFeeling := ""
+	currentColor := threads[targetThreadId].ColorCode
+	postedFeeling := getFeelingFromAWSUrl(thread.Reactions[0].Content)
+	postedColor := colorFeeling[postedFeeling]
 
-		//既存スレッドに対する反応の時
-	} else {
-		if len(thread.ColorCode) == 0 {
-			l.PutErr(err, l.Trace(), l.E_Nil, thread.ColorCode)
-			return errors.New("current colorCode is not contain in posted thread")
-		}
-		if len(thread.Reactions) > 1 {
-			l.PutErr(err, l.Trace(), l.E_TooManyData, thread.Reactions)
-			return errors.New("reactions is not 1")
-		}
-
-		currentFeeling := ""
-		currentColor := threads[targetThreadId].ColorCode
-		postedFeeling := getFeelingFromAWSUrl(thread.Reactions[0].Content)
-		postedColor := colorFeeling[postedFeeling]
-
-		for feeling, code := range colorFeeling {
-			if currentColor == code {
-				currentFeeling = feeling
-			}
-		}
-
-		thread.Reactions[0].DateTime = time.Now().Format(datetimeFormat)
-		findQuery := bson.M{"threadid": targetThreadId}
-		pushQuery := bson.M{"$push": bson.M{"reactions": thread.Reactions[0]}}
-		if err = UpdateMongoData("thread", findQuery, pushQuery); err != nil {
-			l.PutErr(err, l.Trace(), l.E_M_Update, thread.Reactions[0])
-			return err
-		}
-
-		//投稿された感情と、現在の感情に相違がある場合
-		if currentFeeling != postedFeeling {
-			var setColor string
-			var currentFeelingCount, postedFeelingCount int
-
-			if currentColor == colorFeeling["default"] {
-				setColor = postedColor
-			} else {
-
-				for _, r := range threads[targetThreadId].Reactions {
-					switch getFeelingFromAWSUrl(r["content"].(string)) {
-					case currentFeeling:
-						currentFeelingCount++
-					case postedFeeling:
-						postedFeelingCount++
-					}
-				}
-
-				if currentFeelingCount >= postedFeelingCount {
-					setColor = currentColor
-				} else {
-					setColor = postedColor
-				}
-			}
-
-			setQuery := bson.M{"$set": bson.M{"colorcode": setColor}}
-
-			if err = UpdateMongoData("thread", findQuery, setQuery); err != nil {
-				l.PutErr(err, l.Trace(), l.E_M_Update, setColor)
-				return err
-			}
+	for feeling, code := range colorFeeling {
+		if currentColor == code {
+			currentFeeling = feeling
 		}
 	}
-	return nil
+
+	thread.Reactions[0].DateTime = time.Now().Format(datetimeFormat)
+	findQuery := bson.M{"threadid": targetThreadId}
+	pushQuery := bson.M{"$push": bson.M{"reactions": thread.Reactions[0]}}
+	if err = UpdateMongoData("thread", findQuery, pushQuery); err != nil {
+		l.PutErr(err, l.Trace(), l.E_M_Update, thread.Reactions[0])
+		return nil, err
+	}
+
+	//投稿された感情と、現在の感情に相違がある場合
+	if currentFeeling != postedFeeling {
+		var setColor string
+		var currentFeelingCount, postedFeelingCount int
+
+		if currentColor == colorFeeling["default"] {
+			setColor = postedColor
+		} else {
+
+			for _, r := range threads[targetThreadId].Reactions {
+				switch getFeelingFromAWSUrl(r["content"].(string)) {
+				case currentFeeling:
+					currentFeelingCount++
+				case postedFeeling:
+					postedFeelingCount++
+				}
+			}
+
+			if currentFeelingCount >= postedFeelingCount {
+				setColor = currentColor
+			} else {
+				setColor = postedColor
+			}
+		}
+
+		setQuery := bson.M{"$set": bson.M{"colorcode": setColor}}
+
+		if err = UpdateMongoData("thread", findQuery, setQuery); err != nil {
+			l.PutErr(err, l.Trace(), l.E_M_Update, setColor)
+			return nil, err
+		}
+		thread.ColorCode = setColor
+	}
+	return thread, nil
 }

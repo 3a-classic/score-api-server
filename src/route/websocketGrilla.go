@@ -31,6 +31,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 var thread *m.Thread
+var newThread *m.Thread
 
 // connection is an middleman between the websocket connection and the hub.
 type connection struct {
@@ -69,11 +70,11 @@ func (c *connection) readPump() {
 			break
 		}
 
-		if err := m.UpsertNewTimeLine(thread); err != nil {
+		if newThread, err = m.UpdateExistingTimeLine(thread); err != nil {
 			l.PutErr(err, l.Trace(), l.E_R_Upsert, thread)
 		}
 
-		H.Broadcast <- thread
+		H.Broadcast <- newThread
 	}
 }
 

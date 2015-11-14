@@ -30,7 +30,7 @@ const (
 	TraceMsg = "Stack Trace"
 
 	E_Nil         = "This variable is nil"
-	E_WrongData   = "This is not correct data"
+	E_WrongData   = "This do not correct data"
 	E_TooManyData = "There are too many data"
 	E_MakeHash    = "Can not make hash string"
 
