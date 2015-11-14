@@ -52,6 +52,15 @@ func (c *connection) readPump() {
 	c.ws.SetReadDeadline(time.Now().Add(pongWait))
 	c.ws.SetPongHandler(func(string) error { c.ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
+
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Println("ws", c.ws)
+		fmt.Println("thread", thread)
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Println("")
 		err := c.ws.ReadJSON(&thread)
 		if err != nil {
 			logger.Output(
