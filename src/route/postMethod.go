@@ -4,7 +4,6 @@ import (
 	"logger"
 	"mongo"
 
-	"log"
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
@@ -87,7 +86,6 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		updatedTeamScore := new(mongo.PostTeamScore)
 		err := req.ReadEntity(updatedTeamScore)
-		log.Println(updatedTeamScore)
 		if err != nil { // bad request
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
@@ -164,7 +162,6 @@ func register(req *restful.Request, resp *restful.Response) {
 	case "user":
 
 		userCols := new([]mongo.UserCol)
-		log.Println(userCols)
 		if err := req.ReadEntity(userCols); err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
@@ -188,7 +185,6 @@ func register(req *restful.Request, resp *restful.Response) {
 	case "team":
 
 		teamCols := new([]mongo.TeamCol)
-		log.Println(teamCols)
 		if err := req.ReadEntity(teamCols); err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
@@ -213,7 +209,6 @@ func register(req *restful.Request, resp *restful.Response) {
 	case "field":
 
 		fieldCols := new([]mongo.FieldCol)
-		log.Println(fieldCols)
 		if err := req.ReadEntity(fieldCols); err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
@@ -238,7 +233,6 @@ func register(req *restful.Request, resp *restful.Response) {
 	case "thread":
 
 		requestTakePictureStatus := new(mongo.RequestTakePictureStatus)
-		log.Println(requestTakePictureStatus)
 		if err := req.ReadEntity(requestTakePictureStatus); err != nil {
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return

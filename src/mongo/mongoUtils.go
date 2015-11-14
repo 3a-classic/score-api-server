@@ -6,7 +6,6 @@ import (
 	"crypto/rand"
 	"encoding/base32"
 	"io"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -136,7 +135,6 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 			Positive: threadPositive[threadKey],
 		}
 
-		log.Println("thread : ", thread)
 		if err := UpsertNewTimeLine(thread); err != nil {
 			logger.Output(
 				logrus.Fields{
@@ -151,7 +149,6 @@ func RegisterThreadOfScore(holeString string, teamScore *PostTeamScore) error {
 		}
 	}
 
-	log.Println("thread insert done")
 	//	holeThreadScore := make(map[string]int)
 	//	holeThreadUserId := make(map[string]string)
 	//	holeThreadMsg := make(map[string]string)

@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
-	//	"golang.org/x/net/websocket"
+	"logger"
+	"route"
+
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"route"
+	"github.com/Sirupsen/logrus"
 )
 
 func main() {
@@ -23,6 +24,10 @@ func shutdownHook() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	<-sigs
-	fmt.Println("bye")
+	logger.Output(
+		logrus.Fields{},
+		"Shutdown",
+		logger.Info,
+	)
 	os.Exit(0)
 }

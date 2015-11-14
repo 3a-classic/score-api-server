@@ -4,8 +4,6 @@ import (
 	"logger"
 
 	"errors"
-	"log"
-	"strconv"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -162,7 +160,6 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 	db, session := mongoInit()
 	fieldC := db.C("field")
 	defer session.Close()
-	log.Println("field playerの登録を開始します。")
 
 	var createCnt, updateCnt int
 	for _, fieldCol := range fieldCols {
@@ -199,8 +196,6 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 			updateCnt += 1
 		}
 	}
-	log.Println(strconv.Itoa(createCnt) + "件作成されました。")
-	log.Println(strconv.Itoa(updateCnt) + "件更新されました。")
 
 	return &Status{"success"}, nil
 }
