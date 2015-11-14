@@ -43,8 +43,8 @@ func (h *Hub) Run() {
 			h.Connections[c] = true
 			l.Output(
 				logrus.Fields{
-					"New Connection": c,
-					"Connections":    h.Connections,
+					"New Connection": l.Sprintf(c),
+					"Connections":    l.Sprintf(h.Connections),
 				},
 				"Register websocket",
 				l.Debug,
@@ -53,8 +53,8 @@ func (h *Hub) Run() {
 			if _, ok := h.Connections[c]; ok {
 				l.Output(
 					logrus.Fields{
-						"New Connection": c,
-						"Connections":    h.Connections,
+						"New Connection": l.Sprintf(c),
+						"Connections":    l.Sprintf(h.Connections),
 					},
 					"Unregister websocket",
 					l.Debug,
@@ -65,8 +65,8 @@ func (h *Hub) Run() {
 		case me := <-h.Broadcast:
 			l.Output(
 				logrus.Fields{
-					"Broad Cast":  me,
-					"Connections": h.Connections,
+					"Broad Cast":  l.Sprintf(me),
+					"Connections": l.Sprintf(h.Connections),
 				},
 				"Broad Cast websocket",
 				l.Debug,
@@ -88,7 +88,7 @@ func newThreadCheck() {
 		select {
 		case t := <-m.ThreadChan:
 			l.Output(
-				logrus.Fields{"Threa Chain": t},
+				logrus.Fields{"Threa Chain": l.Sprintf(t)},
 				"New Thread websocket",
 				l.Debug,
 			)

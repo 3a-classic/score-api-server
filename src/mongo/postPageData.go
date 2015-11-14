@@ -64,7 +64,7 @@ func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, e
 	if players[AUserIdInTheTeam].Apply != 0 {
 		l.Output(
 			logrus.Fields{
-				"User Apply": players[AUserIdInTheTeam].Apply,
+				"User Apply": l.Sprintf(players[AUserIdInTheTeam].Apply),
 			},
 			"Apply score is already registered",
 			l.Debug,

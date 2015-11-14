@@ -15,7 +15,7 @@ func getCol(req *restful.Request, resp *restful.Response) {
 	col := req.PathParameter("col")
 
 	l.Output(
-		logrus.Fields{"Collection": col},
+		logrus.Fields{"Collection": l.Sprintf(col)},
 		"Get access to collection router",
 		l.Debug,
 	)
@@ -31,7 +31,7 @@ func getCol(req *restful.Request, resp *restful.Response) {
 
 func getPage(req *restful.Request, resp *restful.Response) {
 	var page, team, hole string
-	url := (strings.Split(req.PathParameter("page"), "/"))
+	url := strings.Split(req.PathParameter("page"), "/")
 
 	l.Output(
 		logrus.Fields{"Page": page, "Team": team, "Hole": hole, "URL": url},
