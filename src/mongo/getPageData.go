@@ -11,6 +11,11 @@ import (
 )
 
 func GetIndexPageData() (*Index, error) {
+	logger.Output(
+		logrus.Fields{},
+		"Get page of index",
+		logger.Info,
+	)
 
 	var teamArray []string
 	for name, _ := range teams {
@@ -22,16 +27,15 @@ func GetIndexPageData() (*Index, error) {
 		Team:   teamArray,
 		Length: len(teams),
 	}
-	trace := logger.Trace()
-	logger.Output(
-		logrus.Fields{"Stack Trace": trace},
-		"can not find all user from mongo",
-		"info",
-	)
 	return index, nil
 }
 
 func GetLeadersBoardPageData() (*LeadersBoard, error) {
+	logger.Output(
+		logrus.Fields{},
+		"Get page of leaders board",
+		logger.Info,
+	)
 
 	var leadersBoard LeadersBoard
 	var userScore UserScore
@@ -61,6 +65,15 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 }
 
 func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntrySheet, error) {
+	logger.Output(
+		logrus.Fields{
+			"Team Name":   teamName,
+			"Hole String": holeString,
+		},
+		"Get page of Score Entry Sheet",
+		logger.Info,
+	)
+
 	if len(holeString) == 0 {
 		return nil, errors.New("hole string is nil")
 	}
@@ -94,6 +107,13 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 }
 
 func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
+	logger.Output(
+		logrus.Fields{
+			"Team Name": teamName,
+		},
+		"Get page of Score View Sheet",
+		logger.Info,
+	)
 
 	userIds := teams[teamName].UserIds
 	member := make([]string, len(userIds))
@@ -176,6 +196,11 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 }
 
 func GetEntireScorePageData() (*EntireScore, error) {
+	logger.Output(
+		logrus.Fields{},
+		"Get page of Entire Score",
+		logger.Info,
+	)
 
 	//rows[*][0] ホール rows[*][1] パー rows[*][2->n] PlayerName
 	//rows[0] チーム名
@@ -315,18 +340,12 @@ func GetEntireScorePageData() (*EntireScore, error) {
 	return &EntireScore, nil
 }
 
-type FinalRanking struct {
-	UserId    string
-	ScoreDiff int
-	Gross     int
-}
-
-type ThreadDate struct {
-	ThreadId  string
-	CreatedAt string
-}
-
 func GetTimeLinePageData() (*TimeLine, error) {
+	logger.Output(
+		logrus.Fields{},
+		"Get page of time line",
+		logger.Info,
+	)
 
 	var timeLine TimeLine
 	var tmpThreads []Thread

@@ -18,7 +18,6 @@ func Register() {
 		Param(ws.PathParameter("col", "identifier of the collection index").DataType("string")))
 
 	ws.Route(ws.GET("/page/{page:*}").
-		Filter(basicAuthenticate).
 		To(getPage).
 		Doc("get the page data  by its page").
 		Param(ws.PathParameter("page", "identifier of the page index").DataType("string")))

@@ -1,10 +1,13 @@
 package route
 
 import (
-	"log"
+	"logger"
 	"mongo"
+
+	"log"
 	"net/http"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/emicklei/go-restful"
 )
 
@@ -12,21 +15,29 @@ func postOne(req *restful.Request, resp *restful.Response) {
 	page := req.PathParameter("page")
 	team := req.PathParameter("team")
 	hole := req.PathParameter("hole")
-	log.Println("post data at " + page)
 	if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
 		if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
 			resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
 		}
 	}
-	log.Println(req)
-	log.Println(resp)
+
+	logger.Output(
+		logrus.Fields{
+			"Page":     page,
+			"Team":     team,
+			"Hole":     hole,
+			"Request":  req,
+			"Response": resp,
+		},
+		"Post access to page router",
+		logger.Debug,
+	)
 	switch page {
 
 	case "login":
 
 		loginInfo := new(mongo.PostLogin)
 		err := req.ReadEntity(loginInfo)
-		log.Println(loginInfo)
 		if err != nil { // bad request
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
@@ -34,16 +45,23 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.PostLoginPageData(loginInfo)
 		if err != nil {
-			log.Println("PostLoginPageData err")
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:   err,
+					logger.TraceMsg: logger.Trace(),
+					"Status":        status,
+					"login Info":    loginInfo,
+				},
+				"PostLoginPageData Err",
+				logger.Error,
+			)
 		}
 		resp.WriteAsJson(status)
-		log.Println("login user ID :" + loginInfo.UserId)
 
 	case "scoreViewSheet":
 
 		definedTeam := new(mongo.PostDefinedTeam)
 		err := req.ReadEntity(definedTeam)
-		log.Println(definedTeam)
 		if err != nil { // bad request
 			resp.WriteErrorString(http.StatusBadRequest, err.Error())
 			return
@@ -51,10 +69,19 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.PostScoreViewSheetPageData(team, definedTeam)
 		if err != nil {
-			log.Println("PostScoreViewSheetPageData err")
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:   err,
+					logger.TraceMsg: logger.Trace(),
+					"Status":        status,
+					"Team":          team,
+					"Defind Team":   definedTeam,
+				},
+				"PostScoreViewSheetPageData Err",
+				logger.Error,
+			)
 		}
 		resp.WriteAsJson(status)
-		log.Println("defineding score team:" + team)
 
 	case "scoreEntrySheet":
 
@@ -68,10 +95,20 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.PostScoreEntrySheetPageData(team, hole, updatedTeamScore)
 		if err != nil {
-			log.Println("PostScoreEntrySheetPageData err")
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:        err,
+					logger.TraceMsg:      logger.Trace(),
+					"Status":             status,
+					"Team":               team,
+					"Hole":               hole,
+					"Updated Team Score": updatedTeamScore,
+				},
+				"PostScoreEntrySheetPageData Err",
+				logger.Error,
+			)
 		}
 		resp.WriteAsJson(status)
-		log.Println("updating score team:" + team + ", hole: " + hole)
 
 	case "applyScore":
 		if hole != "" {
@@ -86,24 +123,42 @@ func postOne(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.PostApplyScoreData(team, registeredApplyScore)
 		if err != nil {
-			log.Println("PostApplyScoreData err")
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:   err,
+					logger.TraceMsg: logger.Trace(),
+					"Status":        status,
+					"Team":          team,
+					"Registered Apply Score": registeredApplyScore,
+				},
+				"PostApplyScoreData Err",
+				logger.Error,
+			)
 		}
 		resp.WriteAsJson(status)
-		log.Println("updating apply score:" + team)
 	}
 }
 
 func register(req *restful.Request, resp *restful.Response) {
 	date := req.PathParameter("date")
 	collection := req.PathParameter("collection")
-	log.Println("collection " + collection)
 	if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
 		if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
 			resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
 		}
 	}
-	log.Println(req)
-	log.Println(resp)
+
+	logger.Output(
+		logrus.Fields{
+			"Date":       date,
+			"Collection": collection,
+			"Request":    req,
+			"Response":   resp,
+		},
+		"Post access to register router",
+		logger.Debug,
+	)
+
 	switch collection {
 
 	case "user":
@@ -117,10 +172,18 @@ func register(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.RegisterUserColData(*userCols)
 		if err != nil {
-			log.Println("RegisterUserColData err")
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:      err,
+					logger.TraceMsg:    logger.Trace(),
+					"Status":           status,
+					"User Collections": userCols,
+				},
+				"RegisterUserColData Err",
+				logger.Error,
+			)
 		}
 		resp.WriteAsJson(status)
-		log.Println("register users : ", userCols)
 
 	case "team":
 
@@ -133,10 +196,19 @@ func register(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.RegisterTeamColData(date, *teamCols)
 		if err != nil {
-			log.Println("RegisterTeamColData err")
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:      err,
+					logger.TraceMsg:    logger.Trace(),
+					"Status":           status,
+					"Date":             date,
+					"Team Collections": teamCols,
+				},
+				"RegisterTeamColData Err",
+				logger.Error,
+			)
 		}
 		resp.WriteAsJson(status)
-		log.Println("register team : ", teamCols)
 
 	case "field":
 
@@ -149,10 +221,19 @@ func register(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.RegisterFieldColData(date, *fieldCols)
 		if err != nil {
-			log.Println("RegisterFieldColData err")
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:       err,
+					logger.TraceMsg:     logger.Trace(),
+					"Status":            status,
+					"Date":              date,
+					"Field Collections": fieldCols,
+				},
+				"RegisterFieldColData Err",
+				logger.Error,
+			)
 		}
 		resp.WriteAsJson(status)
-		log.Println("register field : ", fieldCols)
 
 	case "thread":
 
@@ -165,9 +246,18 @@ func register(req *restful.Request, resp *restful.Response) {
 
 		status, err := mongo.RegisterThreadImg(requestTakePictureStatus)
 		if err != nil {
-			log.Println("RegisterThreadImg( err")
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:                 err,
+					logger.TraceMsg:               logger.Trace(),
+					"Status":                      status,
+					"Request Take Picture Status": requestTakePictureStatus,
+				},
+				"RegisterThreadImg Err",
+				logger.Error,
+			)
 		}
+
 		resp.WriteAsJson(status)
-		log.Println("register thread img:", requestTakePictureStatus)
 	}
 }

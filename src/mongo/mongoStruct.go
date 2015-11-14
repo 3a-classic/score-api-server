@@ -109,10 +109,6 @@ type Thread struct {
 	CreatedAt string     `json:"createdAt"`
 }
 
-type sortByScore []UserScore
-type sortByRank []FinalRanking
-type sortByDate []ThreadDate
-
 type Index struct {
 	Team   []string `json:"team"`
 	Length int      `json:"length"`
@@ -202,4 +198,20 @@ type RequestTakePictureStatus struct {
 // websocket struct
 type TimeLineWs struct {
 	Msg string `json:"msg"`
+}
+
+//sort
+type sortByScore []UserScore
+type sortByRank []FinalRanking
+type sortByDate []ThreadDate
+
+type FinalRanking struct {
+	UserId    string
+	ScoreDiff int
+	Gross     int
+}
+
+type ThreadDate struct {
+	ThreadId  string
+	CreatedAt string
 }

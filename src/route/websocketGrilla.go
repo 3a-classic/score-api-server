@@ -1,14 +1,14 @@
 package route
 
 import (
-	//	"golang.org/x/net/websocket"
-	//	"fmt"
-	"github.com/gorilla/websocket"
-	"log"
+	"logger"
 	"mongo"
+
 	"net/http"
-	//	"runtime"
 	"time"
+
+	"github.com/Sirupsen/logrus"
+	"github.com/gorilla/websocket"
 )
 
 const (
@@ -51,17 +51,30 @@ func (c *connection) readPump() {
 	c.ws.SetReadDeadline(time.Now().Add(pongWait))
 	c.ws.SetPongHandler(func(string) error { c.ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		//		_, message, err := c.ws.ReadMessage()
 		err := c.ws.ReadJSON(&thread)
-		//		fmt.Printf("%+v\n", thread)
 		if err != nil {
-			log.Println("JSON Read ERR", err)
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:   err,
+					logger.TraceMsg: logger.Trace(),
+					"Thread":        thread,
+				},
+				"can not read JSON",
+				logger.Error,
+			)
 			break
 		}
-		//		H.Broadcast <- message
 
 		if err := mongo.UpsertNewTimeLine(thread); err != nil {
-			log.Println("reaction update err", err)
+			logger.Output(
+				logrus.Fields{
+					logger.ErrMsg:   err,
+					logger.TraceMsg: logger.Trace(),
+					"Thread":        thread,
+				},
+				"can not upsert thread",
+				logger.Error,
+			)
 		}
 
 		H.Broadcast <- thread
@@ -83,17 +96,34 @@ func (c *connection) writePump() {
 	}()
 	for {
 		select {
-		case threadToWrite, ok := <-c.send:
+		case threadToResponse, ok := <-c.send:
 			if !ok {
 				c.write(websocket.CloseMessage, []byte{})
 				return
 			}
-			//			if err := c.write(websocket.TextMessage, message); err != nil {
-			if err := c.ws.WriteJSON(threadToWrite); err != nil {
+			if err := c.ws.WriteJSON(threadToResponse); err != nil {
+				logger.Output(
+					logrus.Fields{
+						logger.ErrMsg:        err,
+						logger.TraceMsg:      logger.Trace(),
+						"Thread To Response": threadToResponse,
+					},
+					"can not write thread",
+					logger.Error,
+				)
 				return
 			}
 		case <-ticker.C:
 			if err := c.write(websocket.PingMessage, []byte{}); err != nil {
+				logger.Output(
+					logrus.Fields{
+						logger.ErrMsg:   err,
+						logger.TraceMsg: logger.Trace(),
+						"Ping Message":  websocket.PingMessage,
+					},
+					"can not ping message",
+					logger.Error,
+				)
 				return
 			}
 		}
@@ -104,61 +134,20 @@ func (c *connection) writePump() {
 func ServeWs(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err)
+		logger.Output(
+			logrus.Fields{
+				logger.ErrMsg:         err,
+				logger.TraceMsg:       logger.Trace(),
+				"http.ResponseWriter": w,
+				"http.Request":        r,
+			},
+			"can not make websocket",
+			logger.Error,
+		)
 		return
 	}
-	//	c := &connection{send: make(chan []byte, 256), ws: ws}
 	c := &connection{send: make(chan *mongo.Thread, 256), ws: ws}
 	H.Register <- c
 	go c.writePump()
 	c.readPump()
 }
-
-//var (
-//	ActiveClients = make(map[ClientConn]int)
-//)
-//
-//type ClientConn struct {
-//	websocket *websocket.Conn
-//	clientIP  string
-//}
-//
-//func EchoHandler(ws *websocket.Conn) {
-//
-//	defer func() {
-//		if err := ws.Close(); err != nil {
-//			log.Println("Websocket could not be closed", err.Error())
-//		}
-//	}()
-//	client := ws.Request().RemoteAddr
-//	log.Println("Client connected:", client)
-//	sockCli := ClientConn{ws, client}
-//
-//	ActiveClients[sockCli] = 0
-//	log.Println("Number of clients connected ...", len(ActiveClients))
-//
-//	var thread mongo.Thread
-//	for {
-//		log.Println("goroutine num", runtime.NumGoroutine())
-//
-//		if err := websocket.JSON.Receive(ws, &thread); err != nil {
-//			log.Println("Websocket Disconnected waiting", err.Error())
-//			delete(ActiveClients, sockCli)
-//			log.Println("Number of clients still connected ...", len(ActiveClients))
-//			return
-//		}
-//
-//		if err := mongo.UpsertNewTimeLine(&thread); err != nil {
-//			log.Println("cannot insert data to mongo", err.Error())
-//		}
-//
-//		log.Println("Number of channel ", len(mongo.FinChan))
-//		for cs, _ := range ActiveClients {
-//			//		if err = Message.Send(cs.websocket, clientMessage); err != nil {
-//			if err := websocket.JSON.Send(cs.websocket, thread); err != nil {
-//				// we could not send the message to a peer
-//				log.Println("Could not send message to ", cs.clientIP, err.Error())
-//			}
-//		}
-//	}
-//}

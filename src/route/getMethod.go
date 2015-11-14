@@ -1,18 +1,26 @@
 package route
 
 import (
-	"fmt"
-	"log"
+	"logger"
 	"mongo"
+
 	"net/http"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/emicklei/go-restful"
 )
 
 func getCol(req *restful.Request, resp *restful.Response) {
 	col := req.PathParameter("col")
-	log.Println("getting collection data with api:" + col)
+
+	logger.Output(
+		logrus.Fields{
+			"Collection": col,
+		},
+		"Get access to collection router",
+		logger.Debug,
+	)
 
 	if col == "player" || col == "field" || col == "team" {
 		data, err := mongo.GetAllColData(col)
@@ -25,9 +33,18 @@ func getCol(req *restful.Request, resp *restful.Response) {
 
 func getPage(req *restful.Request, resp *restful.Response) {
 	var page, team, hole string
-
 	url := (strings.Split(req.PathParameter("page"), "/"))
-	fmt.Println(url)
+
+	logger.Output(
+		logrus.Fields{
+			"Page": page,
+			"Team": team,
+			"Hole": hole,
+			"URL":  url,
+		},
+		"Get access to page router",
+		logger.Debug,
+	)
 	page = url[0]
 	if len(url) > 1 {
 		team = url[1]
@@ -36,7 +53,6 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		hole = url[2]
 	}
 
-	log.Println("getting page data with api:" + page)
 	switch page {
 	case "index":
 		if team != "" || hole != "" {

@@ -5,8 +5,10 @@
 package route
 
 import (
-	"log"
+	"logger"
 	"mongo"
+
+	"github.com/Sirupsen/logrus"
 )
 
 // hub maintains the set of active connections and broadcasts messages to the
@@ -39,17 +41,37 @@ func (h *Hub) Run() {
 		select {
 		case c := <-h.Register:
 			h.Connections[c] = true
-			log.Println("register", h.Connections[c])
+			logger.Output(
+				logrus.Fields{
+					"New Connection": c,
+					"Connections":    h.Connections,
+				},
+				"Register websocket",
+				logger.Debug,
+			)
 		case c := <-h.Unregister:
 			if _, ok := h.Connections[c]; ok {
-				log.Println("unregister", h.Connections[c])
+				logger.Output(
+					logrus.Fields{
+						"New Connection": c,
+						"Connections":    h.Connections,
+					},
+					"Unregister websocket",
+					logger.Debug,
+				)
 				delete(h.Connections, c)
 				close(c.send)
 			}
 		case m := <-h.Broadcast:
+			logger.Output(
+				logrus.Fields{
+					"Broad Cast":  m,
+					"Connections": h.Connections,
+				},
+				"Broad Cast websocket",
+				logger.Debug,
+			)
 			for c := range h.Connections {
-				//				log.Println("broadcaset", c)
-				//				log.Println("broadcaset m", m)
 				select {
 				case c.send <- m:
 				default:
@@ -65,7 +87,14 @@ func newThreadCheck() {
 	for {
 		select {
 		case t := <-mongo.ThreadChan:
-			log.Println("newThread", "t")
+			logger.Output(
+				logrus.Fields{
+					"Threa Chain": t,
+				},
+				"New Thread websocket",
+				logger.Debug,
+			)
+
 			H.Broadcast <- t
 		}
 	}

@@ -1,15 +1,15 @@
 package route
 
 import (
-	"log"
-	"net/http"
+	//	"log"
+	//	"net/http"
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
+	//	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/emicklei/go-restful"
+	//	"github.com/emicklei/go-restful"
 )
 
 type Config struct {
@@ -37,31 +37,31 @@ func init() {
 	}
 }
 
-func basicAuthenticate(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
-
-	param := strings.Split(req.PathParameter("page"), "/")
-
-	if len(param) != conf.PagesInfo[param[0]].ParamaterLength {
-		resp.WriteErrorString(
-			http.StatusNotFound,
-			"404: Page is not found.",
-		)
-		log.Println("Param Num is not correct")
-		return
-	}
-	if conf.PagesInfo[param[0]].RequireAuth {
-		encoded := req.Request.Header.Get("Authorization")
-		if len(encoded) == 0 || "Basic "+conf.Auth.Admin != encoded {
-			resp.AddHeader(
-				"WWW-Authenticate",
-				"Basic realm=Protected Area",
-			)
-			resp.WriteErrorString(
-				http.StatusUnauthorized,
-				"401: Not Authorized",
-			)
-			return
-		}
-	}
-	chain.ProcessFilter(req, resp)
-}
+//func basicAuthenticate(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
+//
+//	param := strings.Split(req.PathParameter("page"), "/")
+//
+//	if len(param) != conf.PagesInfo[param[0]].ParamaterLength {
+//		resp.WriteErrorString(
+//			http.StatusNotFound,
+//			"404: Page is not found.",
+//		)
+//		log.Println("Param Num is not correct")
+//		return
+//	}
+//	if conf.PagesInfo[param[0]].RequireAuth {
+//		encoded := req.Request.Header.Get("Authorization")
+//		if len(encoded) == 0 || "Basic "+conf.Auth.Admin != encoded {
+//			resp.AddHeader(
+//				"WWW-Authenticate",
+//				"Basic realm=Protected Area",
+//			)
+//			resp.WriteErrorString(
+//				http.StatusUnauthorized,
+//				"401: Not Authorized",
+//			)
+//			return
+//		}
+//	}
+//	chain.ProcessFilter(req, resp)
+//}
