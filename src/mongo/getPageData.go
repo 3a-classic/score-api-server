@@ -330,7 +330,6 @@ func GetTimeLinePageData() (*TimeLine, error) {
 
 	var timeLine TimeLine
 	var tmpThreads []Thread
-	var tmpReactions []Reaction
 
 	threadsKeys := sortByDate{}
 	for k, v := range threads {
@@ -342,12 +341,13 @@ func GetTimeLinePageData() (*TimeLine, error) {
 
 	for _, threadKey := range threadsKeys {
 		var tmpThread Thread
-		var tmpReaction Reaction
+		var tmpReactions []Reaction
 		threadId := threadKey.ThreadId
 		if len(threads[threadId].ImgUrl) == 0 {
 			continue
 		}
 		for _, reaction := range threads[threadId].Reactions {
+			var tmpReaction Reaction
 			tmpReaction.UserId = reaction["userid"].(string)
 			tmpReaction.UserName = reaction["username"].(string)
 			tmpReaction.ContentType = reaction["contenttype"].(int)
