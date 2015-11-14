@@ -56,10 +56,10 @@ func (c *connection) readPump() {
 		if err != nil {
 			logger.Output(
 				logrus.Fields{
-					logger.ErrMsg:          err,
+					logger.ErrMsg:          fmt.Errorf("%v", err),
 					logger.TraceMsg:        logger.Trace(),
-					"Thread":               thread,
-					"Websocket Connection": c.ws,
+					"Thread":               fmt.Sprintf("%+v\n", thread),
+					"Websocket Connection": fmt.Sprintf("%+v\n", c.ws),
 				},
 				"can not read JSON",
 				logger.Error,
