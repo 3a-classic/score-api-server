@@ -56,7 +56,7 @@ func (c *connection) readPump() {
 		fmt.Println("")
 		fmt.Println("")
 		fmt.Println("")
-		fmt.Println("ws", c.ws)
+		fmt.Printf("%v", c.ws)
 		fmt.Println("thread", thread)
 		fmt.Println("")
 		fmt.Println("")
