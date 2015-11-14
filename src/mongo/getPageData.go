@@ -1,7 +1,6 @@
 package mongo
 
 import (
-	"log"
 	l "logger"
 
 	"errors"
