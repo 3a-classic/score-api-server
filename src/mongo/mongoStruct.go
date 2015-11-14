@@ -90,7 +90,7 @@ type Sum struct {
 }
 
 type Reaction struct {
-	Name        string `json:"name"`
+	UserName    string `json:"userName"`
 	UserId      string `json:"userId"`
 	ContentType int    `json:"contentType"`
 	Content     string `json:"content"`

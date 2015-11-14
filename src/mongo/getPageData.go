@@ -347,10 +347,10 @@ func GetTimeLinePageData() (*TimeLine, error) {
 			continue
 		}
 		for _, reaction := range threads[threadId].Reactions {
-			tmpReaction.Name = reaction["name"].(string)
+			tmpReaction.UserId = reaction["userid"].(string)
+			tmpReaction.UserName = reaction["username"].(string)
 			tmpReaction.ContentType = reaction["contenttype"].(int)
 			tmpReaction.Content = reaction["content"].(string)
-			tmpReaction.UserId = reaction["userid"].(string)
 			tmpReaction.DateTime = reaction["datetime"].(string)
 			tmpReactions = append(tmpReactions, tmpReaction)
 		}
