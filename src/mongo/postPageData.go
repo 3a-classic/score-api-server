@@ -163,11 +163,11 @@ func UpsertNewTimeLine(thread *Thread) error {
 	defer SetAllThreadCol()
 
 	colorFeeling := make(map[string]string)
-	colorFeeling["default"] = "#FFFFFF"
-	colorFeeling["angry"] = "#FF0000"
-	colorFeeling["great"] = "#FFFF00"
-	colorFeeling["sad"] = "#0000FF"
-	colorFeeling["vexing"] = "#00FF00"
+	colorFeeling["default"] = "#c0c0c0"
+	colorFeeling["angry"] = "#ff7f7f"
+	colorFeeling["great"] = "#ffff7f"
+	colorFeeling["sad"] = "#7fbfff"
+	colorFeeling["vexing"] = "#7fff7f"
 
 	db, session := mongoInit()
 	threadCol := db.C("thread")
