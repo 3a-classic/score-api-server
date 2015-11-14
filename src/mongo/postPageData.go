@@ -183,7 +183,7 @@ func UpsertNewTimeLine(thread *Thread) error {
 
 	defaultColor := "#c0c0c0"
 
-	if len(thread.ThreadId) == 0 {
+	if len(thread.ThreadId) != 0 {
 		l.PutErr(nil, l.Trace(), l.E_WrongData, thread)
 		return errors.New("thread id exists")
 	}
