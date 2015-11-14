@@ -13,11 +13,8 @@ import (
 
 func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 
-	l.Output(
-		logrus.Fields{"Login Info": loginInfo},
-		l.I_M_PostPage,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_PostPage, loginInfo, nil)
+
 	_, ok := users[loginInfo.UserId]
 	if ok {
 		var teamName string
@@ -58,11 +55,7 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 }
 
 func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, error) {
-	l.Output(
-		logrus.Fields{"Team": teamName, "Apply Socre": ApplyScore},
-		l.I_M_PostPage,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_PostPage, teamName, ApplyScore)
 
 	//更新情報をGlobal変数に格納する
 	defer SetPlayerCol(ApplyScore.UserIds)
@@ -92,11 +85,8 @@ func PostApplyScoreData(teamName string, ApplyScore *PostApplyScore) (*Status, e
 }
 
 func PostScoreViewSheetPageData(teamName string, definedTeam *PostDefinedTeam) (*Status, error) {
-	l.Output(
-		logrus.Fields{"Team": teamName, "Define": definedTeam},
-		l.I_M_PostPage,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_PostPage, teamName, definedTeam)
+
 	//更新情報をGlobal変数に格納する
 	defer SetTeamCol(teamName)
 
@@ -111,15 +101,7 @@ func PostScoreViewSheetPageData(teamName string, definedTeam *PostDefinedTeam) (
 }
 
 func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *PostTeamScore) (*RequestTakePictureStatus, error) {
-	l.Output(
-		logrus.Fields{
-			"Team":        teamName,
-			"Hole String": holeString,
-			"Team Score":  teamScore,
-		},
-		l.I_M_PostPage,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_PostPage, teamName, teamScore)
 
 	userIds := teams[teamName].UserIds
 	//更新情報をGlobal変数に格納する
@@ -172,11 +154,7 @@ func PostScoreEntrySheetPageData(teamName string, holeString string, teamScore *
 }
 
 func UpsertNewTimeLine(thread *Thread) error {
-	l.Output(
-		logrus.Fields{"Thread": thread},
-		l.I_M_PostPage,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_PostPage, thread, nil)
 
 	//更新情報をGlobal変数に格納する
 	defer SetAllThreadCol()
@@ -204,11 +182,7 @@ func UpsertNewTimeLine(thread *Thread) error {
 }
 
 func UpdateExistingTimeLine(thread *Thread) (*Thread, error) {
-	l.Output(
-		logrus.Fields{"Thread": thread},
-		l.I_M_PostPage,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_PostPage, thread, nil)
 
 	targetThreadId := thread.ThreadId
 	//更新情報をGlobal変数に格納する

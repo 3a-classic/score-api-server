@@ -6,12 +6,10 @@ import (
 	"errors"
 	"sort"
 	"strconv"
-
-	"github.com/Sirupsen/logrus"
 )
 
 func GetIndexPageData() (*Index, error) {
-	l.Output(nil, l.I_M_GetPage, l.Info)
+	l.PutInfo(l.I_M_GetPage, nil, nil)
 
 	var teamArray []string
 	for name, _ := range teams {
@@ -27,7 +25,7 @@ func GetIndexPageData() (*Index, error) {
 }
 
 func GetLeadersBoardPageData() (*LeadersBoard, error) {
-	l.Output(nil, l.I_M_GetPage, l.Info)
+	l.PutInfo(l.I_M_GetPage, nil, nil)
 
 	var leadersBoard LeadersBoard
 	var userScore UserScore
@@ -57,11 +55,7 @@ func GetLeadersBoardPageData() (*LeadersBoard, error) {
 }
 
 func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntrySheet, error) {
-	l.Output(
-		logrus.Fields{"Team Name": teamName, "Hole String": holeString},
-		l.I_M_GetPage,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_GetPage, teamName, holeString)
 
 	if len(holeString) == 0 {
 		l.PutErr(nil, l.Trace(), l.E_Nil, teamName)
@@ -97,11 +91,7 @@ func GetScoreEntrySheetPageData(teamName string, holeString string) (*ScoreEntry
 }
 
 func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
-	l.Output(
-		logrus.Fields{"Team Name": teamName},
-		l.I_M_GetPage,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_GetPage, teamName, nil)
 
 	userIds := teams[teamName].UserIds
 	member := make([]string, len(userIds))
@@ -184,7 +174,7 @@ func GetScoreViewSheetPageData(teamName string) (*ScoreViewSheet, error) {
 }
 
 func GetEntireScorePageData() (*EntireScore, error) {
-	l.Output(nil, l.I_M_GetPage, l.Info)
+	l.PutInfo(l.I_M_GetPage, nil, nil)
 
 	//rows[*][0] ホール rows[*][1] パー rows[*][2->n] PlayerName
 	//rows[0] チーム名
@@ -325,7 +315,7 @@ func GetEntireScorePageData() (*EntireScore, error) {
 }
 
 func GetTimeLinePageData() (*TimeLine, error) {
-	l.Output(nil, l.I_M_GetPage, l.Info)
+	l.PutInfo(l.I_M_GetPage, nil, nil)
 
 	var timeLine TimeLine
 	var tmpThreads []Thread

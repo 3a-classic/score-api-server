@@ -6,16 +6,11 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
 )
 
 func RegisterUserColData(userCols []UserCol) (*Status, error) {
-	l.Output(
-		logrus.Fields{"User Collection": userCols},
-		l.I_M_RegisterCol,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_RegisterCol, userCols, nil)
 
 	defer SetAllUserCol()
 
@@ -53,11 +48,7 @@ func RegisterUserColData(userCols []UserCol) (*Status, error) {
 }
 
 func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
-	l.Output(
-		logrus.Fields{"Date": date, "Team Collection": teamCols},
-		l.I_M_RegisterCol,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_RegisterCol, date, teamCols)
 
 	defer SetAllPlayerCol()
 	defer SetAllTeamCol()
@@ -116,11 +107,7 @@ func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
 }
 
 func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
-	l.Output(
-		logrus.Fields{"Date": date, "Field Collection": fieldCols},
-		l.I_M_RegisterCol,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_RegisterCol, date, fieldCols)
 
 	defer SetAllFieldCol()
 
@@ -155,11 +142,7 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 }
 
 func RegisterThreadImg(r *RequestTakePictureStatus) (*RequestTakePictureStatus, error) {
-	l.Output(
-		logrus.Fields{"Request Take Picture Status": r},
-		l.I_M_RegisterCol,
-		l.Info,
-	)
+	l.PutInfo(l.I_M_RegisterCol, r, nil)
 
 	defer SetPlayerCol([]string{r.UserId})
 
