@@ -263,6 +263,9 @@ func UpdateExistingTimeLine(thread *Thread) (*Thread, error) {
 			setColor = postedColor
 		} else {
 
+			//直前の更新を反映させる
+			SetAllThreadCol()
+
 			for _, r := range threads[targetThreadId].Reactions {
 				switch getFeelingFromAWSUrl(r["content"].(string)) {
 				case currentFeeling:
