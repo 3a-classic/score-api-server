@@ -21,6 +21,7 @@ func PutFata(err error, trace string, msg string, obj interface{}) {
 
 func PutErr(err error, trace string, msg string, obj interface{}) {
 
+	fmt.Println("outErr")
 	objType := SprintfType(obj)
 	field := &logrus.Fields{
 		ErrMsg:   Errorf(err),
@@ -28,6 +29,7 @@ func PutErr(err error, trace string, msg string, obj interface{}) {
 		objType:  Sprintf(obj),
 	}
 	log.WithFields(*field).Error(msg)
+	fmt.Println("outErr end")
 }
 
 func PutInfo(msg string, obj1 interface{}, obj2 interface{}) {

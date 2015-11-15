@@ -3,6 +3,8 @@ package mongo
 import (
 	l "logger"
 
+	"log"
+
 	"labix.org/v2/mgo/bson"
 )
 
@@ -33,6 +35,11 @@ func SetAllUserCol() {
 	if err = col.Find(nil).All(&usersCol); err != nil {
 		l.PutErr(err, l.Trace(), l.E_M_FindEntireCol, nil)
 	}
+
+	log.Println(usersCol)
+	log.Println(db)
+	log.Println(session)
+	log.Println(col)
 
 	for _, userCol := range usersCol {
 		users[userCol.UserId] = userCol

@@ -5,6 +5,7 @@ import (
 	l "logger"
 
 	"errors"
+	"log"
 	"strconv"
 	"time"
 
@@ -16,6 +17,13 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 
 	l.PutInfo(l.I_M_PostPage, loginInfo, nil)
 
+	log.Println("users")
+	log.Println("users")
+	log.Println("users")
+	log.Println(users)
+	log.Println("users")
+	log.Println("users")
+	log.Println("users")
 	_, ok := users[loginInfo.UserId]
 	if ok {
 		var teamName string
