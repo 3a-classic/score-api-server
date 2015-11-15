@@ -10,7 +10,6 @@ import (
 
 func GetIndexPageData() (*Index, error) {
 	l.PutInfo(l.I_M_GetPage, nil, nil)
-	l.PutErr(nil, l.Trace(), l.E_Nil, nil)
 
 	var teamArray []string
 	for name, _ := range teams {
