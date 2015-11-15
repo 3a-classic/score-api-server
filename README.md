@@ -38,14 +38,28 @@ $ cd /path/to/work/dir
 $ git clone http://git.sadayuki-matsuno.com/3aclassic/3a-classic-server.git
 ```
 
+* build
+
+```bash
+$ gb build
+```
+
 * run docker
 
 ```bash
-$ docker run -d -t --link 3a-classic-mongo:mongo \
+$ docker run -d -t \
   -v /home/matsuno/docker/3a-classic/server/3a-classic-server:/go/src \
   --name 3a-classic-server \
   --expose 80 \
   -p 8081:80 \
+  -e "SLACK_INCOMING_HOOK_URL=https://hooks.slack.com/***********" \
+  -e "SLACK_CHANNEL=#3a-classic" \
+  -e "SLACK_USERNAME=3a-classic-error-log" \
+  -e "MONGO_HOST=172.17.0.33" \
+  -e "MONGO_PORT=27017" \
+  -e "MONGO_DB=test" \
+  -e "MONGO_LOG_COLLECTION=log" \
+  -e "MONGO_ADMIN_PASS_BASE=*********" \
   golang:latest \
   bash -c /go/src/bin/3aClassic
 ```
@@ -56,6 +70,19 @@ $ docker run -d -t --link 3a-classic-mongo:mongo \
 http://localhost:8081
 ```
 
+### Environment Variables
+
+|Key|ExampleValue|Default|Explain|
+|:--|:--|:--|:--|:--|
+|SLACK_INCOMING_HOOK_URL|https://hooks.slack.com/***|""|Notify you of error logs by Slack|
+|SLACK_CHANNEL|#3a-classic|Depend on [slackrus](https://github.com/johntdyer/slackrus)|Slack use this channel|
+|SLACK_USERNAME|3a-classic-error-log|Depend on [slackrus](https://github.com/johntdyer/slackrus)|Slack use this username|
+|MONGO_HOST|172.17.0.33|mongo|MongoDB hostname or IP|
+|MONGO_PORT|27017|27017|MongoDB port|
+|MONGO_DB|test|test|MongoDB database name|
+|MONGO_LOG_COLLECTION|log|log|MongoDB log collection name|
+
+**Variable Name is not same as Docker one, because I heard Docker Link is "Legacy" somewhere.**
 
 ### CORS
 
