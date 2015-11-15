@@ -22,14 +22,13 @@ var (
 
 func init() {
 	initColMap()
-	initExcntMap()
 	SetAllUserCol()
 	SetAllPlayerCol()
 	SetAllFieldCol()
 	SetAllTeamCol()
 	SetAllThreadCol()
-	datetimeFormat = "2006/01/02 15:04:05 MST"
 
+	initExcntMap()
 	ThreadChan = make(chan *Thread, 2)
 }
 
