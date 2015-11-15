@@ -205,7 +205,7 @@ func makeHoleThreadMsg(positive bool, inOut string, holeString string, playerNam
 
 func RequestTakePicture(userIds []string) (*RequestTakePictureStatus, error) {
 
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("thread")
 	defer session.Close()
 
@@ -256,7 +256,7 @@ func make20lengthHashString() string {
 
 func UpdateMongoData(collection string, findQuery bson.M, updateQuery bson.M) error {
 
-	db, session := mongoInit()
+	db, session := mongoConn()
 	c := db.C(collection)
 	defer session.Close()
 

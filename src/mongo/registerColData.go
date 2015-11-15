@@ -1,6 +1,7 @@
 package mongo
 
 import (
+	c "config"
 	l "logger"
 
 	"errors"
@@ -14,7 +15,7 @@ func RegisterUserColData(userCols []UserCol) (*Status, error) {
 
 	defer SetAllUserCol()
 
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("user")
 	defer session.Close()
 
@@ -29,7 +30,7 @@ func RegisterUserColData(userCols []UserCol) (*Status, error) {
 			userCol.UserId = make20lengthHashString()
 		}
 		if len(userCol.CreatedAt) == 0 {
-			userCol.CreatedAt = time.Now().Format(datetimeFormat)
+			userCol.CreatedAt = time.Now().Format(c.DatetimeFormat)
 		}
 		findQuery := bson.M{"userid": userCol.UserId}
 		change, err := col.Upsert(findQuery, userCol)
@@ -53,7 +54,7 @@ func RegisterTeamColData(date string, teamCols []TeamCol) (*Status, error) {
 	defer SetAllPlayerCol()
 	defer SetAllTeamCol()
 
-	db, session := mongoInit()
+	db, session := mongoConn()
 	playerC := db.C("player")
 	teamC := db.C("team")
 	defer session.Close()
@@ -111,7 +112,7 @@ func RegisterFieldColData(date string, fieldCols []FieldCol) (*Status, error) {
 
 	defer SetAllFieldCol()
 
-	db, session := mongoInit()
+	db, session := mongoConn()
 	fieldC := db.C("field")
 	defer session.Close()
 

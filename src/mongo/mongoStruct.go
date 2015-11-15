@@ -4,13 +4,13 @@ import (
 	"labix.org/v2/mgo/bson"
 )
 
-type Config struct {
-	Mongo struct {
-		Host     string `toml:"host"`
-		Port     string `toml:"port"`
-		Database string `toml:"database"`
-	} `toml:"mongo"`
-}
+//type Config struct {
+//	Mongo struct {
+//		Host     string `toml:"host"`
+//		Port     string `toml:"port"`
+//		Database string `toml:"database"`
+//	} `toml:"mongo"`
+//}
 
 // Structs for Collections
 type UserCol struct {

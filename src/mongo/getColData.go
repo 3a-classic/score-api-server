@@ -13,7 +13,7 @@ import (
 // becouse return is interface(map)
 // and map is not defined  order
 func GetAllColData(collectionName string) (*[]interface{}, error) {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C(collectionName)
 	defer session.Close()
 
@@ -26,7 +26,7 @@ func GetAllColData(collectionName string) (*[]interface{}, error) {
 }
 
 func SetAllUserCol() {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("user")
 	defer session.Close()
 	usersCol := []UserCol{}
@@ -40,7 +40,7 @@ func SetAllUserCol() {
 }
 
 func SetUserCol(userIds []string) {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("user")
 	defer session.Close()
 
@@ -58,7 +58,7 @@ func SetUserCol(userIds []string) {
 }
 
 func SetAllPlayerCol() {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("player")
 	defer session.Close()
 	playersCol := []PlayerCol{}
@@ -72,7 +72,7 @@ func SetAllPlayerCol() {
 }
 
 func SetPlayerCol(userIds []string) {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("player")
 	defer session.Close()
 
@@ -90,7 +90,7 @@ func SetPlayerCol(userIds []string) {
 }
 
 func SetAllFieldCol() {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("field")
 	defer session.Close()
 	fieldsCol := []FieldCol{}
@@ -104,7 +104,7 @@ func SetAllFieldCol() {
 }
 
 func SetFieldCol(hole int) {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("field")
 	defer session.Close()
 
@@ -119,7 +119,7 @@ func SetFieldCol(hole int) {
 }
 
 func SetAllTeamCol() {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("team")
 	defer session.Close()
 	teamsCol := []TeamCol{}
@@ -133,7 +133,7 @@ func SetAllTeamCol() {
 }
 
 func SetTeamCol(teamName string) {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("team")
 	defer session.Close()
 
@@ -148,7 +148,7 @@ func SetTeamCol(teamName string) {
 }
 
 func SetAllThreadCol() {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("thread")
 	defer session.Close()
 	threadsCol := []ThreadCol{}
@@ -162,7 +162,7 @@ func SetAllThreadCol() {
 }
 
 func SetThreadCol(threadId string) {
-	db, session := mongoInit()
+	db, session := mongoConn()
 	col := db.C("thread")
 	defer session.Close()
 

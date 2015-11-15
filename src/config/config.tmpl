@@ -1,0 +1,15 @@
+[slack]
+hookurl = "{{_ .SLACK_INCOMING_HOOK_URL ""}}"
+username = "{{_ .SLACK_USERNAME ""}}"
+channel = "{{_ .SLACK_CHANNEL ""}}"
+
+[mongo]
+host = "{{_ .MONGO_HOST "mongo"}}"
+port = "{{_ .MONGO_PORT "27017"}}"
+database = "{{_ .MONGO_DB "test"}}"
+logcollection = "{{_ .MONGO_LOG_COLLECTION "log"}}"  
+
+[auth]
+# echo -n 'user:password' | base64
+admin = "{{_ .MONGO_ADMIN_PASS_BASE "M2E6Y2xhc3NpYw=="}}"
+

@@ -1,6 +1,7 @@
 package mongo
 
 import (
+	c "config"
 	l "logger"
 
 	"errors"
@@ -166,12 +167,12 @@ func UpsertNewTimeLine(thread *Thread) error {
 		return errors.New("thread id exists")
 	}
 
-	db, session := mongoInit()
+	db, session := mongoConn()
 	threadCol := db.C("thread")
 	defer session.Close()
 
 	thread.ThreadId = make20lengthHashString()
-	thread.CreatedAt = time.Now().Format(datetimeFormat)
+	thread.CreatedAt = time.Now().Format(c.DatetimeFormat)
 	thread.ColorCode = defaultColor
 	if err = threadCol.Insert(thread); err != nil {
 		l.PutErr(err, l.Trace(), l.E_M_Insert, thread)
@@ -222,7 +223,7 @@ func UpdateExistingTimeLine(thread *Thread) (*Thread, error) {
 		}
 	}
 
-	thread.Reactions[0].DateTime = time.Now().Format(datetimeFormat)
+	thread.Reactions[0].DateTime = time.Now().Format(c.DatetimeFormat)
 	findQuery := bson.M{"threadid": targetThreadId}
 	pushQuery := bson.M{"$push": bson.M{"reactions": thread.Reactions[0]}}
 	if err = UpdateMongoData("thread", findQuery, pushQuery); err != nil {

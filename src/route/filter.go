@@ -1,41 +1,43 @@
 package route
 
 import (
-	//	"log"
-	//	"net/http"
-	"os"
-	"path"
-	"path/filepath"
-	//	"strings"
-
-	"github.com/BurntSushi/toml"
-	//	"github.com/emicklei/go-restful"
+//	c "config"
+//
+//	//	"log"
+//	//	"net/http"
+//	"os"
+//	"path"
+//	"path/filepath"
+//	//	"strings"
+//
+//	"github.com/BurntSushi/toml"
+//	"github.com/emicklei/go-restful"
 )
 
-type Config struct {
-	Auth struct {
-		Admin string `toml:"admin"`
-	}
-	PagesInfo map[string]PageInfo
-}
+//type Config struct {
+//	Auth struct {
+//		Admin string `toml:"admin"`
+//	}
+//	PagesInfo map[string]PageInfo
+//}
 
-type PageInfo struct {
-	RequireAuth     bool `toml:"requireAuth"`
-	ParamaterLength int  `toml:"paramaterLength"`
-}
+//type PageInfo struct {
+//	RequireAuth     bool `toml:"requireAuth"`
+//	ParamaterLength int  `toml:"paramaterLength"`
+//}
 
-var conf *Config
+//var conf *Config
 
-func init() {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		panic(err)
-	}
-	_, err = toml.DecodeFile(path.Join(dir, "../config/config.tml"), &conf)
-	if err != nil {
-		panic(err)
-	}
-}
+//func init() {
+//	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+//	if err != nil {
+//		panic(err)
+//	}
+//	_, err = toml.DecodeFile(path.Join(dir, c.ConfigFilePath), &conf)
+//	if err != nil {
+//		panic(err)
+//	}
+//}
 
 //func basicAuthenticate(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
 //

@@ -1,59 +1,35 @@
 package logger
 
 import (
-	"os"
-	"path"
-	"path/filepath"
+	c "config"
 
-	"github.com/BurntSushi/toml"
+	"os"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/johntdyer/slackrus"
 	"github.com/weekface/mgorus"
 )
 
 var (
-	mongoLog = logrus.New()
-	slackLog = logrus.New()
-	conf     *Config
+	log = logrus.New()
 )
-
-type Config struct {
-	Mongo struct {
-		Host     string `toml:"host"`
-		Port     string `toml:"port"`
-		Database string `toml:"database"`
-	} `toml:"mongo"`
-}
 
 func init() {
 
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		panic(err)
-	}
-	if _, err := toml.DecodeFile(path.Join(dir, "../config/config.tml"), &conf); err != nil {
-		panic(err)
-	}
-
-	mongoLog.Formatter = new(logrus.JSONFormatter)
-	slackLog.Formatter = new(logrus.JSONFormatter)
-
-	mongoLog.Out = os.Stderr
-	slackLog.Out = os.Stderr
-
-	mongoLog.Level = logrus.DebugLevel
-	slackLog.Level = logrus.ErrorLevel
-
-	slackLog.Hooks.Add(&slackrus.SlackrusHook{
-		HookURL:        "https://hooks.slack.com/services/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",
-		AcceptedLevels: slackrus.LevelThreshold(logrus.ErrorLevel),
-		Channel:        "#3a-classic",
-		Username:       "3a-classic-error-log",
-	})
-
-	hooker, err := mgorus.NewHooker(conf.Mongo.Host, conf.Mongo.Database, "log")
+	log.Formatter = new(logrus.JSONFormatter)
+	log.Level = logrus.DebugLevel
+	log.Out = os.Stderr
+	hooker, err := mgorus.NewHooker(c.Conf.Mongo.Host, c.Conf.Mongo.Database, c.Conf.Mongo.LogCollection)
 	if err == nil {
-		mongoLog.Hooks.Add(hooker)
+		log.Hooks.Add(hooker)
 	}
 
+	if len(c.Conf.Slack.HookUrl) != 0 {
+		log.Hooks.Add(&slackrus.SlackrusHook{
+			HookURL:        c.Conf.Slack.HookUrl,
+			AcceptedLevels: slackrus.LevelThreshold(logrus.ErrorLevel),
+			Channel:        c.Conf.Slack.Channel,
+			Username:       c.Conf.Slack.Username,
+		})
+	}
 }
