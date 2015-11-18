@@ -59,7 +59,9 @@ $ docker run -d -t \
   -e "MONGO_PORT=27017" \
   -e "MONGO_DB=test" \
   -e "MONGO_LOG_COLLECTION=log" \
-  -e "MONGO_ADMIN_PASS_BASE=*********" \
+  -e "GIT_REMOTE_SERVICE=github" \
+  -e "GIT_REMOTE_URL=https://github.com/sadayuki-matsuno/3aclassic_restful"
+  -e "AUTH_ADMIN_PASS_BASE=*********" \
   golang:latest \
   bash -c /go/src/bin/3aClassic
 ```
@@ -81,6 +83,8 @@ http://localhost:8081
 |MONGO_PORT|27017|27017|MongoDB port|
 |MONGO_DB|test|test|MongoDB database name|
 |MONGO_LOG_COLLECTION|log|log|MongoDB log collection name|
+|GIT_REMOTE_SERVICE|github|for writing error code location in logs. you can also choose "gitlab"|
+|GIT_REMOTE_URL|http://git.sadayuki-matsuno.com/3aclassic/3a-classic-server|for writing error code location in logs.|
 
 **Variable Name is not same as Docker one, because I heard Docker Link is "Legacy" somewhere.**
 
