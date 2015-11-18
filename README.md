@@ -60,7 +60,7 @@ $ docker run -d -t \
   -e "MONGO_DB=test" \
   -e "MONGO_LOG_COLLECTION=log" \
   -e "GIT_REMOTE_SERVICE=github" \
-  -e "GIT_REMOTE_URL=https://github.com/sadayuki-matsuno/3aclassic_restful"
+  -e "GIT_REMOTE_URL=https://github.com/sadayuki-matsuno/3aclassic_restful" \
   -e "AUTH_ADMIN_PASS_BASE=*********" \
   golang:latest \
   bash -c /go/src/bin/3aClassic
