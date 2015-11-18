@@ -171,7 +171,7 @@ $ gb vendor restore ./vendor/manifest
 * build code
 
 ```
-$ gb biuld
+$ gb build
 ```
 
 now you can run code compiled.
