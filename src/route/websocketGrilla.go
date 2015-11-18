@@ -60,8 +60,8 @@ func (c *connection) readPump() {
 			}
 			l.Output(
 				logrus.Fields{
-					l.ErrMsg:   l.Errorf(err),
-					l.TraceMsg: l.Trace(),
+					l.ErrMsg:   l.ErrToStr(err),
+					l.TraceMsg: l.TraceToStr(l.Trace()),
 					"Thread":   l.Sprintf(thread),
 				},
 				"can not read JSON or Closed Websocket",
@@ -101,8 +101,8 @@ func (c *connection) writePump() {
 			if err := c.ws.WriteJSON(threadToResponse); err != nil {
 				l.Output(
 					logrus.Fields{
-						l.ErrMsg:   l.Errorf(err),
-						l.TraceMsg: l.Trace(),
+						l.ErrMsg:   l.ErrToStr(err),
+						l.TraceMsg: l.TraceToStr(l.Trace()),
 						"Thread":   l.Sprintf(threadToResponse),
 					},
 					"can not write JSON",

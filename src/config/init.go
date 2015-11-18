@@ -31,19 +31,16 @@ type Slack struct {
 	Channel  string `toml:"channel"`
 }
 
-type Config struct {
-	Slack Slack
-	Mongo Mongo
-	//	Auth struct {
-	//		Admin string `toml:"admin"`
-	//	}
-	//	PagesInfo map[string]PageInfo
+type GitRemote struct {
+	Service string `toml:"service"`
+	Url     string `toml:"url"`
 }
 
-//type PageInfo struct {
-//	RequireAuth     bool `toml:"requireAuth"`
-//	ParamaterLength int  `toml:"paramaterLength"`
-//}
+type Config struct {
+	Slack     Slack     `toml:"slack"`
+	Mongo     Mongo     `toml:"mongo"`
+	GitRemote GitRemote `toml:"gitremote"`
+}
 
 const (
 	datetimeLocation = "Asia/Tokyo"
@@ -95,12 +92,6 @@ func setConfig() {
 	if err != nil {
 		panic(err)
 	}
-
-	//	// make function to prevent error of no key
-	//	funcMap, err := makeFuncMap()
-	//	if err != nil {
-	//		panic(err)
-	//	}
 
 	// parse tempalate file
 	tmpl, err := template.New("pro").Funcs(funcMap()).Parse(string(tmplString))
