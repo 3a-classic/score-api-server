@@ -50,8 +50,8 @@
   "ignore" : false,
   "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/6_s.png",
   "nearpin": false,
-  "par": 352,
-  "yard": 4
+  "par": 4,
+  "yard": 352
 },
 {
   "hole" : 7,
