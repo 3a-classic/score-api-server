@@ -16,6 +16,7 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 
 	l.PutInfo(l.I_M_PostPage, loginInfo, nil)
 
+	var admin bool
 	_, ok := users[loginInfo.UserId]
 	if ok {
 		var teamName string
@@ -35,12 +36,18 @@ func PostLoginPageData(loginInfo *PostLogin) (*LoginStatus, error) {
 			"login success",
 			l.Debug,
 		)
+
+		if players[loginInfo.UserId].Admin == true {
+			admin = true
+		} else {
+			admin = false
+		}
 		loginStatus := &LoginStatus{
 			Status:   "success",
 			UserId:   loginInfo.UserId,
 			UserName: users[loginInfo.UserId].Name,
 			Team:     teamName,
-			Admin:    players[loginInfo.UserId].Admin,
+			Admin:    admin,
 		}
 		return loginStatus, nil
 	} else {
