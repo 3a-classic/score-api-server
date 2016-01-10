@@ -1,0 +1,3 @@
+test:
+  override:
+    - ./dummy_test_script.sh
