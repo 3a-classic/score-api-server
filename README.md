@@ -1,4 +1,4 @@
-# 3a-classic-ui
+# 3a-classic-server
 
 ## DESCRIPTION
 
