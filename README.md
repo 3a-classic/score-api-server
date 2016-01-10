@@ -156,6 +156,8 @@ I use [gb](https://getgb.io/) as golang package manager
 $ go get github.com/constabulary/gb/...
 ```
 
+* install bzr
+
 * change directry to this repo
 
 ```
@@ -183,4 +185,3 @@ $ ./bin/3aClassic
 ## AUTHOR
 
  Sadayuki Matsuno
->>>>>>> c84100bd495af592ce3b9df9094f488758b4899e
