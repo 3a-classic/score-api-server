@@ -1,0 +1,165 @@
+[
+{
+  "hole" : 1,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/1_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 381
+},
+{
+  "hole" : 2,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/2_s.png",
+  "nearpin": true,
+  "par": 3,
+  "yard": 137
+},
+{
+  "hole" : 3,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/3_s.png",
+  "nearpin": false,
+  "par": 5,
+  "yard": 501
+},
+{
+  "hole" : 4,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/4_s.png",
+  "nearpin": false,
+  "par": 3,
+  "yard": 190
+},
+{
+  "hole" : 5,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/5_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 381
+},
+{
+  "hole" : 6,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/6_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 352
+},
+{
+  "hole" : 7,
+  "drivingcontest": true,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/7_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 414
+},
+{
+  "hole" : 8,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/8_s.png",
+  "nearpin": false,
+  "par": 5,
+  "yard": 507
+},
+{
+  "hole" : 9,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/565/9_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 437
+},
+{
+  "hole" : 10,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/1_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 327
+},
+{
+  "hole" : 11,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/2_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 331
+},
+{
+  "hole" : 12,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/3_s.png",
+  "nearpin": true,
+  "par": 3,
+  "yard": 186
+},
+{
+  "hole" : 13,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/4_s.png",
+  "nearpin": false,
+  "par": 5,
+  "yard": 475
+},
+{
+  "hole" : 14,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/5_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 410
+},
+{
+  "hole" : 15,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/6_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 379
+},
+{
+  "hole" : 16,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/7_s.png",
+  "nearpin": false,
+  "par": 5,
+  "yard": 503
+},
+{
+  "hole" : 17,
+  "drivingcontest": false,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/8_s.png",
+  "nearpin": false,
+  "par": 3,
+  "yard": 126
+},
+{
+  "hole" : 18,
+  "drivingcontest": true,
+  "ignore" : false,
+  "image" : "http://shotnavi.jp/gcguide/cdata/holes/112/2843/9_s.png",
+  "nearpin": false,
+  "par": 4,
+  "yard": 348
+}
+ 
+]

@@ -1,0 +1,272 @@
+2015/09/05 23:38:45 before chain
+2015/09/05 23:38:45 &{0xc208028340 <nil> map[hole:1 page:scoreEntrySheet team:A] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:38:45 &{0xc2080528c0 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:38:45 &{[matsuno kiyota oide tsuchiya] [0 0 5 0] [0 0 2 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:38:45 updating score team:A, hole: 1
+2015/09/05 23:38:47 getting page data with api:index
+2015/09/05 23:38:47 getting page data with api:scoreViewSheet
+2015/09/05 23:38:49 post data at scoreEntrySheet
+2015/09/05 23:38:49 before chain
+2015/09/05 23:38:49 &{0xc208028d00 <nil> map[page:scoreEntrySheet team:A hole:1] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:38:49 &{0xc208053b80 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:38:49 &{[matsuno kiyota oide tsuchiya] [0 0 4 0] [0 0 2 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:38:49 updating score team:A, hole: 1
+2015/09/05 23:38:52 getting collection data with api:field
+2015/09/05 23:38:53 post data at scoreEntrySheet
+2015/09/05 23:38:53 before chain
+2015/09/05 23:38:53 &{0xc208028270 <nil> map[hole:1 page:scoreEntrySheet team:A] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:38:53 &{0xc208052d20 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:38:53 &{[matsuno kiyota oide tsuchiya] [0 0 4 0] [0 0 2 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:38:53 updating score team:A, hole: 1
+2015/09/05 23:39:00 getting page data with api:index
+2015/09/05 23:39:03 getting page data with api:leadersBoard
+2015/09/05 23:39:07 getting page data with api:index
+2015/09/05 23:39:08 getting page data with api:scoreEntrySheet
+2015/09/05 23:39:09 getting page data with api:scoreViewSheet
+2015/09/05 23:39:09 getting page data with api:scoreViewSheet
+2015/09/05 23:39:10 getting page data with api:scoreViewSheet
+2015/09/05 23:39:11 getting page data with api:scoreViewSheet
+2015/09/05 23:39:11 getting page data with api:scoreViewSheet
+2015/09/05 23:39:11 getting page data with api:scoreViewSheet
+2015/09/05 23:39:12 getting page data with api:scoreViewSheet
+2015/09/05 23:39:12 getting page data with api:scoreViewSheet
+2015/09/05 23:39:12 getting page data with api:scoreViewSheet
+2015/09/05 23:39:12 getting page data with api:scoreEntrySheet
+2015/09/05 23:39:14 getting page data with api:scoreEntrySheet
+2015/09/05 23:39:18 post data at scoreEntrySheet
+2015/09/05 23:39:18 before chain
+2015/09/05 23:39:18 &{0xc208029040 <nil> map[hole:1 page:scoreEntrySheet team:A] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:39:18 &{0xc208143220 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:39:18 &{[matsuno kiyota oide tsuchiya] [0 0 0 0] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:39:18 updating score team:A, hole: 1
+2015/09/05 23:39:26 getting page data with api:index
+2015/09/05 23:39:29 getting page data with api:scoreViewSheet
+2015/09/05 23:39:29 getting page data with api:scoreViewSheet
+2015/09/05 23:39:30 getting page data with api:scoreEntrySheet
+2015/09/05 23:39:34 getting page data with api:scoreEntrySheet
+2015/09/05 23:39:47 getting page data with api:scoreViewSheet
+2015/09/05 23:39:47 getting page data with api:scoreViewSheet
+2015/09/05 23:39:51 getting page data with api:scoreViewSheet
+2015/09/05 23:39:52 getting page data with api:index
+2015/09/05 23:39:52 getting page data with api:scoreEntrySheet
+2015/09/05 23:39:53 getting page data with api:scoreViewSheet
+2015/09/05 23:39:54 getting collection data with api:field
+2015/09/05 23:39:57 post data at scoreEntrySheet
+2015/09/05 23:39:57 before chain
+2015/09/05 23:39:57 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:1] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:39:57 &{0xc208142000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:39:57 &{[matsuno kiyota oide tsuchiya] [0 2 0 0] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:39:57 updating score team:A, hole: 1
+2015/09/05 23:40:00 post data at scoreEntrySheet
+2015/09/05 23:40:00 before chain
+2015/09/05 23:40:00 &{0xc208028270 <nil> map[hole:1 page:scoreEntrySheet team:A] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:40:00 &{0xc208142320 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:40:00 &{[matsuno kiyota oide tsuchiya] [0 2 0 0] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:40:00 updating score team:A, hole: 1
+2015/09/05 23:40:07 post data at scoreEntrySheet
+2015/09/05 23:40:07 before chain
+2015/09/05 23:40:07 &{0xc208028340 <nil> map[page:scoreEntrySheet team:A hole:1] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:40:07 &{0xc208142640 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:40:07 &{[matsuno kiyota oide tsuchiya] [0 2 0 0] [0 0 1 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:40:07 updating score team:A, hole: 1
+2015/09/05 23:40:13 post data at scoreEntrySheet
+2015/09/05 23:40:13 before chain
+2015/09/05 23:40:13 &{0xc208028820 <nil> map[page:scoreEntrySheet team:A hole:1] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:40:13 &{0xc208142960 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:40:13 &{[matsuno kiyota oide tsuchiya] [0 2 0 0] [0 0 1 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:40:13 updating score team:A, hole: 1
+2015/09/05 23:40:22 post data at scoreEntrySheet
+2015/09/05 23:40:22 before chain
+2015/09/05 23:40:22 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:1] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:40:22 &{0xc208142000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:40:22 &{[matsuno kiyota oide tsuchiya] [0 2 0 1] [0 0 1 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:40:22 updating score team:A, hole: 1
+2015/09/05 23:40:39 getting page data with api:scoreViewSheet
+2015/09/05 23:45:37 getting page data with api:index
+2015/09/05 23:45:40 getting page data with api:scoreViewSheet
+2015/09/05 23:45:48 getting page data with api:scoreEntrySheet
+2015/09/05 23:46:02 post data at scoreEntrySheet
+2015/09/05 23:46:02 before chain
+2015/09/05 23:46:02 &{0xc208028270 <nil> map[hole:1 page:scoreEntrySheet team:A] map[] /api/page/{page}/{team}/{hole}}
+2015/09/05 23:46:02 &{0xc208052000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/05 23:46:02 &{[matsuno kiyota oide tsuchiya] [0 0 0 0] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/05 23:46:02 updating score team:A, hole: 1
+2015/09/05 23:51:00 getting page data with api:scoreViewSheet
+2015/09/05 23:51:00 getting page data with api:scoreViewSheet
+2015/09/05 23:51:15 getting page data with api:index
+2015/09/05 23:51:18 getting page data with api:index
+2015/09/06 01:40:57 getting page data with api:index
+2015/09/06 01:41:00 getting page data with api:scoreViewSheet
+2015/09/06 01:41:04 getting page data with api:scoreEntrySheet
+2015/09/06 01:41:07 post data at scoreEntrySheet
+2015/09/06 01:41:07 before chain
+2015/09/06 01:41:07 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:1] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 01:41:07 &{0xc208052000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 01:41:07 &{[matsuno kiyota oide tsuchiya] [1 0 0 0] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 01:41:07 updating score team:A, hole: 1
+2015/09/06 01:41:10 getting page data with api:scoreViewSheet
+2015/09/06 01:41:15 getting page data with api:scoreEntrySheet
+2015/09/06 01:41:18 post data at scoreEntrySheet
+2015/09/06 01:41:18 before chain
+2015/09/06 01:41:18 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:1] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 01:41:18 &{0xc2080520a0 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 01:41:18 &{[matsuno kiyota oide tsuchiya] [0 0 0 0] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 01:41:18 updating score team:A, hole: 1
+2015/09/06 01:41:21 getting page data with api:scoreViewSheet
+2015/09/06 01:45:55 getting page data with api:index
+2015/09/06 02:05:32 getting page data with api:index
+2015/09/06 02:05:34 getting page data with api:scoreViewSheet
+2015/09/06 02:05:37 getting page data with api:scoreEntrySheet
+2015/09/06 02:06:22 post data at scoreEntrySheet
+2015/09/06 02:06:22 before chain
+2015/09/06 02:06:22 &{0xc2080280d0 <nil> map[hole:1 page:scoreEntrySheet team:A] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 02:06:22 &{0xc208052000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 02:06:22 &{[matsuno kiyota oide tsuchiya] [7 7 4 10] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 02:06:22 updating score team:A, hole: 1
+2015/09/06 02:06:25 getting page data with api:scoreViewSheet
+2015/09/06 02:22:16 getting page data with api:scoreEntrySheet
+2015/09/06 02:22:40 post data at scoreEntrySheet
+2015/09/06 02:22:40 before chain
+2015/09/06 02:22:40 &{0xc208028270 <nil> map[page:scoreEntrySheet team:A hole:2] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 02:22:40 &{0xc208052f00 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 02:22:40 &{[matsuno kiyota oide tsuchiya] [5 7 4 11] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 02:22:40 updating score team:A, hole: 2
+2015/09/06 02:22:43 getting page data with api:scoreViewSheet
+2015/09/06 02:34:51 getting page data with api:scoreEntrySheet
+2015/09/06 02:35:45 post data at scoreEntrySheet
+2015/09/06 02:35:45 before chain
+2015/09/06 02:35:45 &{0xc208028820 <nil> map[page:scoreEntrySheet team:A hole:3] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 02:35:45 &{0xc208052000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 02:35:45 &{[matsuno kiyota oide tsuchiya] [8 6 6 8] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 02:35:45 updating score team:A, hole: 3
+2015/09/06 02:35:45 post data at scoreEntrySheet
+2015/09/06 02:35:45 before chain
+2015/09/06 02:35:45 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:3] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 02:35:45 &{0xc2080528c0 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 02:35:45 &{[matsuno kiyota oide tsuchiya] [8 6 6 8] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 02:35:45 updating score team:A, hole: 3
+2015/09/06 02:35:47 getting page data with api:scoreViewSheet
+2015/09/06 02:51:37 getting page data with api:scoreEntrySheet
+2015/09/06 02:51:59 post data at scoreEntrySheet
+2015/09/06 02:51:59 before chain
+2015/09/06 02:51:59 &{0xc208028270 <nil> map[page:scoreEntrySheet team:A hole:4] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 02:51:59 &{0xc208052000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 02:51:59 &{[matsuno kiyota oide tsuchiya] [9 6 5 8] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 02:51:59 updating score team:A, hole: 4
+2015/09/06 02:52:02 getting page data with api:scoreViewSheet
+2015/09/06 03:07:45 getting page data with api:scoreEntrySheet
+2015/09/06 03:08:01 post data at scoreEntrySheet
+2015/09/06 03:08:01 before chain
+2015/09/06 03:08:01 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:5] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 03:08:01 &{0xc208052000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 03:08:01 &{[matsuno kiyota oide tsuchiya] [8 6 4 5] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 03:08:01 updating score team:A, hole: 5
+2015/09/06 03:08:04 getting page data with api:scoreViewSheet
+2015/09/06 03:08:07 getting page data with api:leadersBoard
+2015/09/06 03:08:09 getting page data with api:leadersBoard
+2015/09/06 03:08:28 getting page data with api:scoreViewSheet
+2015/09/06 03:09:00 getting page data with api:leadersBoard
+2015/09/06 03:09:03 getting page data with api:leadersBoard
+2015/09/06 03:09:14 getting page data with api:leadersBoard
+2015/09/06 03:09:16 getting page data with api:leadersBoard
+2015/09/06 03:09:26 getting page data with api:leadersBoard
+2015/09/06 03:10:23 getting page data with api:index
+2015/09/06 03:10:26 getting page data with api:scoreViewSheet
+2015/09/06 03:28:30 getting page data with api:scoreEntrySheet
+2015/09/06 03:28:48 post data at scoreEntrySheet
+2015/09/06 03:28:48 before chain
+2015/09/06 03:28:48 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:6] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 03:28:48 &{0xc208052e60 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 03:28:48 &{[matsuno kiyota oide tsuchiya] [8 9 3 6] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 03:28:48 updating score team:A, hole: 6
+2015/09/06 03:28:51 getting page data with api:scoreViewSheet
+2015/09/06 03:47:53 getting page data with api:scoreEntrySheet
+2015/09/06 03:48:23 post data at scoreEntrySheet
+2015/09/06 03:48:23 before chain
+2015/09/06 03:48:23 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:7] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 03:48:23 &{0xc208052dc0 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 03:48:23 &{[matsuno kiyota oide tsuchiya] [11 13 2 7] [0 1 1 1] 0}
+playerにデータを挿入します。
+2015/09/06 03:48:23 updating score team:A, hole: 7
+2015/09/06 03:48:23 post data at scoreEntrySheet
+2015/09/06 03:48:23 before chain
+2015/09/06 03:48:23 &{0xc208029380 <nil> map[page:scoreEntrySheet team:A hole:7] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 03:48:23 &{0xc2080530e0 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 03:48:23 &{[matsuno kiyota oide tsuchiya] [11 13 2 7] [0 1 1 1] 0}
+playerにデータを挿入します。
+2015/09/06 03:48:23 updating score team:A, hole: 7
+2015/09/06 03:48:25 getting page data with api:scoreViewSheet
+2015/09/06 03:48:27 getting page data with api:scoreEntrySheet
+2015/09/06 03:58:13 getting page data with api:scoreEntrySheet
+2015/09/06 03:58:30 post data at scoreEntrySheet
+2015/09/06 03:58:30 before chain
+2015/09/06 03:58:30 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:8] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 03:58:30 &{0xc208052e60 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 03:58:30 &{[matsuno kiyota oide tsuchiya] [4 6 2 4] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 03:58:30 updating score team:A, hole: 8
+2015/09/06 03:58:30 post data at scoreEntrySheet
+2015/09/06 03:58:30 before chain
+2015/09/06 03:58:30 &{0xc208029380 <nil> map[page:scoreEntrySheet team:A hole:8] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 03:58:30 &{0xc208053180 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 03:58:30 &{[matsuno kiyota oide tsuchiya] [4 6 2 4] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 03:58:30 updating score team:A, hole: 8
+2015/09/06 03:58:33 getting page data with api:scoreViewSheet
+2015/09/06 04:01:55 getting page data with api:scoreViewSheet
+2015/09/06 04:02:01 getting page data with api:scoreViewSheet
+2015/09/06 04:02:11 getting page data with api:index
+2015/09/06 04:02:13 getting page data with api:leadersBoard
+2015/09/06 04:02:24 getting page data with api:index
+2015/09/06 04:02:27 getting page data with api:leadersBoard
+2015/09/06 04:02:41 getting page data with api:index
+2015/09/06 04:02:52 getting page data with api:scoreViewSheet
+2015/09/06 04:03:25 getting page data with api:scoreViewSheet
+2015/09/06 04:03:39 getting page data with api:leadersBoard
+2015/09/06 04:03:41 getting page data with api:scoreViewSheet
+2015/09/06 04:03:52 getting page data with api:scoreViewSheet
+2015/09/06 04:04:14 getting page data with api:scoreViewSheet
+2015/09/06 04:05:01 getting page data with api:scoreEntrySheet
+2015/09/06 04:05:08 getting page data with api:scoreEntrySheet
+2015/09/06 04:05:13 post data at scoreEntrySheet
+2015/09/06 04:05:13 before chain
+2015/09/06 04:05:13 &{0xc208028270 <nil> map[page:scoreEntrySheet team:A hole:8] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 04:05:13 &{0xc20812abe0 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 04:05:13 &{[matsuno kiyota oide tsuchiya] [4 6 3 4] [0 0 0 0] 0}
+playerにデータを挿入します。
+2015/09/06 04:05:13 updating score team:A, hole: 8
+2015/09/06 04:05:16 getting page data with api:scoreViewSheet
+2015/09/06 04:05:24 getting page data with api:scoreEntrySheet
+2015/09/06 04:05:38 getting page data with api:scoreEntrySheet
+2015/09/06 04:05:47 getting page data with api:scoreEntrySheet
+2015/09/06 04:05:48 getting page data with api:scoreEntrySheet
+2015/09/06 04:05:52 getting page data with api:index
+2015/09/06 04:05:54 getting page data with api:scoreViewSheet
+2015/09/06 04:05:57 getting page data with api:scoreEntrySheet
+2015/09/06 04:05:59 getting page data with api:leadersBoard
+2015/09/06 04:05:59 getting page data with api:scoreViewSheet
+2015/09/06 04:05:59 getting page data with api:scoreEntrySheet
+2015/09/06 04:06:04 post data at scoreEntrySheet
+2015/09/06 04:06:04 before chain
+2015/09/06 04:06:04 &{0xc2080280d0 <nil> map[page:scoreEntrySheet team:A hole:7] map[] /api/page/{page}/{team}/{hole}}
+2015/09/06 04:06:04 &{0xc20812a000 application/json, text/javascript, */*; q=0.01 [application/json] 200 0 true ?reflect.Value?}
+2015/09/06 04:06:04 &{[matsuno kiyota oide tsuchiya] [11 13 4 7] [0 1 1 1] 0}
