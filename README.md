@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/3a-classic/score-api-server/badge.svg?branch=master&service=github)](https://coveralls.io/github/3a-classic/score-api-server?branch=master)
 [![Stories in Ready](https://badge.waffle.io/3a-classic/score-api-server.png?label=ready&title=Ready)](https://waffle.io/3a-classic/score-api-server)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/3a-classic/score-api-server/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Join the chat at https://gitter.im/3a-classic/score-api-server](https://badges.gitter.im/3a-classic/score-api-server.svg)](https://gitter.im/3a-classic/score-api-server?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Apache2.0 License](http://img.shields.io/badge/license-Apache2.0-blue.svg?style=flat)](LICENSE)
 
 ## DESCRIPTION
