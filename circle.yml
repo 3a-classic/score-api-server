@@ -1,3 +1,5 @@
 test:
   override:
     - ./dummy_test_script.sh
+  post:
+    - ssh circle@api.3a-classic.com -t "cd ~/3a-classic/server/score-api-server && bash ~/3a-classic/server/score-api-server/docker_run.sh"
