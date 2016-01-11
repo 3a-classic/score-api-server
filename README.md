@@ -1,6 +1,9 @@
 # 3a-classic-server
 
 [![Circle CI](https://circleci.com/gh/3a-classic/score-api-server.svg?style=shield&circle-token=05ab242168e17f5fd1b442f85002417e6e963a3a)](https://circleci.com/gh/3a-classic/score-api-server)
+[![Coverage Status](https://coveralls.io/repos/3a-classic/score-api-server/badge.svg?branch=master&service=github)](https://coveralls.io/github/3a-classic/score-api-server?branch=master)
+[![Stories in Ready](https://badge.waffle.io/3a-classic/score-api-server.png?label=ready&title=Ready)](https://waffle.io/3a-classic/score-api-server)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/3a-classic/score-api-server/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![Apache2.0 License](http://img.shields.io/badge/license-Apache2.0-blue.svg?style=flat)](LICENSE)
 
 ## DESCRIPTION
