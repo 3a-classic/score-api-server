@@ -5,8 +5,8 @@ deployment:
   production:
     branch: master
     commands:
-      - ssh circle@api.3a-classic.com -t "cd ~/3a-classic/server/score-api-server && bash ~/3a-classic/server/score-api-server/docker_run.sh"
+      - ssh circle@api.3a-classic.com -t "cd ~/3a-classic/server/score-api-server && bash ~/3a-classic/server/pro_score-api-server/circle_deploy_pro.sh"
   staging:
     branch: stage
     commands:
-      - ssh circle@api.3a-classic.com -t "cd ~/3a-classic/server/score-api-server && bash ~/3a-classic/server/score-api-server/docker_run.sh"
+      - ssh circle@api.3a-classic.com -t "cd ~/3a-classic/server/score-api-server && bash ~/3a-classic/server/sta_score-api-server/circle_deploy_sta.sh"

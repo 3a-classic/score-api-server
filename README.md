@@ -1,5 +1,3 @@
-https://circleci.com/gh/3a-classic/score-api-server.svg?style=shield&circle-token=05ab242168e17f5fd1b442f85002417e6e963a3a
-
 # 3a-classic-server
 
 [![Circle CI](https://circleci.com/gh/3a-classic/score-api-server.svg?style=shield&circle-token=05ab242168e17f5fd1b442f85002417e6e963a3a)](https://circleci.com/gh/3a-classic/score-api-server)
