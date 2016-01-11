@@ -4,4 +4,4 @@ log
 data
 src/config/config.tml
 bin/
-docker_run.sh
+circle_deploy*
