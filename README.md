@@ -1,4 +1,4 @@
-# 3a-classic-server
+# score-api-server
 
 [![Circle CI](https://circleci.com/gh/3a-classic/score-api-server.svg?style=shield&circle-token=05ab242168e17f5fd1b442f85002417e6e963a3a)](https://circleci.com/gh/3a-classic/score-api-server)
 [![Coverage Status](https://coveralls.io/repos/3a-classic/score-api-server/badge.svg?branch=master&service=github)](https://coveralls.io/github/3a-classic/score-api-server?branch=master)
@@ -91,7 +91,7 @@ http://localhost:8081
 |MONGO_DB|test|test|MongoDB database name|
 |MONGO_LOG_COLLECTION|log|log|MongoDB log collection name|
 |GIT_REMOTE_SERVICE|github/gitlab|github|for writing error code location in logs. you can also choose "gitlab"|
-|GIT_REMOTE_URL|http://git.sadayuki-matsuno.com/3aclassic/3a-classic-server|http://git.sadayuki-matsuno.com/3aclassic/3a-classic-server|for writing error code location in logs.|
+|GIT_REMOTE_URL|https://github.com/3a-classic/score-api-server|https://github.com/3a-classic/score-api-server|for writing error code location in logs.|
 
 **Variable Name is not same as Docker one, because I heard Docker Link is "Legacy" somewhere.**
 
