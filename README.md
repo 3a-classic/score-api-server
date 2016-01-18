@@ -13,7 +13,7 @@ This is api server for 3a-classic
 
 ## DEPENDENCY
 
-* [3a-classic-ui](http://git.sadayuki-matsuno.com/3aclassic/3a-classic-ui)
+* [3a-classic-ui](https://github.com/3a-classic/score)
 * mongo
 
 ## REQUIRED CONFIGURATION
