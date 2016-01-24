@@ -1,6 +1,6 @@
 test:
   override:
-    - ./dummy_test_script.sh
+    - echo "dummy"
 deployment:
   production:
     branch: master
