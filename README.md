@@ -55,8 +55,8 @@ $ gb build
 
 ```bash
 $ docker run -d -t \
-  -v /home/matsuno/docker/3a-classic/server/3a-classic-server:/go/src \
-  --name 3a-classic-server \
+  -v $HOME/3a-classic/server/score-api-server:/go/src \
+  --name score-api-server \
   --expose 80 \
   -p 8081:80 \
   -e "SLACK_INCOMING_HOOK_URL=https://hooks.slack.com/***********" \
@@ -67,10 +67,10 @@ $ docker run -d -t \
   -e "MONGO_DB=test" \
   -e "MONGO_LOG_COLLECTION=log" \
   -e "GIT_REMOTE_SERVICE=github" \
-  -e "GIT_REMOTE_URL=https://github.com/sadayuki-matsuno/3aclassic_restful" \
+  -e "GIT_REMOTE_URL=https://github.com/3a-classic/score-api-server" \
   -e "AUTH_ADMIN_PASS_BASE=*********" \
   golang:latest \
-  bash -c /go/src/bin/3aClassic
+  bash -c /go/src/bin/3aClassic-linux-amd64
 ```
 
 * access
