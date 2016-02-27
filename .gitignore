@@ -5,3 +5,4 @@ data
 src/config/config.tml
 bin/
 circle_deploy*
+private/
