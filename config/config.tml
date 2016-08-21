@@ -1,0 +1,19 @@
+[slack]
+hookurl = ""
+username = ""
+channel = ""
+
+[mongo]
+host = "localhost"
+port = "27017"
+database = "test"
+logcollection = "log"  
+
+[gitremote]
+service = "github"
+url =  "https://github.com/sadayuki-matsuno/3aclassic_restful"
+
+[auth]
+# echo -n 'user:password' | base64
+admin = "M2E6Y2xhc3NpYw=="
+
