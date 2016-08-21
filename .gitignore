@@ -7,3 +7,4 @@ bin/
 circle_deploy*
 private/
 vendor
+score-api-server
