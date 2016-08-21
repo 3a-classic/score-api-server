@@ -1,7 +1,7 @@
 package mongo
 
 import (
-	c "config"
+	c "github.com/3a-classic/score-api-server/config"
 
 	"labix.org/v2/mgo"
 )
