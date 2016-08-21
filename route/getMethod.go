@@ -4,15 +4,15 @@ import (
 	l "github.com/3a-classic/score-api-server/logger"
 	m "github.com/3a-classic/score-api-server/mongo"
 
-	"net/http"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/emicklei/go-restful"
+	"github.com/gin-gonic/gin"
+	"github.com/k0kubun/pp"
 )
 
-func getCol(req *restful.Request, resp *restful.Response) {
-	col := req.PathParameter("col")
+func getCol(c *gin.Context) {
+	col := c.Params.ByName("col")
 
 	l.Output(
 		logrus.Fields{"Collection": l.Sprintf(col)},
@@ -22,30 +22,33 @@ func getCol(req *restful.Request, resp *restful.Response) {
 
 	if col == "player" || col == "field" || col == "team" {
 		data, err := m.GetAllColData(col)
+		pp.Println(data)
 		if err != nil {
 			panic(err)
 		}
-		resp.WriteAsJson(data)
+		c.JSON(200, data)
 	}
 }
 
-func getPage(req *restful.Request, resp *restful.Response) {
+func getPage(c *gin.Context) {
 	var page, team, hole string
-	url := strings.Split(req.PathParameter("page"), "/")
+	url := strings.Split(c.Params.ByName("page"), "/")
+	pp.Println(url)
 
 	l.Output(
 		logrus.Fields{"Page": page, "Team": team, "Hole": hole, "URL": url},
 		"Get access to page router",
 		l.Debug,
 	)
-	page = url[0]
-	if len(url) > 1 {
-		team = url[1]
-	}
+	page = url[1]
 	if len(url) > 2 {
-		hole = url[2]
+		team = url[2]
+	}
+	if len(url) > 3 {
+		hole = url[3]
 	}
 
+	pp.Println(page)
 	switch page {
 	case "index":
 		if team != "" || hole != "" {
@@ -55,7 +58,7 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			panic(err)
 		}
-		resp.WriteAsJson(data)
+		c.JSON(200, data)
 
 	case "leadersBoard":
 		if team != "" || hole != "" {
@@ -65,14 +68,14 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			panic(err)
 		}
-		resp.WriteAsJson(data)
+		c.JSON(200, data)
 
 	case "scoreEntrySheet":
 		data, err := m.GetScoreEntrySheetPageData(team, hole)
 		if err != nil {
 			panic(err)
 		}
-		resp.WriteAsJson(data)
+		c.JSON(200, data)
 
 	case "scoreViewSheet":
 		if hole != "" {
@@ -82,7 +85,7 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			panic(err)
 		}
-		resp.WriteAsJson(data)
+		c.JSON(200, data)
 
 	case "entireScore":
 
@@ -90,7 +93,7 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			panic(err)
 		}
-		resp.WriteAsJson(data)
+		c.JSON(200, data)
 
 	case "timeLine":
 
@@ -98,12 +101,9 @@ func getPage(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			panic(err)
 		}
-		resp.WriteAsJson(data)
+		c.JSON(200, data)
 
 	default:
-		resp.WriteErrorString(
-			http.StatusNotFound,
-			"404: Page is not found.",
-		)
+		c.JSON(404, gin.H{"status": "not found"})
 	}
 }

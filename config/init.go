@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
 	"path/filepath"
 
 	"log"
@@ -46,8 +45,8 @@ const (
 	datetimeLocation = "Asia/Tokyo"
 	DatetimeFormat   = "2006/01/02 15:04:05 MST"
 
-	templateFilePath = "../src/config/config.tmpl"
-	configFilePath   = "../src/config/config.tml"
+	templateFilePath = "config/config.tmpl"
+	configFilePath   = "config/config.tml"
 )
 
 func init() {
@@ -73,13 +72,9 @@ func checkTemplateFile(path string) {
 func setConfig() {
 
 	// get current dir
-	pwd, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		panic(err)
-	}
-
-	templateFileAbsPath := path.Join(pwd, templateFilePath)
-	configFileAbsPath := path.Join(pwd, configFilePath)
+	wd, _ := os.Getwd()
+	templateFileAbsPath := filepath.Join(wd, templateFilePath)
+	configFileAbsPath := filepath.Join(wd, configFilePath)
 
 	// check if file exists
 	if _, err := os.Stat(templateFileAbsPath); os.IsNotExist(err) {

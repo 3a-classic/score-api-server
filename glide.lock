@@ -1,0 +1,51 @@
+hash: 2d420f5f7b6c3f245ef94468cb160cdc5463e848ac3b339f56482ea2dcfa5ad7
+updated: 2016-08-21T15:40:55.553059256+09:00
+imports:
+- name: github.com/3a-classic/score-api-server
+  version: 4fa6c2a42416333165eb52dcf110753016bc9839
+  subpackages:
+  - config
+  - logger
+  - mongo
+  - route
+- name: github.com/BurntSushi/toml
+  version: bbd5bb678321a0d6e58f1099321dfa73391c1b6f
+- name: github.com/gin-gonic/gin
+  version: e2fa89777e344782ef5d31929f095f4589c35dcc
+  subpackages:
+  - binding
+  - render
+- name: github.com/johntdyer/slack-go
+  version: 88736fd63eed11c942b478c3182bdd2f152971e5
+- name: github.com/johntdyer/slackrus
+  version: e2f91fbc69b731f9dd08f34106d7438fc47f680b
+- name: github.com/julienschmidt/httprouter
+  version: b428fda53bb0a764fea9c76c9413512eda291dec
+- name: github.com/k0kubun/pp
+  version: fa6ef2628b80777cf9af03bff7ad351a12b774c4
+- name: github.com/mattn/go-colorable
+  version: ed8eb9e318d7a84ce5915b495b7d35e0cfe7b5a8
+- name: github.com/mattn/go-isatty
+  version: 66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8
+- name: github.com/Sirupsen/logrus
+  version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
+- name: github.com/weekface/mgorus
+  version: c5a051503cfee8ef91dcc8a8fa45dbbcf3431970
+- name: golang.org/x/sys
+  version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
+  subpackages:
+  - unix
+- name: gopkg.in/mgo.v2
+  version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
+  subpackages:
+  - bson
+  - internal/sasl
+  - internal/scram
+  - internal/json
+- name: labix.org/v2/mgo
+  version: "287"
+  subpackages:
+  - bson
+- name: labix.org/v2/mgo/sasl
+  version: ""
+testImports: []

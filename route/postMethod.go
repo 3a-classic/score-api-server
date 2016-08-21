@@ -4,29 +4,27 @@ import (
 	l "github.com/3a-classic/score-api-server/logger"
 	m "github.com/3a-classic/score-api-server/mongo"
 
-	"net/http"
-
 	"github.com/Sirupsen/logrus"
-	"github.com/emicklei/go-restful"
+	"github.com/gin-gonic/gin"
+	"github.com/k0kubun/pp"
 )
 
-func postOne(req *restful.Request, resp *restful.Response) {
-	page := req.PathParameter("page")
-	team := req.PathParameter("team")
-	hole := req.PathParameter("hole")
-	if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
-		if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
-			resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
-		}
-	}
+func postOne(c *gin.Context) {
+	page := c.Params.ByName("page")
+	team := c.Params.ByName("team")
+	hole := c.Params.ByName("hole")
+	//		if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
+	//			if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
+	//				resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
+	//			}
+	//		}
 
 	l.Output(
 		logrus.Fields{
-			"Page":     page,
-			"Team":     team,
-			"Hole":     hole,
-			"Request":  l.Sprintf(req),
-			"Response": l.Sprintf(resp),
+			"Page":    page,
+			"Team":    team,
+			"Hole":    hole,
+			"Context": l.Sprintf(c),
 		},
 		"Post access to page router",
 		l.Debug,
@@ -36,9 +34,8 @@ func postOne(req *restful.Request, resp *restful.Response) {
 	case "login":
 
 		loginInfo := new(m.PostLogin)
-		err := req.ReadEntity(loginInfo)
-		if err != nil { // bad request
-			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+		if !c.Bind(loginInfo) {
+			c.JSON(404, gin.H{"status": "wrong queries"})
 			return
 		}
 
@@ -46,14 +43,13 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			l.PutErr(err, l.Trace(), l.E_R_PostPage, loginInfo)
 		}
-		resp.WriteAsJson(status)
+		c.JSON(200, status)
 
 	case "scoreViewSheet":
 
 		definedTeam := new(m.PostDefinedTeam)
-		err := req.ReadEntity(definedTeam)
-		if err != nil { // bad request
-			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+		if !c.Bind(definedTeam) {
+			c.JSON(404, gin.H{"status": "wrong queries"})
 			return
 		}
 
@@ -61,14 +57,13 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			l.PutErr(err, l.Trace(), l.E_R_PostPage, definedTeam)
 		}
-		resp.WriteAsJson(status)
+		c.JSON(200, status)
 
 	case "scoreEntrySheet":
 
 		updatedTeamScore := new(m.PostTeamScore)
-		err := req.ReadEntity(updatedTeamScore)
-		if err != nil { // bad request
-			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+		if !c.Bind(updatedTeamScore) {
+			c.JSON(404, gin.H{"status": "wrong queries"})
 			return
 		}
 
@@ -76,16 +71,15 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			l.PutErr(err, l.Trace(), l.E_R_PostPage, updatedTeamScore)
 		}
-		resp.WriteAsJson(status)
+		c.JSON(200, status)
 
 	case "applyScore":
 		if hole != "" {
 			return
 		}
 		registeredApplyScore := new(m.PostApplyScore)
-		err := req.ReadEntity(registeredApplyScore)
-		if err != nil {
-			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+		if !c.Bind(registeredApplyScore) {
+			c.JSON(404, gin.H{"status": "wrong queries"})
 			return
 		}
 
@@ -93,25 +87,25 @@ func postOne(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			l.PutErr(err, l.Trace(), l.E_R_PostPage, registeredApplyScore)
 		}
-		resp.WriteAsJson(status)
+		c.JSON(200, status)
 	}
 }
 
-func register(req *restful.Request, resp *restful.Response) {
-	date := req.PathParameter("date")
-	collection := req.PathParameter("collection")
-	if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
-		if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
-			resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
-		}
-	}
+func register(c *gin.Context) {
+	date := c.Params.ByName("date")
+	collection := c.Params.ByName("collection")
+	//		if origin := req.HeaderParameter(restful.HEADER_Origin); origin != "" {
+	//			if len(resp.Header().Get(restful.HEADER_AccessControlAllowOrigin)) == 0 {
+	//				resp.AddHeader(restful.HEADER_AccessControlAllowOrigin, origin)
+	//			}
+	//		}
 
+	pp.Println(date)
 	l.Output(
 		logrus.Fields{
 			"Date":       date,
 			"Collection": collection,
-			"Request":    l.Sprintf(req),
-			"Response":   l.Sprintf(resp),
+			"Context":    l.Sprintf(c),
 		},
 		"Post access to register router",
 		l.Debug,
@@ -122,8 +116,8 @@ func register(req *restful.Request, resp *restful.Response) {
 	case "user":
 
 		userCols := new([]m.UserCol)
-		if err := req.ReadEntity(userCols); err != nil {
-			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+		if !c.Bind(userCols) {
+			c.JSON(404, gin.H{"status": "wrong queries"})
 			return
 		}
 
@@ -131,13 +125,13 @@ func register(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			l.PutErr(err, l.Trace(), l.E_R_RegisterCol, userCols)
 		}
-		resp.WriteAsJson(status)
+		c.JSON(200, status)
 
 	case "team":
 
 		teamCols := new([]m.TeamCol)
-		if err := req.ReadEntity(teamCols); err != nil {
-			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+		if !c.Bind(teamCols) {
+			c.JSON(404, gin.H{"status": "wrong queries"})
 			return
 		}
 
@@ -145,13 +139,13 @@ func register(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			l.PutErr(err, l.Trace(), l.E_R_RegisterCol, teamCols)
 		}
-		resp.WriteAsJson(status)
+		c.JSON(200, status)
 
 	case "field":
 
 		fieldCols := new([]m.FieldCol)
-		if err := req.ReadEntity(fieldCols); err != nil {
-			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+		if !c.Bind(fieldCols) {
+			c.JSON(404, gin.H{"status": "wrong queries"})
 			return
 		}
 
@@ -159,13 +153,13 @@ func register(req *restful.Request, resp *restful.Response) {
 		if err != nil {
 			l.PutErr(err, l.Trace(), l.E_R_RegisterCol, fieldCols)
 		}
-		resp.WriteAsJson(status)
+		c.JSON(200, status)
 
 	case "thread":
 
 		requestTakePictureStatus := new(m.RequestTakePictureStatus)
-		if err := req.ReadEntity(requestTakePictureStatus); err != nil {
-			resp.WriteErrorString(http.StatusBadRequest, err.Error())
+		if !c.Bind(requestTakePictureStatus) {
+			c.JSON(404, gin.H{"status": "wrong queries"})
 			return
 		}
 
@@ -174,6 +168,6 @@ func register(req *restful.Request, resp *restful.Response) {
 			l.PutErr(err, l.Trace(), l.E_R_RegisterCol, requestTakePictureStatus)
 		}
 
-		resp.WriteAsJson(status)
+		c.JSON(200, status)
 	}
 }

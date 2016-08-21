@@ -4,17 +4,14 @@ import (
 	l "github.com/3a-classic/score-api-server/logger"
 	r "github.com/3a-classic/score-api-server/route"
 
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
 func main() {
+	l.Output(nil, "Start API server", l.Info)
 	r.Register()
-	go r.H.Run()
-	http.HandleFunc("/ws/timeLine", r.ServeWs)
-	http.ListenAndServe(":80", nil)
 	shutdownHook()
 }
 
