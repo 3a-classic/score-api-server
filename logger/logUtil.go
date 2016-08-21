@@ -1,8 +1,6 @@
 package logger
 
 import (
-	c "config"
-
 	"fmt"
 	"net/url"
 	"path/filepath"
@@ -11,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	c "github.com/3a-classic/score-api-server/config"
 	"github.com/Sirupsen/logrus"
 )
 

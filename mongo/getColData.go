@@ -1,8 +1,7 @@
 package mongo
 
 import (
-	l "logger"
-
+	l "github.com/3a-classic/score-api-server/logger"
 	"labix.org/v2/mgo/bson"
 )
 

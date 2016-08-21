@@ -1,8 +1,8 @@
 package main
 
 import (
-	l "logger"
-	r "route"
+	l "github.com/3a-classic/score-api-server/logger"
+	r "github.com/3a-classic/score-api-server/route"
 
 	"net/http"
 	"os"

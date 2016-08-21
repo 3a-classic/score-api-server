@@ -1,8 +1,8 @@
 package route
 
 import (
-	l "logger"
-	m "mongo"
+	l "github.com/3a-classic/score-api-server/logger"
+	m "github.com/3a-classic/score-api-server/mongo"
 
 	"net/http"
 	"strings"

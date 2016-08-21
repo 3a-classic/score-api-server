@@ -1,7 +1,7 @@
 package logger
 
 import (
-	c "config"
+	c "github.com/3a-classic/score-api-server/config"
 
 	"os"
 
