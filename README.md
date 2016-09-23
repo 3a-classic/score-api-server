@@ -192,3 +192,7 @@ $ ./bin/3aClassic
 ## AUTHOR
 
  Sadayuki Matsuno
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/3a-classic/score-api-server/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
